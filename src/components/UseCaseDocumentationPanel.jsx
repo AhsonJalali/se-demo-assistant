@@ -1,8 +1,10 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { useResizable } from '../hooks/useResizable';
 
 const UseCaseDocumentationPanel = () => {
   const { setShowUseCasePanel, selectedUseCaseId } = useApp();
+  const { width, startResize, isResizing } = useResizable(60);
 
   const handleClose = () => {
     setShowUseCasePanel(false);
@@ -17,7 +19,14 @@ const UseCaseDocumentationPanel = () => {
       />
 
       {/* Slide-in panel */}
-      <div className="fixed top-0 right-0 h-full w-[600px] bg-white shadow-2xl z-50 flex flex-col animate-slide-in">
+      <div className="fixed top-0 right-0 h-full bg-white shadow-2xl z-50 flex flex-col animate-slide-in" style={{ width: `${width}%` }}>
+        {/* Resize Handle */}
+        <div
+          className={`absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize hover:bg-[#d4af37]/50 transition-colors ${
+            isResizing ? 'bg-[#d4af37]' : ''
+          }`}
+          onMouseDown={startResize}
+        />
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Use Case Documentation</h2>
