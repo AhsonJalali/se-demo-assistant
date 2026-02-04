@@ -372,6 +372,45 @@ export const AppProvider = ({ children }) => {
     }
   }, [currentSession]);
 
+  // Use case documentation methods
+  const getUseCaseDocumentation = useCallback((useCaseId) => {
+    if (!currentSession) return null;
+    return currentSession.useCaseDocumentation[useCaseId] || null;
+  }, [currentSession]);
+
+  const updateUseCaseDocumentation = useCallback((useCaseId, updates) => {
+    if (!currentSession) return;
+
+    try {
+      const existingDoc = currentSession.useCaseDocumentation[useCaseId] || {
+        structured: {
+          customerContext: {},
+          stakeholders: {},
+          timeline: {},
+          businessRequirements: {},
+          technicalRequirements: {}
+        },
+        notes: { content: '', quickCaptureItems: [], lastModified: null }
+      };
+
+      const updated = {
+        ...currentSession,
+        useCaseDocumentation: {
+          ...currentSession.useCaseDocumentation,
+          [useCaseId]: {
+            ...existingDoc,
+            ...updates
+          }
+        },
+        updatedAt: new Date().toISOString()
+      };
+
+      setCurrentSession(updated);
+    } catch (error) {
+      showToast(`Failed to update documentation: ${error.message}`, 'error');
+    }
+  }, [currentSession, showToast]);
+
   const getItemNote = useCallback((itemId) => {
     if (!currentSession) return null;
     return currentSession.notes.items[itemId] || null;
@@ -458,6 +497,10 @@ export const AppProvider = ({ children }) => {
     removeItemNote,
     updateGeneralNotes,
     getItemNote,
+
+    // Use case documentation
+    getUseCaseDocumentation,
+    updateUseCaseDocumentation,
 
     // Item selection
     toggleItemSelection,

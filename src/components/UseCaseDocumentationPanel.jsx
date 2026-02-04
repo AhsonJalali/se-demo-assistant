@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
 import { useResizable } from '../hooks/useResizable';
+import CustomerContextCard from './useCasePanel/CustomerContextCard';
 
 const UseCaseDocumentationPanel = () => {
   const { setShowUseCasePanel, selectedUseCaseId } = useApp();
@@ -40,9 +41,9 @@ const UseCaseDocumentationPanel = () => {
           </button>
         </div>
 
-        {/* Content area - empty for now */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <p className="text-gray-500">Documentation content will appear here for use case: {selectedUseCaseId}</p>
+        {/* Content area */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+          <CustomerContextCard useCaseId={selectedUseCaseId} />
         </div>
       </div>
     </>
