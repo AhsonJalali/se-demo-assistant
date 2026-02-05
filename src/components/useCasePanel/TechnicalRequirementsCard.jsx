@@ -8,6 +8,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
   const technicalRequirements = doc?.structured?.technicalRequirements || {};
   const overview = technicalRequirements.overview || {};
   const apiIntegration = technicalRequirements.apiIntegration || {};
+  const dataModel = technicalRequirements.dataModel || {};
 
   const handleFieldChange = (subsection, field, value) => {
     const updated = {
@@ -215,6 +216,89 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
                 placeholder="e.g., 1000 requests/hour"
                 className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Data Model Section */}
+        <div className="mt-6">
+          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+            Data Model
+          </h4>
+
+          <div className="space-y-4">
+            {/* Schema Complexity */}
+            <div>
+              <label htmlFor="schemaComplexity" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Schema Complexity
+              </label>
+              <select
+                id="schemaComplexity"
+                value={dataModel.schemaComplexity || ''}
+                onChange={(e) => handleFieldChange('dataModel', 'schemaComplexity', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="simple">Simple (1-5 tables)</option>
+                <option value="moderate">Moderate (6-20 tables)</option>
+                <option value="complex">Complex (21-50 tables)</option>
+                <option value="very-complex">Very Complex (50+ tables)</option>
+              </select>
+            </div>
+
+            {/* Data Relationships */}
+            <div>
+              <label htmlFor="dataRelationships" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Data Relationships
+              </label>
+              <select
+                id="dataRelationships"
+                value={dataModel.dataRelationships || ''}
+                onChange={(e) => handleFieldChange('dataModel', 'dataRelationships', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="flat">Flat/No relationships</option>
+                <option value="one-to-many">One-to-Many</option>
+                <option value="many-to-many">Many-to-Many</option>
+                <option value="complex-hierarchies">Complex hierarchies</option>
+              </select>
+            </div>
+
+            {/* Key Entities */}
+            <div>
+              <label htmlFor="keyEntities" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Key Entities
+              </label>
+              <textarea
+                id="keyEntities"
+                value={dataModel.keyEntities || ''}
+                onChange={(e) => handleFieldChange('dataModel', 'keyEntities', e.target.value)}
+                placeholder="List key data entities and their relationships..."
+                rows={4}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+              />
+            </div>
+
+            {/* Data Refresh Rate */}
+            <div>
+              <label htmlFor="dataRefreshRate" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Data Refresh Rate
+              </label>
+              <select
+                id="dataRefreshRate"
+                value={dataModel.dataRefreshRate || ''}
+                onChange={(e) => handleFieldChange('dataModel', 'dataRefreshRate', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="real-time">Real-time</option>
+                <option value="hourly">Hourly</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="on-demand">On-demand</option>
+              </select>
             </div>
           </div>
         </div>
