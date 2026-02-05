@@ -4,6 +4,7 @@ import { useResizable } from '../hooks/useResizable';
 import CustomerContextCard from './useCasePanel/CustomerContextCard';
 import StakeholdersCard from './useCasePanel/StakeholdersCard';
 import TimelineCard from './useCasePanel/TimelineCard';
+import BusinessRequirementsCard from './useCasePanel/BusinessRequirementsCard';
 
 const UseCaseDocumentationPanel = () => {
   const { setShowUseCasePanel, selectedUseCaseId } = useApp();
@@ -49,6 +50,7 @@ const UseCaseDocumentationPanel = () => {
           <CustomerContextCard useCaseId={selectedUseCaseId} />
           <StakeholdersCard useCaseId={selectedUseCaseId} />
           <TimelineCard useCaseId={selectedUseCaseId} />
+          <BusinessRequirementsCard useCaseId={selectedUseCaseId} />
         </div>
       </div>
     </>
