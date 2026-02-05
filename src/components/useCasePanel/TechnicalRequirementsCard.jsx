@@ -10,6 +10,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
   const apiIntegration = technicalRequirements.apiIntegration || {};
   const dataModel = technicalRequirements.dataModel || {};
   const infrastructure = technicalRequirements.infrastructure || {};
+  const compliance = technicalRequirements.compliance || {};
 
   const handleFieldChange = (subsection, field, value) => {
     const updated = {
@@ -36,11 +37,28 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
     handleFieldChange('overview', 'securityRequirements', updated);
   };
 
+  const handleRegulatoryRequirementChange = (requirement) => {
+    const regulatoryRequirements = compliance.regulatoryRequirements || [];
+    const updated = regulatoryRequirements.includes(requirement)
+      ? regulatoryRequirements.filter(req => req !== requirement)
+      : [...regulatoryRequirements, requirement];
+    handleFieldChange('compliance', 'regulatoryRequirements', updated);
+  };
+
   const securityOptions = [
     { id: 'rls', label: 'Row Level Security (RLS)' },
     { id: 'cls', label: 'Column Level Security (CLS)' },
     { id: 'encryption', label: 'Data Encryption' },
     { id: 'compliance', label: 'Compliance (GDPR, HIPAA, etc.)' }
+  ];
+
+  const regulatoryOptions = [
+    { id: 'gdpr', label: 'GDPR (EU data protection)' },
+    { id: 'hipaa', label: 'HIPAA (Healthcare)' },
+    { id: 'soc2', label: 'SOC 2 (Security)' },
+    { id: 'pci-dss', label: 'PCI DSS (Payment card)' },
+    { id: 'ccpa', label: 'CCPA (California privacy)' },
+    { id: 'other', label: 'Other/Custom' }
   ];
 
   return (
@@ -385,6 +403,97 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
                 <option value="active-active">Active-active</option>
                 <option value="geographic-redundancy">Geographic redundancy</option>
               </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Compliance Section */}
+        <div className="mt-6">
+          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+            Compliance
+          </h4>
+
+          <div className="space-y-4">
+            {/* Regulatory Requirements */}
+            <div>
+              <fieldset>
+                <legend className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                  Regulatory Requirements
+                </legend>
+                <div className="space-y-2">
+                  {regulatoryOptions.map(option => (
+                    <div key={option.id} className="flex items-center">
+                      <input
+                        id={`regulatory-${option.id}`}
+                        type="checkbox"
+                        checked={(compliance.regulatoryRequirements || []).includes(option.id)}
+                        onChange={() => handleRegulatoryRequirementChange(option.id)}
+                        className="w-4 h-4 bg-[#0a0e1a] border border-[#252d44] rounded text-[#d4af37] focus:ring-[#d4af37] focus:ring-offset-0 focus:ring-2 cursor-pointer"
+                      />
+                      <label
+                        htmlFor={`regulatory-${option.id}`}
+                        className="ml-2 text-sm text-[#e8eaf0] cursor-pointer select-none"
+                      >
+                        {option.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+
+            {/* Data Residency */}
+            <div>
+              <label htmlFor="dataResidency" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Data Residency
+              </label>
+              <select
+                id="dataResidency"
+                value={compliance.dataResidency || ''}
+                onChange={(e) => handleFieldChange('compliance', 'dataResidency', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not specified</option>
+                <option value="us-only">US only</option>
+                <option value="eu-only">EU only</option>
+                <option value="apac-only">APAC only</option>
+                <option value="multi-region">Multi-region</option>
+                <option value="customer-choice">Customer choice</option>
+              </select>
+            </div>
+
+            {/* Audit Requirements */}
+            <div>
+              <label htmlFor="auditRequirements" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Audit Requirements
+              </label>
+              <select
+                id="auditRequirements"
+                value={compliance.auditRequirements || ''}
+                onChange={(e) => handleFieldChange('compliance', 'auditRequirements', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not required</option>
+                <option value="basic-logging">Basic logging</option>
+                <option value="detailed-audit-trail">Detailed audit trail</option>
+                <option value="compliance-reporting">Compliance reporting</option>
+                <option value="full-audit-suite">Full audit suite</option>
+              </select>
+            </div>
+
+            {/* Compliance Notes */}
+            <div>
+              <label htmlFor="complianceNotes" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Compliance Notes
+              </label>
+              <textarea
+                id="complianceNotes"
+                value={compliance.complianceNotes || ''}
+                onChange={(e) => handleFieldChange('compliance', 'complianceNotes', e.target.value)}
+                placeholder="Additional compliance requirements or notes..."
+                rows={4}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+              />
             </div>
           </div>
         </div>
