@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 
-const TechnicalRequirementsCard = ({ useCaseId }) => {
+const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
   const { getUseCaseDocumentation, updateUseCaseDocumentation } = useApp();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const doc = getUseCaseDocumentation(useCaseId);
   const technicalRequirements = doc?.structured?.technicalRequirements || {};
@@ -61,13 +62,26 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
     { id: 'other', label: 'Other/Custom' }
   ];
 
+  const isCardCollapsed = collapsed || isCollapsed;
+
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
-      <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
-        Technical Requirements
-      </h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+          Technical Requirements
+        </h3>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
+        >
+          <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
 
-      <div className="space-y-4">
+      <div className={`space-y-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
         {/* Overview Section Header */}
         <div>
           <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">

@@ -58,6 +58,7 @@ export const AppProvider = ({ children }) => {
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const [showUseCasePanel, setShowUseCasePanel] = useState(false);
   const [selectedUseCaseId, setSelectedUseCaseId] = useState(null);
+  const [allCardsCollapsed, setAllCardsCollapsed] = useState(false);
 
   // Auto-save debounce ref
   const autoSaveTimeoutRef = useRef(null);
@@ -524,7 +525,9 @@ export const AppProvider = ({ children }) => {
     showUseCasePanel,
     setShowUseCasePanel,
     selectedUseCaseId,
-    setSelectedUseCaseId
+    setSelectedUseCaseId,
+    allCardsCollapsed,
+    setAllCardsCollapsed
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

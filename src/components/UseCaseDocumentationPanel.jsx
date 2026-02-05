@@ -8,7 +8,7 @@ import BusinessRequirementsCard from './useCasePanel/BusinessRequirementsCard';
 import TechnicalRequirementsCard from './useCasePanel/TechnicalRequirementsCard';
 
 const UseCaseDocumentationPanel = () => {
-  const { setShowUseCasePanel, selectedUseCaseId, setShowExportModal, showToast } = useApp();
+  const { setShowUseCasePanel, selectedUseCaseId, setShowExportModal, showToast, allCardsCollapsed, setAllCardsCollapsed } = useApp();
   const { width, startResize, isResizing } = useResizable(60);
 
   const handleClose = () => {
@@ -20,7 +20,8 @@ const UseCaseDocumentationPanel = () => {
   };
 
   const handleCollapseAll = () => {
-    showToast('Collapse All - Coming soon', 'info');
+    setAllCardsCollapsed(!allCardsCollapsed);
+    showToast(allCardsCollapsed ? 'All cards expanded' : 'All cards collapsed', 'info');
   };
 
   const handleCopyLink = () => {
@@ -70,13 +71,21 @@ const UseCaseDocumentationPanel = () => {
               type="button"
               onClick={handleCollapseAll}
               className="group flex items-center gap-2 px-3 py-2 rounded-md bg-[#252b3b] hover:bg-[#2d3548] border border-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all duration-200"
-              title="Collapse all cards"
-              aria-label="Collapse all cards"
+              title={allCardsCollapsed ? "Expand all cards" : "Collapse all cards"}
+              aria-label={allCardsCollapsed ? "Expand all cards" : "Collapse all cards"}
             >
-              <svg className="w-4 h-4 text-gray-400 group-hover:text-[#d4af37] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <span className="text-sm text-gray-300 group-hover:text-[#d4af37] transition-colors">Collapse All</span>
+              {allCardsCollapsed ? (
+                <svg className="w-4 h-4 text-gray-400 group-hover:text-[#d4af37] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 text-gray-400 group-hover:text-[#d4af37] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+              <span className="text-sm text-gray-300 group-hover:text-[#d4af37] transition-colors">
+                {allCardsCollapsed ? 'Expand All' : 'Collapse All'}
+              </span>
             </button>
 
             {/* Export Button */}
@@ -125,11 +134,11 @@ const UseCaseDocumentationPanel = () => {
 
         {/* Content area */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
-          <CustomerContextCard useCaseId={selectedUseCaseId} />
-          <StakeholdersCard useCaseId={selectedUseCaseId} />
-          <TimelineCard useCaseId={selectedUseCaseId} />
-          <BusinessRequirementsCard useCaseId={selectedUseCaseId} />
-          <TechnicalRequirementsCard useCaseId={selectedUseCaseId} />
+          <CustomerContextCard useCaseId={selectedUseCaseId} collapsed={allCardsCollapsed} />
+          <StakeholdersCard useCaseId={selectedUseCaseId} collapsed={allCardsCollapsed} />
+          <TimelineCard useCaseId={selectedUseCaseId} collapsed={allCardsCollapsed} />
+          <BusinessRequirementsCard useCaseId={selectedUseCaseId} collapsed={allCardsCollapsed} />
+          <TechnicalRequirementsCard useCaseId={selectedUseCaseId} collapsed={allCardsCollapsed} />
         </div>
       </div>
     </>
