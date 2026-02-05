@@ -5,6 +5,7 @@ import CustomerContextCard from './useCasePanel/CustomerContextCard';
 import StakeholdersCard from './useCasePanel/StakeholdersCard';
 import TimelineCard from './useCasePanel/TimelineCard';
 import BusinessRequirementsCard from './useCasePanel/BusinessRequirementsCard';
+import TechnicalRequirementsCard from './useCasePanel/TechnicalRequirementsCard';
 
 const UseCaseDocumentationPanel = () => {
   const { setShowUseCasePanel, selectedUseCaseId } = useApp();
@@ -51,6 +52,7 @@ const UseCaseDocumentationPanel = () => {
           <StakeholdersCard useCaseId={selectedUseCaseId} />
           <TimelineCard useCaseId={selectedUseCaseId} />
           <BusinessRequirementsCard useCaseId={selectedUseCaseId} />
+          <TechnicalRequirementsCard useCaseId={selectedUseCaseId} />
         </div>
       </div>
     </>
