@@ -7,16 +7,17 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
   const doc = getUseCaseDocumentation(useCaseId);
   const technicalRequirements = doc?.structured?.technicalRequirements || {};
   const overview = technicalRequirements.overview || {};
+  const apiIntegration = technicalRequirements.apiIntegration || {};
 
-  const handleFieldChange = (field, value) => {
+  const handleFieldChange = (subsection, field, value) => {
     const updated = {
       ...doc,
       structured: {
         ...doc?.structured,
         technicalRequirements: {
           ...technicalRequirements,
-          overview: {
-            ...overview,
+          [subsection]: {
+            ...(subsection === 'overview' ? overview : apiIntegration),
             [field]: value
           }
         }
@@ -30,7 +31,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
     const updated = securityRequirements.includes(requirement)
       ? securityRequirements.filter(req => req !== requirement)
       : [...securityRequirements, requirement];
-    handleFieldChange('securityRequirements', updated);
+    handleFieldChange('overview', 'securityRequirements', updated);
   };
 
   const securityOptions = [
@@ -62,7 +63,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
               <select
                 id="integrationNeeds"
                 value={overview.integrationNeeds || ''}
-                onChange={(e) => handleFieldChange('integrationNeeds', e.target.value)}
+                onChange={(e) => handleFieldChange('overview', 'integrationNeeds', e.target.value)}
                 className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
               >
                 <option value="">Not specified</option>
@@ -81,7 +82,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
               <select
                 id="dataVolume"
                 value={overview.dataVolume || ''}
-                onChange={(e) => handleFieldChange('dataVolume', e.target.value)}
+                onChange={(e) => handleFieldChange('overview', 'dataVolume', e.target.value)}
                 className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
               >
                 <option value="">Not specified</option>
@@ -100,7 +101,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
               <select
                 id="performanceNeeds"
                 value={overview.performanceNeeds || ''}
-                onChange={(e) => handleFieldChange('performanceNeeds', e.target.value)}
+                onChange={(e) => handleFieldChange('overview', 'performanceNeeds', e.target.value)}
                 className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
               >
                 <option value="">Not specified</option>
@@ -136,6 +137,84 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
                   ))}
                 </div>
               </fieldset>
+            </div>
+          </div>
+        </div>
+
+        {/* API Integration Section */}
+        <div className="mt-6">
+          <h4 className="text-[#d4af37] text-sm font-semibold mb-3">
+            API Integration
+          </h4>
+
+          <div className="space-y-4">
+            {/* API Type */}
+            <div>
+              <label htmlFor="apiType" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                API Type
+              </label>
+              <select
+                id="apiType"
+                value={apiIntegration.apiType || ''}
+                onChange={(e) => handleFieldChange('apiIntegration', 'apiType', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="rest">REST API</option>
+                <option value="graphql">GraphQL</option>
+                <option value="soap">SOAP</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            {/* Authentication Method */}
+            <div>
+              <label htmlFor="authMethod" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Authentication Method
+              </label>
+              <select
+                id="authMethod"
+                value={apiIntegration.authMethod || ''}
+                onChange={(e) => handleFieldChange('apiIntegration', 'authMethod', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="oauth2">OAuth 2.0</option>
+                <option value="apikey">API Key</option>
+                <option value="basic">Basic Auth</option>
+                <option value="saml">SAML</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            {/* Required Endpoints */}
+            <div>
+              <label htmlFor="requiredEndpoints" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Required Endpoints
+              </label>
+              <textarea
+                id="requiredEndpoints"
+                value={apiIntegration.requiredEndpoints || ''}
+                onChange={(e) => handleFieldChange('apiIntegration', 'requiredEndpoints', e.target.value)}
+                placeholder="List required API endpoints..."
+                rows={4}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+              />
+            </div>
+
+            {/* Rate Limits */}
+            <div>
+              <label htmlFor="rateLimits" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Rate Limits
+              </label>
+              <input
+                id="rateLimits"
+                type="text"
+                value={apiIntegration.rateLimits || ''}
+                onChange={(e) => handleFieldChange('apiIntegration', 'rateLimits', e.target.value)}
+                placeholder="e.g., 1000 requests/hour"
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              />
             </div>
           </div>
         </div>
