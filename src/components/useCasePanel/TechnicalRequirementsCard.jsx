@@ -9,6 +9,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
   const overview = technicalRequirements.overview || {};
   const apiIntegration = technicalRequirements.apiIntegration || {};
   const dataModel = technicalRequirements.dataModel || {};
+  const infrastructure = technicalRequirements.infrastructure || {};
 
   const handleFieldChange = (subsection, field, value) => {
     const updated = {
@@ -298,6 +299,91 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
                 <option value="on-demand">On-demand</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Infrastructure Section */}
+        <div className="mt-6">
+          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+            Infrastructure
+          </h4>
+
+          <div className="space-y-4">
+            {/* Hosting Preference */}
+            <div>
+              <label htmlFor="hostingPreference" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Hosting Preference
+              </label>
+              <select
+                id="hostingPreference"
+                value={infrastructure.hostingPreference || ''}
+                onChange={(e) => handleFieldChange('infrastructure', 'hostingPreference', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not specified</option>
+                <option value="cloud">Cloud (AWS/Azure/GCP)</option>
+                <option value="on-premise">On-premise</option>
+                <option value="hybrid">Hybrid</option>
+                <option value="multi-cloud">Multi-cloud</option>
+              </select>
+            </div>
+
+            {/* Scalability Needs */}
+            <div>
+              <label htmlFor="scalabilityNeeds" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Scalability Needs
+              </label>
+              <select
+                id="scalabilityNeeds"
+                value={infrastructure.scalabilityNeeds || ''}
+                onChange={(e) => handleFieldChange('infrastructure', 'scalabilityNeeds', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not applicable</option>
+                <option value="low">Low (static users)</option>
+                <option value="medium">Medium (growing users)</option>
+                <option value="high">High (dynamic scaling)</option>
+                <option value="enterprise">Enterprise (global scale)</option>
+              </select>
+            </div>
+
+            {/* Availability Requirements */}
+            <div>
+              <label htmlFor="availabilityRequirements" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Availability Requirements
+              </label>
+              <select
+                id="availabilityRequirements"
+                value={infrastructure.availabilityRequirements || ''}
+                onChange={(e) => handleFieldChange('infrastructure', 'availabilityRequirements', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not specified</option>
+                <option value="standard">Standard (99%)</option>
+                <option value="high">High (99.9%)</option>
+                <option value="critical">Critical (99.99%)</option>
+                <option value="maximum">Maximum (99.999%)</option>
+              </select>
+            </div>
+
+            {/* Disaster Recovery */}
+            <div>
+              <label htmlFor="disasterRecovery" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                Disaster Recovery
+              </label>
+              <select
+                id="disasterRecovery"
+                value={infrastructure.disasterRecovery || ''}
+                onChange={(e) => handleFieldChange('infrastructure', 'disasterRecovery', e.target.value)}
+                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              >
+                <option value="">Not required</option>
+                <option value="basic-backup">Basic backup</option>
+                <option value="hot-standby">Hot standby</option>
+                <option value="active-active">Active-active</option>
+                <option value="geographic-redundancy">Geographic redundancy</option>
               </select>
             </div>
           </div>
