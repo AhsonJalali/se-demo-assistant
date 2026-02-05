@@ -48,7 +48,6 @@ const BusinessRequirementsCard = ({ useCaseId }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
-        <span>📋</span>
         Business Requirements
       </h3>
 
@@ -121,7 +120,7 @@ const BusinessRequirementsCard = ({ useCaseId }) => {
               value={newDataSource}
               onChange={(e) => setNewDataSource(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="e.g., Salesforce, SAP, Custom DB"
+              placeholder="Enter data source..."
               className="flex-1 px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
               aria-label="Add data source"
             />
@@ -141,7 +140,7 @@ const BusinessRequirementsCard = ({ useCaseId }) => {
           {/* User Count */}
           <div>
             <label htmlFor="userCount" className="block text-xs font-medium text-[#a8b0c8] mb-2">
-              Expected User Count
+              User Count
             </label>
             <input
               id="userCount"
