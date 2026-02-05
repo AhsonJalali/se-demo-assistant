@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useResizable } from '../hooks/useResizable';
 import CustomerContextCard from './useCasePanel/CustomerContextCard';
 import StakeholdersCard from './useCasePanel/StakeholdersCard';
+import TimelineCard from './useCasePanel/TimelineCard';
 
 const UseCaseDocumentationPanel = () => {
   const { setShowUseCasePanel, selectedUseCaseId } = useApp();
@@ -46,6 +47,7 @@ const UseCaseDocumentationPanel = () => {
         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
           <CustomerContextCard useCaseId={selectedUseCaseId} />
           <StakeholdersCard useCaseId={selectedUseCaseId} />
+          <TimelineCard useCaseId={selectedUseCaseId} />
         </div>
       </div>
     </>
