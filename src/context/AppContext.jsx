@@ -203,6 +203,8 @@ export const AppProvider = ({ children }) => {
           closeNoteModal();
         } else if (showExportModal) {
           setShowExportModal(false);
+        } else if (showUseCasePanel) {
+          setShowUseCasePanel(false);
         } else if (showNotesPanel) {
           setShowNotesPanel(false);
         }
@@ -211,7 +213,7 @@ export const AppProvider = ({ children }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSession, showSessionModal, editingNoteItemId, showExportModal, showNotesPanel]);
+  }, [currentSession, showSessionModal, editingNoteItemId, showExportModal, showUseCasePanel, showNotesPanel]);
 
   // Auto-save current session with debounce (300ms)
   const autoSaveSession = useCallback(() => {
