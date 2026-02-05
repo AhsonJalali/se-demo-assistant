@@ -17,7 +17,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
         technicalRequirements: {
           ...technicalRequirements,
           [subsection]: {
-            ...(subsection === 'overview' ? overview : apiIntegration),
+            ...(technicalRequirements[subsection] || {}),
             [field]: value
           }
         }
@@ -143,7 +143,7 @@ const TechnicalRequirementsCard = ({ useCaseId }) => {
 
         {/* API Integration Section */}
         <div className="mt-6">
-          <h4 className="text-[#d4af37] text-sm font-semibold mb-3">
+          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
             API Integration
           </h4>
 
