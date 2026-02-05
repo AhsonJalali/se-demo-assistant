@@ -20,8 +20,9 @@ const UseCaseDocumentationPanel = () => {
   };
 
   const handleCollapseAll = () => {
-    setAllCardsCollapsed(!allCardsCollapsed);
-    showToast(allCardsCollapsed ? 'All cards expanded' : 'All cards collapsed', 'info');
+    const newCollapsedState = !allCardsCollapsed;
+    setAllCardsCollapsed(newCollapsedState);
+    showToast(newCollapsedState ? 'All cards collapsed' : 'All cards expanded', 'info');
   };
 
   const handleCopyLink = () => {
