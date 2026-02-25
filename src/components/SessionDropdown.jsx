@@ -212,8 +212,6 @@ const SessionDropdown = () => {
                           </div>
 
                           <div className="flex items-center gap-2 text-xs text-[#a8b0c8] mb-2">
-                            <span>{session.metadata.dealStage}</span>
-                            <span>•</span>
                             <span>{formatDate(session.metadata.demoDate)}</span>
                           </div>
 
