@@ -1,0 +1,233 @@
+{
+  "objections": [
+    {
+      "id": "obj-1",
+      "objection": "ThoughtSpot is too expensive",
+      "category": "pricing",
+      "response": "Let's discuss the total cost of ownership. While our list price may be higher than some alternatives, ThoughtSpot typically delivers significantly lower TCO when you factor in implementation time, training costs, and analyst productivity gains.",
+      "talkingPoints": [
+        "Faster time to insight reduces analyst hours by 50-70%",
+        "Lower training costs - hours vs weeks for traditional BI",
+        "Reduced maintenance - no extract pipelines or report backlogs",
+        "Self-service reduces bottlenecks on IT teams",
+        "Calculate cost per insight, not just license cost"
+      ],
+      "questions": [
+        "What is your current BI tool costing (licenses + maintenance + FTEs)?",
+        "How many hours do analysts spend creating reports vs analyzing?",
+        "What is the cost of delayed decisions due to slow insights?",
+        "How many people are waiting for analytics access?"
+      ]
+    },
+    {
+      "id": "obj-2",
+      "objection": "We already invested heavily in [Tableau/Power BI/etc]",
+      "category": "competition",
+      "response": "We understand and respect that investment. ThoughtSpot isn't about replacing everything overnight. Many customers start with a specific use case where their current tools aren't meeting needs - like embedded analytics, self-service for business users, or modern cloud analytics. We can coexist and even complement your existing tools.",
+      "talkingPoints": [
+        "Start with a pilot for a specific use case",
+        "Many customers run ThoughtSpot alongside existing BI",
+        "Focus on gaps in current solution",
+        "Phased approach reduces risk",
+        "ROI from new capabilities, not replacement"
+      ],
+      "questions": [
+        "What use cases is your current tool struggling with?",
+        "Are there user groups not being served well today?",
+        "What would make this evaluation worth your time?",
+        "How do you handle ad-hoc analysis requests now?"
+      ]
+    },
+    {
+      "id": "obj-3",
+      "objection": "Our users won't adopt another tool",
+      "category": "implementation",
+      "response": "Change management is always a concern, but ThoughtSpot typically sees much higher adoption than traditional BI tools because it's actually easier to use. The search interface is familiar - everyone knows how to use Google. Most users are productive within minutes, not weeks.",
+      "talkingPoints": [
+        "Search interface requires no training - it's familiar",
+        "Higher adoption rates than traditional BI (typically 3-5x)",
+        "Users choose ThoughtSpot because it's easier",
+        "Champion program helps drive grassroots adoption",
+        "Mobile access increases engagement"
+      ],
+      "questions": [
+        "What is your current BI tool adoption rate?",
+        "How much training did that require?",
+        "What would success look like for adoption?",
+        "Who are your analytics champions?"
+      ]
+    },
+    {
+      "id": "obj-4",
+      "objection": "We need to see more customer references in our industry",
+      "category": "competition",
+      "response": "I understand wanting to see proven success in your industry. We have customers across [mention relevant industries], and I can connect you with references. That said, analytics challenges are often similar across industries - data democratization, self-service, and faster insights are universal needs.",
+      "talkingPoints": [
+        "Can provide references in similar-sized companies",
+        "Many customers started without industry peers",
+        "Focus on use case similarity vs industry",
+        "Offer to connect with customer success team",
+        "Highlight transferable success patterns"
+      ],
+      "questions": [
+        "What specific industry challenges are you concerned about?",
+        "Would use case alignment matter more than industry?",
+        "What would you want to learn from a reference call?",
+        "Are there adjacent industries that would be relevant?"
+      ]
+    },
+    {
+      "id": "obj-5",
+      "objection": "Search-based analytics didn't work for us before",
+      "category": "technical",
+      "response": "I hear this occasionally, and it's usually about older search tools or poor implementations. ThoughtSpot is purpose-built for search - it's not a traditional BI tool with search bolted on. Our NLP engine, SpotIQ AI, and semantic modeling make search actually work at scale.",
+      "talkingPoints": [
+        "What was your previous experience with search analytics?",
+        "ThoughtSpot's search is fundamentally different from others",
+        "Built from ground up for search, not retrofitted",
+        "Continuous NLP improvements and learning",
+        "Show live demo to prove the difference"
+      ],
+      "questions": [
+        "What tool did you try before?",
+        "What specifically didn't work?",
+        "What would it take to give search another chance?",
+        "Can we show you the difference in a live demo?"
+      ]
+    },
+    {
+      "id": "obj-6",
+      "objection": "Implementation will take too long",
+      "category": "implementation",
+      "response": "ThoughtSpot implementations are typically faster than traditional BI tools. Most customers are live with their first use case in 4-8 weeks. Because we connect directly to your cloud data warehouse, there's no complex ETL or extract layer to build. Our Professional Services team has a proven methodology.",
+      "talkingPoints": [
+        "Agile implementation approach with quick wins",
+        "No extracts or separate data pipeline needed",
+        "Typical time to first insights: 4-8 weeks",
+        "Proven implementation methodology",
+        "Can start with limited scope and expand"
+      ],
+      "questions": [
+        "What is your timeline for needing analytics?",
+        "What does your data infrastructure look like?",
+        "Have you defined the initial use case?",
+        "What resources can you dedicate to the project?"
+      ]
+    },
+    {
+      "id": "obj-7",
+      "objection": "Our data isn't ready for this",
+      "category": "technical",
+      "response": "Perfect data is a myth - no one has it. ThoughtSpot works with your data as it is. We can help you prioritize what data to make available first. Most customers start with a subset of data for a specific use case and expand over time.",
+      "talkingPoints": [
+        "Start with available data, expand later",
+        "Data modeling layer helps clean up inconsistencies",
+        "Iterative approach to data quality",
+        "Focus on business value, not perfection",
+        "Data governance can be implemented over time"
+      ],
+      "questions": [
+        "What data quality issues are you concerned about?",
+        "Is your data in a cloud warehouse?",
+        "What data would deliver the most business value?",
+        "Do you have a data catalog or governance program?"
+      ]
+    },
+    {
+      "id": "obj-8",
+      "objection": "We want to build this ourselves with open source",
+      "category": "competition",
+      "response": "Building with open source seems appealing, but the hidden costs are significant - engineering time, maintenance, scaling, security, and support. Most companies that try this approach end up spending 18-24 months and significant resources before realizing the complexity. ThoughtSpot lets you focus on your core business instead.",
+      "talkingPoints": [
+        "True cost includes engineering time, not just licenses",
+        "Ongoing maintenance and scaling challenges",
+        "Security, compliance, and enterprise features take years",
+        "Opportunity cost of engineering resources",
+        "Time to market advantage with ThoughtSpot"
+      ],
+      "questions": [
+        "How many engineers would work on this?",
+        "What is the timeline to reach production?",
+        "Have you calculated the total cost of engineering time?",
+        "What is the opportunity cost of this vs other projects?"
+      ]
+    },
+    {
+      "id": "obj-9",
+      "objection": "We need to support on-premises deployment",
+      "category": "technical",
+      "response": "While ThoughtSpot is cloud-first, we do support on-premises and private cloud deployments for customers with specific requirements. However, I'd encourage exploring cloud options first - the benefits in terms of scale, performance, and reduced operational overhead are significant.",
+      "talkingPoints": [
+        "Cloud deployment recommended for best experience",
+        "On-prem available for specific requirements",
+        "Private cloud options (VPC, BYOC)",
+        "Hybrid architectures possible",
+        "Total cost of ownership lower in cloud"
+      ],
+      "questions": [
+        "What drives the on-premises requirement?",
+        "Are there specific compliance concerns?",
+        "Have you considered private cloud options?",
+        "What is your broader cloud strategy?"
+      ]
+    },
+    {
+      "id": "obj-10",
+      "objection": "The learning curve seems steep",
+      "category": "implementation",
+      "response": "Actually, ThoughtSpot has one of the lowest learning curves in analytics. The search interface is intuitive - if you can use Google, you can use ThoughtSpot. Our data shows most users are productive within minutes, and we provide comprehensive enablement resources.",
+      "talkingPoints": [
+        "Search interface is familiar to everyone",
+        "Minimal training required for end users",
+        "Comprehensive learning resources and documentation",
+        "Champion program for power users",
+        "Support and customer success team available"
+      ],
+      "questions": [
+        "What is your concern about the learning curve?",
+        "How much training did your current BI tool require?",
+        "Would a hands-on trial help address this concern?",
+        "Who would be the primary users?"
+      ]
+    },
+    {
+      "id": "obj-11",
+      "objection": "We have concerns about data security",
+      "category": "technical",
+      "response": "Security is foundational to ThoughtSpot. We're SOC 2 Type II certified, support SSO/SAML, and have granular row-level security. Your data stays in your warehouse - we query it, we don't copy it. We work with heavily regulated industries like financial services and healthcare.",
+      "talkingPoints": [
+        "SOC 2 Type II certified",
+        "Row-level and column-level security",
+        "Data stays in your warehouse (live query mode)",
+        "SSO/SAML integration",
+        "Encryption at rest and in transit",
+        "Audit logging and compliance features"
+      ],
+      "questions": [
+        "What specific security requirements do you have?",
+        "What compliance frameworks do you need to meet?",
+        "How do you handle security in your current BI tool?",
+        "Would you like to review our security documentation?"
+      ]
+    },
+    {
+      "id": "obj-12",
+      "objection": "We're not sure about the ROI",
+      "category": "pricing",
+      "response": "ROI comes from three main areas: analyst productivity gains, faster decision making, and broader data democratization. Our customers typically see 50-70% reduction in time spent creating reports, 10x more users with data access, and measurable business impact from faster insights.",
+      "talkingPoints": [
+        "Analyst time savings: 50-70% on report creation",
+        "Faster decisions lead to measurable business impact",
+        "Broader access: 5-10x more users with analytics",
+        "Reduced backlog and IT bottlenecks",
+        "Customer case studies with quantified ROI"
+      ],
+      "questions": [
+        "How do you measure analytics ROI today?",
+        "What is the cost of delayed decisions?",
+        "How many people need but don't have analytics access?",
+        "What would a successful outcome look like?"
+      ]
+    }
+  ]
+}

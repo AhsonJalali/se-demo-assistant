@@ -1,0 +1,43 @@
+{
+  "industries": [
+    { "id": "all", "name": "All Industries" },
+    { "id": "retail", "name": "Retail" },
+    { "id": "finance", "name": "Financial Services" },
+    { "id": "healthcare", "name": "Healthcare" },
+    { "id": "manufacturing", "name": "Manufacturing" },
+    { "id": "technology", "name": "Technology" }
+  ],
+  "useCases": [
+    { "id": "analytics-modernization", "name": "Analytics Modernization" },
+    { "id": "embedded-analytics", "name": "Embedded Analytics" },
+    { "id": "data-democratization", "name": "Data Democratization" },
+    { "id": "self-service-bi", "name": "Self-Service BI" },
+    { "id": "operational-analytics", "name": "Operational Analytics" }
+  ],
+  "competitors": [
+    { "id": "tableau", "name": "Tableau" },
+    { "id": "powerbi", "name": "Power BI" },
+    { "id": "looker", "name": "Looker" },
+    { "id": "qlik", "name": "Qlik" }
+  ],
+  "objectionCategories": [
+    { "id": "pricing", "name": "Pricing" },
+    { "id": "technical", "name": "Technical" },
+    { "id": "implementation", "name": "Implementation" },
+    { "id": "competition", "name": "Competition" }
+  ],
+  "discoveryCategories": [
+    { "id": "technical", "name": "Technical" },
+    { "id": "business", "name": "Business" },
+    { "id": "users", "name": "Users & Adoption" },
+    { "id": "data", "name": "Data & Infrastructure" }
+  ],
+  "useCaseCategories": [
+    { "id": "modernization", "name": "Modernization" },
+    { "id": "embedded", "name": "Embedded Analytics" },
+    { "id": "self-service", "name": "Self-Service" },
+    { "id": "operational", "name": "Operational" },
+    { "id": "customer-analytics", "name": "Customer Analytics" },
+    { "id": "financial", "name": "Financial Analytics" }
+  ]
+}

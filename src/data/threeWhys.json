@@ -1,0 +1,19 @@
+{
+  "questions": [
+    {
+      "id": "why-change",
+      "question": "Why change",
+      "order": 1
+    },
+    {
+      "id": "why-now",
+      "question": "Why now",
+      "order": 2
+    },
+    {
+      "id": "why-thoughtspot",
+      "question": "Why ThoughtSpot",
+      "order": 3
+    }
+  ]
+}

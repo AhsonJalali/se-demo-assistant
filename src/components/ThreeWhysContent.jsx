@@ -75,71 +75,59 @@ const ThreeWhysContent = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
-      <div className="max-w-[1200px] mx-auto">
-        {/* Header */}
-        <div className="mb-8 animate-fade-in-up">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-cyan)] to-transparent rounded-full" />
-            <h2 className="text-3xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
-              The 3 Why's
-            </h2>
-          </div>
-          <p className="text-[var(--color-text-secondary)] ml-4">
-            Capture the strategic context for this opportunity
-          </p>
+    <div className="flex-1 flex flex-col p-6 min-h-0">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between animate-fade-in-up shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="h-6 w-1 bg-gradient-to-b from-[var(--color-accent-cyan)] to-transparent rounded-full" />
+          <h2 className="text-2xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
+            The 3 Why's
+          </h2>
+          <p className="text-sm text-[var(--color-text-secondary)]">— Capture the strategic context for this opportunity</p>
         </div>
-
-        {/* Auto-save indicator */}
         {isAutoSaving && (
-          <div className="mb-4 flex items-center gap-2 text-sm text-[var(--color-text-tertiary)] animate-fade-in-up">
-            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
+            <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="12" cy="12" r="10" strokeWidth="3" strokeDasharray="60" strokeDashoffset="15" opacity="0.25"/>
               <path d="M12 2a10 10 0 0110 10" strokeWidth="3" strokeLinecap="round"/>
             </svg>
             <span>Saving...</span>
           </div>
         )}
+      </div>
 
-        {/* Questions */}
-        <div className="space-y-8">
-          {threeWhysData.questions.map((question, index) => (
-            <div
-              key={question.id}
-              className="glass-panel p-6 rounded-2xl animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <label htmlFor={question.id} className="block mb-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-accent-cyan)] to-[#0099CC] text-[var(--color-bg-primary)] text-sm font-bold">
-                    {index + 1}
-                  </span>
-                  <h3 className="text-xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
-                    {question.question}
-                  </h3>
-                </div>
-              </label>
+      {/* Questions — 3-column side-by-side, fills remaining height */}
+      <div className="grid grid-cols-3 gap-4 flex-1 min-h-0">
+        {threeWhysData.questions.map((question, index) => (
+          <div
+            key={question.id}
+            className="flex flex-col glass-panel p-4 rounded-2xl animate-fade-in-up min-h-0"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <label htmlFor={question.id} className="block mb-3 shrink-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-[var(--color-accent-cyan)] to-[#0099CC] text-[var(--color-bg-primary)] text-xs font-bold shrink-0">
+                  {index + 1}
+                </span>
+                <h3 className="text-base font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
+                  {question.question}
+                </h3>
+              </div>
+            </label>
 
-              <textarea
-                id={question.id}
-                value={answers[question.id] || ''}
-                onChange={(e) => handleChange(question.id, e.target.value)}
-                rows={10}
-                className="w-full px-4 py-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-subtle)] rounded-xl
-                         text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)]
-                         focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:ring-opacity-30
-                         focus:border-[var(--color-accent-cyan)] transition-all duration-200
-                         resize-vertical min-h-[200px]"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Footer note */}
-        <div className="mt-8 text-center text-sm text-[var(--color-text-tertiary)] animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <p>Your responses are automatically saved to the current session</p>
-        </div>
+            <textarea
+              id={question.id}
+              value={answers[question.id] || ''}
+              onChange={(e) => handleChange(question.id, e.target.value)}
+              className="flex-1 w-full px-3 py-2 bg-[var(--color-bg-secondary)] border border-[var(--color-border-subtle)] rounded-xl
+                       text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)]
+                       focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:ring-opacity-30
+                       focus:border-[var(--color-accent-cyan)] transition-all duration-200
+                       resize-none min-h-0"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -63,6 +63,12 @@ export const AppProvider = ({ children }) => {
   // Auto-save debounce ref
   const autoSaveTimeoutRef = useRef(null);
 
+  // Toast notification - defined early so other functions can use it
+  const showToast = useCallback((message, type = 'info') => {
+    setToastMessage({ message, type, id: Date.now() });
+    setTimeout(() => setToastMessage(null), 3000);
+  }, []);
+
   // Get filtered content based on active tab and filters
   const getFilteredContent = () => {
     let content = [];
@@ -112,8 +118,8 @@ export const AppProvider = ({ children }) => {
       });
     }
 
-    // Apply category filter (for objections, discovery, and usecases)
-    if (selectedCategories.length > 0) {
+    // Apply category filter (for discovery only - each tab has its own category taxonomy)
+    if (selectedCategories.length > 0 && activeTab === 'discovery') {
       content = content.filter(item => {
         return selectedCategories.includes(item.category);
       });
@@ -139,9 +145,11 @@ export const AppProvider = ({ children }) => {
     setSearchQuery('');
   };
 
-  // Reset filters when tab changes
+  // Reset only tab-specific filters when tab changes (keep Industry, Competitors, and Categories global)
   useEffect(() => {
-    clearFilters();
+    // Clear tab-specific filters only (Industry, Competitors, and Categories persist globally)
+    setSelectedUseCases([]);
+    setSearchQuery('');
     setExpandedCard(null);
   }, [activeTab]);
 
@@ -378,41 +386,52 @@ export const AppProvider = ({ children }) => {
   // Use case documentation methods
   const getUseCaseDocumentation = useCallback((useCaseId) => {
     if (!currentSession) return null;
+    if (!currentSession.useCaseDocumentation) return null;
     return currentSession.useCaseDocumentation[useCaseId] || null;
   }, [currentSession]);
 
   const updateUseCaseDocumentation = useCallback((useCaseId, updates) => {
-    if (!currentSession) return;
-
     try {
-      const existingDoc = currentSession.useCaseDocumentation[useCaseId] || {
-        structured: {
-          customerContext: {},
-          stakeholders: {},
-          timeline: {},
-          businessRequirements: {},
-          technicalRequirements: {}
-        },
-        notes: { content: '', quickCaptureItems: [], lastModified: null }
-      };
+      setCurrentSession(prev => {
+        if (!prev) return prev;
 
-      const updated = {
-        ...currentSession,
-        useCaseDocumentation: {
-          ...currentSession.useCaseDocumentation,
-          [useCaseId]: {
-            ...existingDoc,
-            ...updates
-          }
-        },
-        updatedAt: new Date().toISOString()
-      };
+        const existingDocs = prev.useCaseDocumentation || {};
+        const existingDoc = existingDocs[useCaseId] || {
+          structured: {
+            customerContext: {},
+            stakeholders: {},
+            timeline: {},
+            businessRequirements: {},
+            technicalRequirements: {}
+          },
+          notes: { content: '', quickCaptureItems: [], lastModified: null }
+        };
 
-      setCurrentSession(updated);
+        // Deep merge structured fields so concurrent effect updates don't overwrite each other
+        const mergedStructured = updates.structured
+          ? Object.keys({ ...existingDoc.structured, ...updates.structured }).reduce((acc, key) => {
+              acc[key] = { ...existingDoc.structured?.[key], ...updates.structured?.[key] };
+              return acc;
+            }, {})
+          : existingDoc.structured;
+
+        return {
+          ...prev,
+          useCaseDocumentation: {
+            ...existingDocs,
+            [useCaseId]: {
+              ...existingDoc,
+              ...updates,
+              structured: mergedStructured
+            }
+          },
+          updatedAt: new Date().toISOString()
+        };
+      });
     } catch (error) {
       showToast(`Failed to update documentation: ${error.message}`, 'error');
     }
-  }, [currentSession, showToast]);
+  }, [showToast]);
 
   const getItemNote = useCallback((itemId) => {
     if (!currentSession) return null;
@@ -449,12 +468,6 @@ export const AppProvider = ({ children }) => {
     const category = activeTab;
     return currentSession.selectedItems[category]?.includes(itemId) || false;
   }, [currentSession, activeTab]);
-
-  // Toast notification
-  const showToast = useCallback((message, type = 'info') => {
-    setToastMessage({ message, type, id: Date.now() });
-    setTimeout(() => setToastMessage(null), 3000);
-  }, []);
 
   // Note modal methods
   const openNoteModal = useCallback((itemId) => {

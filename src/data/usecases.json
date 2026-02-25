@@ -1,0 +1,244 @@
+{
+  "useCases": [
+    {
+      "id": "uc-1",
+      "name": "Analytics Modernization",
+      "description": "Transform legacy BI systems into modern, cloud-based analytics platforms that deliver insights faster and scale with business needs.",
+      "category": "modernization",
+      "industries": ["all"],
+      "keyBenefits": [
+        "Reduce time-to-insight from weeks to minutes",
+        "Scale analytics infrastructure elastically",
+        "Eliminate data silos and enable unified analytics",
+        "Lower total cost of ownership vs. legacy systems"
+      ],
+      "typicalChallenges": [
+        "Long wait times for reports and dashboards",
+        "Limited scalability of on-premise BI tools",
+        "High maintenance costs of legacy systems",
+        "Inability to handle modern data volumes"
+      ],
+      "idealFor": [
+        "Organizations with legacy BI tools (Cognos, BusinessObjects, etc.)",
+        "Companies migrating to cloud data warehouses",
+        "Enterprises looking to reduce BI infrastructure costs"
+      ],
+      "demoScenarios": [
+        "Show live query performance vs. legacy BI",
+        "Demonstrate self-service analytics capabilities",
+        "Highlight cloud-native architecture benefits"
+      ]
+    },
+    {
+      "id": "uc-2",
+      "name": "Embedded Analytics",
+      "description": "Integrate powerful analytics directly into products, applications, and workflows to deliver insights where users work.",
+      "category": "embedded",
+      "industries": ["technology", "healthcare", "finance"],
+      "keyBenefits": [
+        "Increase product value with built-in analytics",
+        "Generate new revenue streams through analytics features",
+        "Improve user engagement and retention",
+        "White-label analytics with your brand"
+      ],
+      "typicalChallenges": [
+        "Building analytics from scratch is expensive and slow",
+        "Maintaining analytics infrastructure diverts engineering resources",
+        "Scaling analytics for multi-tenant applications",
+        "Providing customization without complexity"
+      ],
+      "idealFor": [
+        "SaaS companies wanting to add analytics to their product",
+        "ISVs building data-driven applications",
+        "Platform providers serving multiple customers"
+      ],
+      "demoScenarios": [
+        "Show embedded analytics within a sample application",
+        "Demonstrate API-driven integration",
+        "Highlight multi-tenant security and customization"
+      ]
+    },
+    {
+      "id": "uc-3",
+      "name": "Data Democratization",
+      "description": "Enable everyone in the organization to access and analyze data without depending on IT or data teams.",
+      "category": "self-service",
+      "industries": ["all"],
+      "keyBenefits": [
+        "Empower business users to answer their own questions",
+        "Reduce backlog for BI and data teams",
+        "Foster data-driven culture across organization",
+        "Accelerate decision-making with self-service access"
+      ],
+      "typicalChallenges": [
+        "Business users depend on IT for every report",
+        "BI team overwhelmed with ad-hoc requests",
+        "Lack of data literacy among business users",
+        "Governance concerns with self-service access"
+      ],
+      "idealFor": [
+        "Organizations with large BI request backlogs",
+        "Companies wanting to build data-driven culture",
+        "Enterprises with skilled business analysts"
+      ],
+      "demoScenarios": [
+        "Show business user creating analysis without SQL",
+        "Demonstrate natural language search capabilities",
+        "Highlight governance and security controls"
+      ]
+    },
+    {
+      "id": "uc-4",
+      "name": "Self-Service BI",
+      "description": "Give business users intuitive tools to explore data, create visualizations, and build dashboards without technical skills.",
+      "category": "self-service",
+      "industries": ["all"],
+      "keyBenefits": [
+        "Reduce dependency on BI developers",
+        "Enable faster insight discovery",
+        "Lower cost per analysis",
+        "Increase data adoption across teams"
+      ],
+      "typicalChallenges": [
+        "Traditional BI tools too complex for business users",
+        "Long wait times for custom reports and dashboards",
+        "Limited exploration capabilities in current tools",
+        "High licensing costs for BI tool seats"
+      ],
+      "idealFor": [
+        "Organizations with diverse analytics user base",
+        "Companies looking to reduce BI team workload",
+        "Teams wanting to explore data interactively"
+      ],
+      "demoScenarios": [
+        "Show drag-and-drop visualization building",
+        "Demonstrate SpotIQ automated insights",
+        "Highlight search-driven analytics"
+      ]
+    },
+    {
+      "id": "uc-5",
+      "name": "Operational Analytics",
+      "description": "Embed real-time analytics into operational workflows and processes to drive immediate action and decision-making.",
+      "category": "operational",
+      "industries": ["retail", "manufacturing", "finance"],
+      "keyBenefits": [
+        "Enable real-time operational decision-making",
+        "Reduce time from insight to action",
+        "Improve operational efficiency and agility",
+        "Connect analytics to business processes"
+      ],
+      "typicalChallenges": [
+        "Analytics separated from operational workflows",
+        "Batch processing delays critical insights",
+        "Difficulty connecting BI to operational systems",
+        "Static reports don't support dynamic operations"
+      ],
+      "idealFor": [
+        "Operations teams needing real-time insights",
+        "Organizations with time-sensitive decisions",
+        "Companies with high-velocity business processes"
+      ],
+      "demoScenarios": [
+        "Show live operational dashboards",
+        "Demonstrate alerts and threshold monitoring",
+        "Highlight integration with operational apps"
+      ]
+    },
+    {
+      "id": "uc-6",
+      "name": "Customer 360 Analytics",
+      "description": "Unify customer data from multiple sources to create comprehensive customer views and drive personalized experiences.",
+      "category": "customer-analytics",
+      "industries": ["retail", "finance", "healthcare"],
+      "keyBenefits": [
+        "Complete view of customer across all touchpoints",
+        "Improve customer segmentation and targeting",
+        "Enable personalized customer experiences",
+        "Increase customer lifetime value"
+      ],
+      "typicalChallenges": [
+        "Customer data scattered across systems",
+        "Inconsistent customer definitions and metrics",
+        "Inability to analyze customer journey holistically",
+        "Delayed customer insights impact engagement"
+      ],
+      "idealFor": [
+        "Customer-focused organizations",
+        "Marketing and sales teams",
+        "Companies with multiple customer touchpoints"
+      ],
+      "demoScenarios": [
+        "Show unified customer profile with multi-source data",
+        "Demonstrate customer segmentation analysis",
+        "Highlight customer journey visualization"
+      ]
+    },
+    {
+      "id": "uc-7",
+      "name": "Supply Chain Analytics",
+      "description": "Gain visibility across the supply chain to optimize inventory, logistics, and supplier relationships.",
+      "category": "operational",
+      "industries": ["manufacturing", "retail"],
+      "keyBenefits": [
+        "Optimize inventory levels and reduce waste",
+        "Improve supplier performance and relationships",
+        "Enhance demand forecasting accuracy",
+        "Reduce supply chain costs and risks"
+      ],
+      "typicalChallenges": [
+        "Limited visibility across supply chain",
+        "Disconnected supplier and logistics data",
+        "Reactive rather than predictive planning",
+        "Difficulty identifying bottlenecks and risks"
+      ],
+      "idealFor": [
+        "Manufacturing and distribution companies",
+        "Retail organizations with complex supply chains",
+        "Procurement and supply chain teams"
+      ],
+      "demoScenarios": [
+        "Show end-to-end supply chain visibility",
+        "Demonstrate inventory optimization analysis",
+        "Highlight supplier performance dashboards"
+      ]
+    },
+    {
+      "id": "uc-8",
+      "name": "Financial Analytics & Planning",
+      "description": "Enable CFOs and finance teams to analyze financial performance, create forecasts, and drive strategic planning.",
+      "category": "financial",
+      "industries": ["all"],
+      "keyBenefits": [
+        "Accelerate financial close and reporting cycles",
+        "Improve forecast accuracy and scenario planning",
+        "Enable real-time financial performance monitoring",
+        "Reduce time spent on manual data preparation"
+      ],
+      "typicalChallenges": [
+        "Manual, spreadsheet-based financial processes",
+        "Disconnected financial and operational data",
+        "Long financial close cycles",
+        "Limited ability to perform what-if analysis"
+      ],
+      "idealFor": [
+        "Finance and accounting teams",
+        "FP&A organizations",
+        "CFOs seeking operational efficiency"
+      ],
+      "demoScenarios": [
+        "Show integrated financial performance dashboard",
+        "Demonstrate budget vs. actuals analysis",
+        "Highlight drill-down from P&L to transactions"
+      ]
+    }
+  ],
+  "categories": [
+    { "id": "modernization", "name": "Modernization" },
+    { "id": "embedded", "name": "Embedded Analytics" },
+    { "id": "self-service", "name": "Self-Service" },
+    { "id": "operational", "name": "Operational" },
+    { "id": "customer-analytics", "name": "Customer Analytics" },
+    { "id": "financial", "name": "Financial Analytics" }
+  ]
+}

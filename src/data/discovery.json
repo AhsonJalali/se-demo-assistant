@@ -1,0 +1,199 @@
+{
+  "questions": [
+    {
+      "id": "disc-1",
+      "question": "What is your current analytics stack?",
+      "category": "technical",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization", "self-service-bi"],
+      "priority": "high",
+      "followUp": [
+        "What pain points are you experiencing with your current tools?",
+        "How long have you been using this stack?",
+        "What would you change if you could start over?"
+      ]
+    },
+    {
+      "id": "disc-2",
+      "question": "Who are the primary users of analytics in your organization?",
+      "category": "users",
+      "industries": ["all"],
+      "useCases": ["data-democratization", "self-service-bi"],
+      "priority": "high",
+      "followUp": [
+        "What is their technical skill level?",
+        "How much training have they received?",
+        "What percentage of users actively use analytics tools?"
+      ]
+    },
+    {
+      "id": "disc-3",
+      "question": "How long does it take to get answers to business questions today?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization", "operational-analytics"],
+      "priority": "high",
+      "followUp": [
+        "Who typically fulfills these requests?",
+        "What is the backlog like for your BI team?",
+        "How does this delay impact business decisions?"
+      ]
+    },
+    {
+      "id": "disc-4",
+      "question": "What data sources do you need to analyze?",
+      "category": "data",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization", "operational-analytics"],
+      "priority": "high",
+      "followUp": [
+        "Is your data in a cloud data warehouse?",
+        "How is data currently integrated?",
+        "What data governance policies are in place?"
+      ]
+    },
+    {
+      "id": "disc-5",
+      "question": "Are you looking to embed analytics into your product or application?",
+      "category": "business",
+      "industries": ["technology", "finance"],
+      "useCases": ["embedded-analytics"],
+      "priority": "high",
+      "followUp": [
+        "What user experience are you targeting?",
+        "How many end users will access embedded analytics?",
+        "What level of customization do you need?"
+      ]
+    },
+    {
+      "id": "disc-6",
+      "question": "What percentage of your organization is data-driven in decision making?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["data-democratization", "self-service-bi"],
+      "priority": "medium",
+      "followUp": [
+        "What barriers prevent wider adoption?",
+        "How do non-analysts currently access insights?",
+        "What is your vision for data culture?"
+      ]
+    },
+    {
+      "id": "disc-7",
+      "question": "How many people are on your BI/analytics team?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization", "self-service-bi"],
+      "priority": "medium",
+      "followUp": [
+        "What is the ratio of analysts to business users?",
+        "How much time is spent on report creation vs analysis?",
+        "Are they spending time on strategic or tactical work?"
+      ]
+    },
+    {
+      "id": "disc-8",
+      "question": "What are your key business metrics and KPIs?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["operational-analytics", "self-service-bi"],
+      "priority": "high",
+      "followUp": [
+        "How frequently are these monitored?",
+        "Who is responsible for tracking them?",
+        "How quickly do you need to respond to changes?"
+      ]
+    },
+    {
+      "id": "disc-9",
+      "question": "Do you have experience with search-driven analytics?",
+      "category": "technical",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization", "self-service-bi"],
+      "priority": "medium",
+      "followUp": [
+        "What was your experience like?",
+        "What did users think about the interface?",
+        "What made you move away from it or consider it?"
+      ]
+    },
+    {
+      "id": "disc-10",
+      "question": "What is your timeline for making a decision?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["all"],
+      "priority": "high",
+      "followUp": [
+        "What is driving this timeline?",
+        "Who else is involved in the decision?",
+        "What does the procurement process look like?"
+      ]
+    },
+    {
+      "id": "disc-11",
+      "question": "What security and compliance requirements do you have?",
+      "category": "technical",
+      "industries": ["finance", "healthcare"],
+      "useCases": ["all"],
+      "priority": "high",
+      "followUp": [
+        "Do you need SOC 2, HIPAA, or other certifications?",
+        "What data privacy regulations apply to you?",
+        "How do you handle row-level security today?"
+      ]
+    },
+    {
+      "id": "disc-12",
+      "question": "How do you currently handle ad-hoc analysis requests?",
+      "category": "users",
+      "industries": ["all"],
+      "useCases": ["self-service-bi", "data-democratization"],
+      "priority": "medium",
+      "followUp": [
+        "What tools do power users have access to?",
+        "How often do requests fall outside existing reports?",
+        "What happens when users need to explore data differently?"
+      ]
+    },
+    {
+      "id": "disc-13",
+      "question": "What is your data warehouse or lake platform?",
+      "category": "data",
+      "industries": ["all"],
+      "useCases": ["analytics-modernization"],
+      "priority": "high",
+      "followUp": [
+        "Are you on Snowflake, Databricks, BigQuery, Redshift, or other?",
+        "How is data modeled in your warehouse?",
+        "What is your data refresh frequency?"
+      ]
+    },
+    {
+      "id": "disc-14",
+      "question": "How do you measure analytics ROI today?",
+      "category": "business",
+      "industries": ["all"],
+      "useCases": ["all"],
+      "priority": "medium",
+      "followUp": [
+        "What business outcomes are you tracking?",
+        "How do you quantify analyst productivity?",
+        "What cost savings or revenue impact have you seen?"
+      ]
+    },
+    {
+      "id": "disc-15",
+      "question": "What mobile or on-the-go analytics requirements do you have?",
+      "category": "users",
+      "industries": ["retail", "manufacturing"],
+      "useCases": ["operational-analytics"],
+      "priority": "medium",
+      "followUp": [
+        "Who needs mobile access?",
+        "What use cases require real-time alerts?",
+        "How are field teams currently getting data?"
+      ]
+    }
+  ]
+}
