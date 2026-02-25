@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 
 const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
-  const { getUseCaseDocumentation, updateUseCaseDocumentation, categories } = useApp();
+  const {
+    getUseCaseDocumentation,
+    updateUseCaseDocumentation,
+    categories,
+    selectedCompetitors,
+    selectedIndustries,
+    selectedCategories
+  } = useApp();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const doc = getUseCaseDocumentation(useCaseId);
@@ -22,6 +29,60 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
     updateUseCaseDocumentation(useCaseId, updated);
   };
 
+  // Auto-populate Current Tools with selected competitors
+  useEffect(() => {
+    if (selectedCompetitors.length > 0) {
+      const competitorNames = selectedCompetitors.map(compId => {
+        const competitor = categories.competitors.find(c => c.id === compId);
+        return competitor?.name;
+      }).filter(Boolean);
+
+      const currentTools = context.currentTools || [];
+      const newTools = [...new Set([...currentTools, ...competitorNames])];
+
+      if (newTools.length > currentTools.length) {
+        handleFieldChange('currentTools', newTools);
+      }
+    }
+  }, [useCaseId, selectedCompetitors]);
+
+  // Auto-populate Industry from global filter
+  useEffect(() => {
+    if (selectedIndustries.length > 0) {
+      const industryNames = selectedIndustries
+        .filter(id => id !== 'all')
+        .map(indId => {
+          const industry = categories.industries.find(i => i.id === indId);
+          return industry?.name;
+        })
+        .filter(Boolean);
+
+      const currentIndustries = context.industry || [];
+      const newIndustries = [...new Set([...currentIndustries, ...industryNames])];
+
+      if (newIndustries.length > currentIndustries.length) {
+        handleFieldChange('industry', newIndustries);
+      }
+    }
+  }, [useCaseId, selectedIndustries]);
+
+  // Auto-populate Category from global filter (Discovery categories only)
+  useEffect(() => {
+    if (selectedCategories.length > 0) {
+      const categoryNames = selectedCategories.map(catId => {
+        const category = categories.discoveryCategories?.find(c => c.id === catId);
+        return category?.name;
+      }).filter(Boolean);
+
+      const currentCategories = context.category || [];
+      const newCategories = [...new Set([...currentCategories, ...categoryNames])];
+
+      if (newCategories.length > currentCategories.length) {
+        handleFieldChange('category', newCategories);
+      }
+    }
+  }, [useCaseId, selectedCategories]);
+
   const urgencyColors = {
     low: 'bg-[#a8b0c8]/20 text-[#a8b0c8] border-[#a8b0c8]/40',
     medium: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
@@ -34,13 +95,13 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
           <span>🏢</span>
           Customer Context
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,21 +116,16 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
           <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
             Industry
           </label>
-          <select
-            multiple
-            value={context.industry || []}
+          <input
+            type="text"
+            value={context.industry?.join(', ') || ''}
             onChange={(e) => {
-              const selected = Array.from(e.target.selectedOptions, option => option.value);
-              handleFieldChange('industry', selected);
+              const industries = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+              handleFieldChange('industry', industries);
             }}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
-            size={4}
-          >
-            {categories.industries.map(ind => (
-              <option key={ind.id} value={ind.id}>{ind.name}</option>
-            ))}
-          </select>
-          <p className="text-xs text-[#a8b0c8]/70 mt-1">Hold Cmd/Ctrl to select multiple</p>
+            placeholder="Auto-filled from global filter"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
+          />
         </div>
 
         {/* Company Size */}
@@ -80,13 +136,30 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
           <select
             value={context.companySize || ''}
             onChange={(e) => handleFieldChange('companySize', e.target.value)}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
           >
             <option value="">Select size...</option>
             <option value="smb">SMB (&lt; 500 employees)</option>
-            <option value="mid-market">Mid-Market (500-5000)</option>
-            <option value="enterprise">Enterprise (5000+)</option>
+            <option value="mid-market">Mid-Market (500-1000)</option>
+            <option value="enterprise">Enterprise (1000+)</option>
           </select>
+        </div>
+
+        {/* Category */}
+        <div className="col-span-2">
+          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+            Category
+          </label>
+          <input
+            type="text"
+            value={context.category?.join(', ') || ''}
+            onChange={(e) => {
+              const categories = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+              handleFieldChange('category', categories);
+            }}
+            placeholder="Auto-filled from global filter"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
+          />
         </div>
 
         {/* Current Tools */}
@@ -101,8 +174,8 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
               const tools = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
               handleFieldChange('currentTools', tools);
             }}
-            placeholder="e.g., Tableau, Excel, Power BI (comma-separated)"
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+            placeholder="Auto-filled from competitor filter, or add manually"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
           />
         </div>
 
@@ -119,7 +192,7 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
                 className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide border transition-all ${
                   context.urgencyLevel === level
                     ? urgencyColors[level]
-                    : 'bg-[#0a0e1a]/50 text-[#a8b0c8]/50 border-[#252d44] hover:border-[#d4af37]/30'
+                    : 'bg-[#08062B]/50 text-[#a8b0c8]/50 border-[#1B1B61] hover:border-[#00D2FF]/30'
                 }`}
               >
                 {level}

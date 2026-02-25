@@ -45,13 +45,13 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
           <span>📅</span>
           Timeline & Project Scope
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
             id="decisionTimeline"
             value={timeline.decisionTimeline || ''}
             onChange={(e) => handleFieldChange('decisionTimeline', e.target.value)}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
           >
             <option value="">Select timeline...</option>
             <option value="no-timeline">No timeline set</option>
@@ -99,7 +99,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
               id="budgetStatus"
               value={timeline.budgetStatus || ''}
               onChange={(e) => handleFieldChange('budgetStatus', e.target.value)}
-              className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
             >
               <option value="">Select status...</option>
               <option value="not-discussed">Not discussed</option>
@@ -118,7 +118,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
               id="currentPhase"
               value={timeline.currentPhase || ''}
               onChange={(e) => handleFieldChange('currentPhase', e.target.value)}
-              className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
             >
               <option value="">Select phase...</option>
               <option value="initial-discovery">Initial discovery</option>
@@ -141,7 +141,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
             type="date"
             value={timeline.expectedStartDate || ''}
             onChange={(e) => handleFieldChange('expectedStartDate', e.target.value)}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
           />
         </div>
 
@@ -156,7 +156,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
             onChange={(e) => handleFieldChange('keyMilestones', e.target.value)}
             placeholder="List key dates and milestones..."
             rows={4}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors resize-none"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors resize-none"
           />
         </div>
       </div>

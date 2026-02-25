@@ -51,12 +51,12 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
           Business Requirements
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
             onChange={(e) => handleFieldChange('primaryGoal', e.target.value)}
             placeholder="What is the main business goal?"
             rows={3}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors resize-none"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors resize-none"
           />
         </div>
 
@@ -92,7 +92,7 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
             onChange={(e) => handleFieldChange('successMetrics', e.target.value)}
             placeholder="How will success be measured? List specific KPIs..."
             rows={4}
-            className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors resize-none"
+            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors resize-none"
           />
         </div>
 
@@ -108,12 +108,12 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
               {(businessRequirements.dataSources || []).map((source) => (
                 <div
                   key={source}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#d4af37]/20 text-[#d4af37] rounded-lg text-sm border border-[#d4af37]/40"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-[#00D2FF]/20 text-[#00D2FF] rounded-lg text-sm border border-[#00D2FF]/40"
                 >
                   <span>{source}</span>
                   <button
                     onClick={() => removeDataSource(source)}
-                    className="flex items-center justify-center hover:text-[#d4af37]/80 transition-colors"
+                    className="flex items-center justify-center hover:text-[#00D2FF]/80 transition-colors"
                     aria-label={`Remove ${source}`}
                     type="button"
                   >
@@ -135,13 +135,13 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
               onChange={(e) => setNewDataSource(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Enter data source..."
-              className="flex-1 px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="flex-1 px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               aria-label="Add data source"
             />
             <button
               onClick={addDataSource}
               disabled={!newDataSource.trim()}
-              className="px-4 py-2 bg-[#d4af37] text-[#0a0e1a] rounded-lg text-sm font-medium hover:bg-[#d4af37]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-[#00D2FF] text-[#08062B] rounded-lg text-sm font-medium hover:bg-[#00D2FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               type="button"
             >
               Add
@@ -163,7 +163,7 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
               value={businessRequirements.userCount || ''}
               onChange={(e) => handleFieldChange('userCount', e.target.value)}
               placeholder="Number of users"
-              className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
             />
           </div>
 
@@ -176,7 +176,7 @@ const BusinessRequirementsCard = ({ useCaseId, collapsed = false }) => {
               id="deploymentModel"
               value={businessRequirements.deploymentModel || ''}
               onChange={(e) => handleFieldChange('deploymentModel', e.target.value)}
-              className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
             >
               <option value="">Not specified</option>
               <option value="cloud">Cloud</option>

@@ -67,12 +67,12 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
           Technical Requirements
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,7 +84,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
       <div className={`space-y-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
         {/* Overview Section Header */}
         <div>
-          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
             Overview
           </h4>
 
@@ -98,7 +98,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="integrationNeeds"
                 value={overview.integrationNeeds || ''}
                 onChange={(e) => handleFieldChange('overview', 'integrationNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="none">None</option>
@@ -117,7 +117,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="dataVolume"
                 value={overview.dataVolume || ''}
                 onChange={(e) => handleFieldChange('overview', 'dataVolume', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="small">Small (&lt;1GB)</option>
@@ -136,7 +136,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="performanceNeeds"
                 value={overview.performanceNeeds || ''}
                 onChange={(e) => handleFieldChange('overview', 'performanceNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="standard">Standard</option>
@@ -159,7 +159,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                         type="checkbox"
                         checked={(overview.securityRequirements || []).includes(option.id)}
                         onChange={() => handleSecurityRequirementChange(option.id)}
-                        className="w-4 h-4 bg-[#0a0e1a] border border-[#252d44] rounded text-[#d4af37] focus:ring-[#d4af37] focus:ring-offset-0 focus:ring-2 cursor-pointer"
+                        className="w-4 h-4 bg-[#08062B] border border-[#1B1B61] rounded text-[#00D2FF] focus:ring-[#00D2FF] focus:ring-offset-0 focus:ring-2 cursor-pointer"
                       />
                       <label
                         htmlFor={`security-${option.id}`}
@@ -177,7 +177,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* API Integration Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
             API Integration
           </h4>
 
@@ -191,7 +191,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="apiType"
                 value={apiIntegration.apiType || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'apiType', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="rest">REST API</option>
@@ -210,7 +210,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="authMethod"
                 value={apiIntegration.authMethod || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'authMethod', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="oauth2">OAuth 2.0</option>
@@ -232,7 +232,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('apiIntegration', 'requiredEndpoints', e.target.value)}
                 placeholder="List required API endpoints..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
               />
             </div>
 
@@ -247,7 +247,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 value={apiIntegration.rateLimits || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'rateLimits', e.target.value)}
                 placeholder="e.g., 1000 requests/hour"
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Data Model Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
             Data Model
           </h4>
 
@@ -269,7 +269,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="schemaComplexity"
                 value={dataModel.schemaComplexity || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'schemaComplexity', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="simple">Simple (1-5 tables)</option>
@@ -288,7 +288,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="dataRelationships"
                 value={dataModel.dataRelationships || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'dataRelationships', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="flat">Flat/No relationships</option>
@@ -309,7 +309,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('dataModel', 'keyEntities', e.target.value)}
                 placeholder="List key data entities and their relationships..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
               />
             </div>
 
@@ -322,7 +322,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="dataRefreshRate"
                 value={dataModel.dataRefreshRate || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'dataRefreshRate', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="real-time">Real-time</option>
@@ -338,7 +338,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Infrastructure Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
             Infrastructure
           </h4>
 
@@ -352,7 +352,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="hostingPreference"
                 value={infrastructure.hostingPreference || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'hostingPreference', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="cloud">Cloud (AWS/Azure/GCP)</option>
@@ -371,7 +371,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="scalabilityNeeds"
                 value={infrastructure.scalabilityNeeds || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'scalabilityNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not applicable</option>
                 <option value="low">Low (static users)</option>
@@ -390,7 +390,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="availabilityRequirements"
                 value={infrastructure.availabilityRequirements || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'availabilityRequirements', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="standard">Standard (99%)</option>
@@ -409,7 +409,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="disasterRecovery"
                 value={infrastructure.disasterRecovery || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'disasterRecovery', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not required</option>
                 <option value="basic-backup">Basic backup</option>
@@ -423,7 +423,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Compliance Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#d4af37] uppercase tracking-wider mb-3">
+          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
             Compliance
           </h4>
 
@@ -442,7 +442,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                         type="checkbox"
                         checked={(compliance.regulatoryRequirements || []).includes(option.id)}
                         onChange={() => handleRegulatoryRequirementChange(option.id)}
-                        className="w-4 h-4 bg-[#0a0e1a] border border-[#252d44] rounded text-[#d4af37] focus:ring-[#d4af37] focus:ring-offset-0 focus:ring-2 cursor-pointer"
+                        className="w-4 h-4 bg-[#08062B] border border-[#1B1B61] rounded text-[#00D2FF] focus:ring-[#00D2FF] focus:ring-offset-0 focus:ring-2 cursor-pointer"
                       />
                       <label
                         htmlFor={`regulatory-${option.id}`}
@@ -465,7 +465,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="dataResidency"
                 value={compliance.dataResidency || ''}
                 onChange={(e) => handleFieldChange('compliance', 'dataResidency', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not specified</option>
                 <option value="us-only">US only</option>
@@ -485,7 +485,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 id="auditRequirements"
                 value={compliance.auditRequirements || ''}
                 onChange={(e) => handleFieldChange('compliance', 'auditRequirements', e.target.value)}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
               >
                 <option value="">Not required</option>
                 <option value="basic-logging">Basic logging</option>
@@ -506,7 +506,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('compliance', 'complianceNotes', e.target.value)}
                 placeholder="Additional compliance requirements or notes..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#d4af37] transition-colors resize-y"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
               />
             </div>
           </div>

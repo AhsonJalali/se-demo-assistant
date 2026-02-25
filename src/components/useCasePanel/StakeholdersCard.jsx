@@ -75,13 +75,13 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
   return (
     <div className="glass-panel-strong rounded-xl p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#d4af37] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
           <span>👥</span>
           Stakeholders
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#d4af37] transition-colors"
+          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
                 value={stakeholders.primaryContact?.name || ''}
                 onChange={(e) => handlePrimaryContactChange('name', e.target.value)}
                 placeholder="Contact name"
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               />
             </div>
             <div>
@@ -118,7 +118,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
                 value={stakeholders.primaryContact?.role || ''}
                 onChange={(e) => handlePrimaryContactChange('role', e.target.value)}
                 placeholder="Job title"
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               />
             </div>
           </div>
@@ -135,7 +135,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
             {(stakeholders.decisionMakers || []).map((dm) => (
               <div
                 key={dm.id}
-                className="flex items-center gap-2 p-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg"
+                className="flex items-center gap-2 p-2 bg-[#08062B] border border-[#1B1B61] rounded-lg"
               >
                 <button
                   onClick={() => toggleChampion(dm.id)}
@@ -144,8 +144,8 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
                 >
                   <svg
                     className="w-5 h-5"
-                    fill={dm.isChampion ? '#d4af37' : 'none'}
-                    stroke={dm.isChampion ? '#d4af37' : '#a8b0c8'}
+                    fill={dm.isChampion ? '#00D2FF' : 'none'}
+                    stroke={dm.isChampion ? '#00D2FF' : '#a8b0c8'}
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -180,7 +180,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
               value={newDMName}
               onChange={(e) => setNewDMName(e.target.value)}
               placeholder="Name"
-              className="flex-1 px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="flex-1 px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               onKeyPress={(e) => e.key === 'Enter' && addDecisionMaker()}
             />
             <input
@@ -188,13 +188,13 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
               value={newDMRole}
               onChange={(e) => setNewDMRole(e.target.value)}
               placeholder="Role"
-              className="flex-1 px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="flex-1 px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               onKeyPress={(e) => e.key === 'Enter' && addDecisionMaker()}
             />
             <button
               onClick={addDecisionMaker}
               disabled={!newDMName.trim() || !newDMRole.trim()}
-              className="px-4 py-2 bg-[#d4af37] text-[#0a0e1a] rounded-lg text-sm font-medium hover:bg-[#d4af37]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-[#00D2FF] text-[#08062B] rounded-lg text-sm font-medium hover:bg-[#00D2FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Add
             </button>
@@ -216,7 +216,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
                 value={stakeholders.economicBuyer?.name || ''}
                 onChange={(e) => handleEconomicBuyerChange('name', e.target.value)}
                 placeholder="Buyer name"
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               />
             </div>
             <div>
@@ -228,7 +228,7 @@ const StakeholdersCard = ({ useCaseId, collapsed = false }) => {
                 value={stakeholders.economicBuyer?.role || ''}
                 onChange={(e) => handleEconomicBuyerChange('role', e.target.value)}
                 placeholder="Job title"
-                className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#252d44] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#d4af37] transition-colors"
+                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
               />
             </div>
           </div>
