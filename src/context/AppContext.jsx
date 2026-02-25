@@ -259,6 +259,47 @@ export const AppProvider = ({ children }) => {
   //   }
   // }, [currentSession, autoSaveSession]);
 
+  // Session import / export
+  const exportSessionAsJson = useCallback((session) => {
+    try {
+      const fileName = `${session.name.replace(/[^a-z0-9]/gi, '_')}_${new Date(session.updatedAt).toISOString().split('T')[0]}.json`;
+      const blob = new Blob([JSON.stringify(session, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`Exported "${session.name}"`, 'success');
+    } catch (error) {
+      showToast(`Export failed: ${error.message}`, 'error');
+    }
+  }, [showToast]);
+
+  const importSessionFromJson = useCallback((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const session = JSON.parse(e.target.result);
+        if (!session.name || !session.notes || !session.selectedItems) {
+          showToast('Invalid session file', 'error');
+          return;
+        }
+        // Assign a fresh ID so it never collides with existing sessions
+        const imported = { ...session, id: crypto.randomUUID(), updatedAt: new Date().toISOString() };
+        saveSessionHelper(imported);
+        setSessions(loadAllSessions());
+        setCurrentSessionId(imported.id);
+        setCurrentSession(imported);
+        saveCurrentSessionId(imported.id);
+        showToast(`Imported "${imported.name}"`, 'success');
+      } catch {
+        showToast('Could not read session file — make sure it\'s a valid JSON export', 'error');
+      }
+    };
+    reader.readAsText(file);
+  }, [showToast]);
+
   // Session management methods
   const createSession = useCallback((name, metadata) => {
     try {
@@ -507,6 +548,8 @@ export const AppProvider = ({ children }) => {
     updateSession,
     deleteSession,
     saveSession,
+    exportSessionAsJson,
+    importSessionFromJson,
 
     // Note management
     addItemNote,
