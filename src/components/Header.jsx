@@ -8,10 +8,7 @@ const Header = () => {
     setSearchQuery,
     showNotesPanel,
     setShowNotesPanel,
-    setShowExportModal,
     currentSession,
-    isAutoSaving,
-    saveSession
   } = useApp();
   const [isFocused, setIsFocused] = React.useState(false);
 
@@ -78,38 +75,6 @@ const Header = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3 min-w-fit">
-          {/* Save Button */}
-          <button
-            onClick={saveSession}
-            disabled={!currentSession}
-            className={`p-2.5 rounded-lg border border-[#1B1B61] bg-[#08062B]/80 backdrop-blur-sm transition-all duration-300 ${
-              currentSession
-                ? 'hover:border-[#00D2FF]/50 hover:bg-[#00D2FF]/10 cursor-pointer'
-                : 'opacity-30 cursor-not-allowed'
-            }`}
-            title="Save session (Ctrl/Cmd+S)"
-          >
-            <svg className="w-5 h-5 text-[#e8eaf0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-            </svg>
-          </button>
-
-          {/* Export Button */}
-          <button
-            onClick={() => setShowExportModal(true)}
-            disabled={!currentSession}
-            className={`p-2.5 rounded-lg border border-[#1B1B61] bg-[#08062B]/80 backdrop-blur-sm transition-all duration-300 ${
-              currentSession
-                ? 'hover:border-[#00D2FF]/50 hover:bg-[#00D2FF]/10 cursor-pointer'
-                : 'opacity-30 cursor-not-allowed'
-            }`}
-            title="Export session"
-          >
-            <svg className="w-5 h-5 text-[#e8eaf0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </button>
-
           {/* Notes Panel Toggle */}
           <button
             onClick={() => setShowNotesPanel(!showNotesPanel)}
