@@ -127,7 +127,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
     <>
       <div className="flex items-start justify-between gap-4 mb-4">
         <h3 className="text-xl font-bold text-[var(--color-text-primary)] flex-1 pr-8 leading-relaxed"
-            style={{ fontFamily: "'Crimson Pro', serif" }}>
+            style={{ fontFamily: "'Geist', serif" }}>
           {item.name}
         </h3>
       </div>
@@ -252,7 +252,7 @@ const DiscoveryCard = ({ item, isExpanded }) => {
     <>
       <div className="flex items-start justify-between gap-4 mb-4">
         <h3 className="text-lg font-semibold text-[var(--color-text-primary)] flex-1 pr-8 leading-relaxed"
-            style={{ fontFamily: "'Crimson Pro', serif" }}>
+            style={{ fontFamily: "'Geist', serif" }}>
           {item.question}
         </h3>
         <div className="flex flex-col gap-2 items-end">
@@ -303,7 +303,7 @@ const DifferentiatorCard = ({ item, isExpanded }) => {
     <>
       <div className="flex items-start justify-between gap-4 mb-4">
         <h3 className="text-lg font-semibold text-[var(--color-text-primary)] flex-1 pr-8 leading-relaxed"
-            style={{ fontFamily: "'Crimson Pro', serif" }}>
+            style={{ fontFamily: "'Geist', serif" }}>
           {item.feature}
         </h3>
         <CompetitorBadge competitor={item.competitorName} />
@@ -394,7 +394,7 @@ const ObjectionCard = ({ item, isExpanded }) => {
         </div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-[var(--color-text-primary)] leading-relaxed mb-3"
-              style={{ fontFamily: "'Crimson Pro', serif" }}>
+              style={{ fontFamily: "'Geist', serif" }}>
             "{item.objection}"
           </h3>
           <CategoryTag label={item.category} />
