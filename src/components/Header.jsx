@@ -57,15 +57,15 @@ const Header = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="w-full pl-12 pr-12 py-3 glass-panel text-[var(--color-text-primary)] rounded-xl
-                       focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-gold)]/50
+                       focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50
                        placeholder-[var(--color-text-tertiary)] transition-all duration-200
-                       hover:border-[var(--color-accent-gold)]/30"
+                       hover:border-[var(--color-accent-cyan)]/30"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)]
-                         hover:text-[var(--color-accent-gold)] transition-colors duration-200
+                         hover:text-[var(--color-accent-cyan)] transition-colors duration-200
                          w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/5"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -82,7 +82,7 @@ const Header = () => {
           <button
             onClick={saveSession}
             disabled={!currentSession}
-            className={`p-2.5 rounded-lg border border-[#252d44] bg-[#0a0e1a]/80 backdrop-blur-sm transition-all duration-300 ${
+            className={`p-2.5 rounded-lg border border-[#1B1B61] bg-[#08062B]/80 backdrop-blur-sm transition-all duration-300 ${
               currentSession
                 ? 'hover:border-[#00D2FF]/50 hover:bg-[#00D2FF]/10 cursor-pointer'
                 : 'opacity-30 cursor-not-allowed'
@@ -98,7 +98,7 @@ const Header = () => {
           <button
             onClick={() => setShowExportModal(true)}
             disabled={!currentSession}
-            className={`p-2.5 rounded-lg border border-[#252d44] bg-[#0a0e1a]/80 backdrop-blur-sm transition-all duration-300 ${
+            className={`p-2.5 rounded-lg border border-[#1B1B61] bg-[#08062B]/80 backdrop-blur-sm transition-all duration-300 ${
               currentSession
                 ? 'hover:border-[#00D2FF]/50 hover:bg-[#00D2FF]/10 cursor-pointer'
                 : 'opacity-30 cursor-not-allowed'
@@ -116,7 +116,7 @@ const Header = () => {
             className={`relative p-2.5 rounded-lg border transition-all duration-300 ${
               showNotesPanel
                 ? 'border-[#00D2FF] bg-[#00D2FF]/10'
-                : 'border-[#252d44] bg-[#0a0e1a]/80 hover:border-[#00D2FF]/50'
+                : 'border-[#1B1B61] bg-[#08062B]/80 hover:border-[#00D2FF]/50'
             } backdrop-blur-sm`}
             title="Toggle notes panel"
           >
@@ -130,8 +130,8 @@ const Header = () => {
 
 
           {/* Version Badge */}
-          <div className="px-3 py-1.5 rounded-full glass-panel border border-[var(--color-accent-gold)]/20">
-            <span className="text-xs font-semibold text-[var(--color-accent-gold)]">v1.1</span>
+          <div className="px-3 py-1.5 rounded-full glass-panel border border-[var(--color-accent-cyan)]/20">
+            <span className="text-xs font-semibold text-[var(--color-accent-cyan)]">v1.1</span>
           </div>
         </div>
       </div>

@@ -39,15 +39,15 @@ const Card = ({ item, type }) => {
       className={`group glass-panel rounded-2xl overflow-hidden cursor-pointer
                  transition-all duration-500 hover:scale-[1.01]
                  ${isExpanded
-                   ? 'ring-2 ring-[var(--color-accent-gold)]/50 shadow-2xl shadow-[var(--color-accent-gold)]/10'
+                   ? 'ring-2 ring-[var(--color-accent-cyan)]/50 shadow-2xl shadow-[var(--color-accent-cyan)]/10'
                    : isSelected
-                   ? 'ring-2 ring-[var(--color-accent-gold)]/30'
-                   : 'hover:border-[var(--color-accent-gold)]/30'
+                   ? 'ring-2 ring-[var(--color-accent-cyan)]/30'
+                   : 'hover:border-[var(--color-accent-cyan)]/30'
                  }`}
       onClick={toggleExpand}
     >
       {/* Hover glow effect */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-[var(--color-accent-gold)]/5 to-transparent opacity-0
+      <div className={`absolute inset-0 bg-gradient-to-br from-[var(--color-accent-cyan)]/5 to-transparent opacity-0
                       group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
                         isExpanded || isSelected ? 'opacity-100' : ''
                       }`} />
@@ -67,11 +67,11 @@ const Card = ({ item, type }) => {
             />
             <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
               isSelected
-                ? 'bg-[#d4af37] border-[#d4af37]'
-                : 'bg-[#0a0e1a]/80 border-[#252d44] hover:border-[#d4af37]/50'
+                ? 'bg-[#00D2FF] border-[#00D2FF]'
+                : 'bg-[#08062B]/80 border-[#1B1B61] hover:border-[#00D2FF]/50'
             }`}>
               {isSelected && (
-                <svg className="w-3 h-3 text-[#0a0e1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 text-[#08062B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               )}
@@ -90,7 +90,7 @@ const Card = ({ item, type }) => {
       {/* Gold corner accent if note exists */}
       {hasNote && hasNote.content && (
         <div className="absolute top-0 right-0 w-8 h-8">
-          <div className="absolute top-0 right-0 w-0 h-0 border-t-[32px] border-t-[#d4af37]/30 border-l-[32px] border-l-transparent" />
+          <div className="absolute top-0 right-0 w-0 h-0 border-t-[32px] border-t-[#00D2FF]/30 border-l-[32px] border-l-transparent" />
         </div>
       )}
 
@@ -103,7 +103,7 @@ const Card = ({ item, type }) => {
 
       {/* Expand indicator */}
       <div className={`absolute bottom-3 right-3 w-8 h-8 rounded-full glass-panel flex items-center justify-center
-                      transition-all duration-300 ${isExpanded ? 'bg-[var(--color-accent-gold)]/20' : ''}`}>
+                      transition-all duration-300 ${isExpanded ? 'bg-[var(--color-accent-cyan)]/20' : ''}`}>
         <svg
           width="14"
           height="14"
@@ -112,7 +112,7 @@ const Card = ({ item, type }) => {
           stroke="currentColor"
           strokeWidth="2"
           className={`transition-transform duration-300 ${
-            isExpanded ? 'rotate-180 text-[var(--color-accent-gold)]' : 'text-[var(--color-text-tertiary)]'
+            isExpanded ? 'rotate-180 text-[var(--color-accent-cyan)]' : 'text-[var(--color-text-tertiary)]'
           }`}
         >
           <polyline points="6 9 12 15 18 9"/>
@@ -159,7 +159,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-secondary)] pl-6 relative
                            before:content-[''] before:absolute before:left-0 before:top-[0.6em]
-                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-gold)]/50
+                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-cyan)]/50
                            hover:text-[var(--color-text-primary)] transition-colors duration-200"
                 >
                   {benefit}
@@ -196,7 +196,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
           </div>
 
           {/* Ideal For */}
-          <div className="glass-panel-strong rounded-xl p-4 border-l-2 border-[var(--color-accent-gold)]">
+          <div className="glass-panel-strong rounded-xl p-4 border-l-2 border-[var(--color-accent-cyan)]">
             <div className="flex items-center gap-2 mb-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -204,7 +204,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
-              <h4 className="text-sm font-bold text-[var(--color-accent-gold)] uppercase tracking-wider">Ideal For</h4>
+              <h4 className="text-sm font-bold text-[var(--color-accent-cyan)] uppercase tracking-wider">Ideal For</h4>
             </div>
             <ul className="space-y-2">
               {item.idealFor.map((target, idx) => (
@@ -212,7 +212,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-primary)] pl-6 relative
                            before:content-['✓'] before:absolute before:left-0 before:top-0
-                           before:text-[var(--color-accent-gold)] before:font-bold"
+                           before:text-[var(--color-accent-cyan)] before:font-bold"
                 >
                   {target}
                 </li>
@@ -221,12 +221,12 @@ const UseCaseCard = ({ item, isExpanded }) => {
           </div>
 
           {/* Demo Scenarios */}
-          <div className="glass-panel-strong rounded-xl p-4 bg-gradient-to-br from-[var(--color-accent-gold)]/10 to-transparent">
+          <div className="glass-panel-strong rounded-xl p-4 bg-gradient-to-br from-[var(--color-accent-cyan)]/10 to-transparent">
             <div className="flex items-center gap-2 mb-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="5 3 19 12 5 21 5 3"/>
               </svg>
-              <h4 className="text-sm font-bold text-[var(--color-accent-gold)] uppercase tracking-wider">Demo Scenarios</h4>
+              <h4 className="text-sm font-bold text-[var(--color-accent-cyan)] uppercase tracking-wider">Demo Scenarios</h4>
             </div>
             <ul className="space-y-2">
               {item.demoScenarios.map((scenario, idx) => (
@@ -234,7 +234,7 @@ const UseCaseCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-primary)] pl-6 relative
                            before:content-['▸'] before:absolute before:left-0 before:top-0
-                           before:text-[var(--color-accent-gold)]"
+                           before:text-[var(--color-accent-cyan)]"
                 >
                   {scenario}
                 </li>
@@ -283,7 +283,7 @@ const DiscoveryCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-secondary)] pl-6 relative
                            before:content-[''] before:absolute before:left-0 before:top-[0.6em]
-                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-gold)]/50
+                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-cyan)]/50
                            hover:text-[var(--color-text-primary)] transition-colors duration-200"
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
@@ -357,7 +357,7 @@ const DifferentiatorCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-secondary)] pl-6 relative
                            before:content-[''] before:absolute before:left-0 before:top-[0.6em]
-                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-gold)]/50
+                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-cyan)]/50
                            hover:text-[var(--color-text-primary)] transition-colors duration-200"
                 >
                   {point}
@@ -366,12 +366,12 @@ const DifferentiatorCard = ({ item, isExpanded }) => {
             </ul>
           </div>
 
-          <div className="glass-panel-strong rounded-xl p-4 bg-gradient-to-br from-[var(--color-accent-gold)]/10 to-transparent">
+          <div className="glass-panel-strong rounded-xl p-4 bg-gradient-to-br from-[var(--color-accent-cyan)]/10 to-transparent">
             <div className="flex items-center gap-2 mb-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
-              <h4 className="text-sm font-bold text-[var(--color-accent-gold)] uppercase tracking-wider">Demo Tip</h4>
+              <h4 className="text-sm font-bold text-[var(--color-accent-cyan)] uppercase tracking-wider">Demo Tip</h4>
             </div>
             <p className="text-sm text-[var(--color-text-primary)] leading-relaxed">{item.demo}</p>
           </div>
@@ -409,12 +409,12 @@ const ObjectionCard = ({ item, isExpanded }) => {
 
       {isExpanded && (
         <div className="mt-6 space-y-5 animate-fade-in-up pl-9">
-          <div className="glass-panel-strong rounded-xl p-4 border-l-2 border-[var(--color-accent-gold)]">
+          <div className="glass-panel-strong rounded-xl p-4 border-l-2 border-[var(--color-accent-cyan)]">
             <div className="flex items-center gap-2 mb-2">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
               </svg>
-              <h4 className="text-sm font-bold text-[var(--color-accent-gold)] uppercase tracking-wider">Response</h4>
+              <h4 className="text-sm font-bold text-[var(--color-accent-cyan)] uppercase tracking-wider">Response</h4>
             </div>
             <p className="text-sm text-[var(--color-text-primary)] leading-relaxed">{item.response}</p>
           </div>
@@ -435,7 +435,7 @@ const ObjectionCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-secondary)] pl-6 relative
                            before:content-[''] before:absolute before:left-0 before:top-[0.6em]
-                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-gold)]/50
+                           before:w-2 before:h-2 before:rounded-full before:bg-[var(--color-accent-cyan)]/50
                            hover:text-[var(--color-text-primary)] transition-colors duration-200"
                 >
                   {point}
@@ -461,7 +461,7 @@ const ObjectionCard = ({ item, isExpanded }) => {
                   key={idx}
                   className="text-sm text-[var(--color-text-secondary)] pl-6 relative
                            before:content-['?'] before:absolute before:left-0 before:top-0
-                           before:text-[var(--color-accent-gold)] before:font-bold
+                           before:text-[var(--color-accent-cyan)] before:font-bold
                            hover:text-[var(--color-text-primary)] transition-colors duration-200"
                 >
                   {question}
@@ -515,7 +515,7 @@ const PriorityBadge = ({ priority }) => {
 const CategoryTag = ({ label }) => {
   return (
     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-xs font-medium text-[var(--color-text-secondary)] border border-[var(--color-border)]">
-      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-gold)]/60" />
+      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-cyan)]/60" />
       {label}
     </span>
   );

@@ -44,15 +44,15 @@ const FilterPanel = () => {
             Filters
           </h2>
           {activeFilterCount > 0 && (
-            <div className="px-2 py-0.5 rounded-full bg-[var(--color-accent-gold)]/10 border border-[var(--color-accent-gold)]/30">
-              <span className="text-xs font-bold text-[var(--color-accent-gold)]">{activeFilterCount}</span>
+            <div className="px-2 py-0.5 rounded-full bg-[var(--color-accent-cyan)]/10 border border-[var(--color-accent-cyan)]/30">
+              <span className="text-xs font-bold text-[var(--color-accent-cyan)]">{activeFilterCount}</span>
             </div>
           )}
         </div>
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="text-xs font-medium text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-gold)]
+            className="text-xs font-medium text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-cyan)]
                      transition-all duration-200 flex items-center gap-1.5 group"
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -154,7 +154,7 @@ const FilterSection = ({ title, items, selected, onToggle, icon, isGlobal = fals
         className="w-full flex items-center justify-between mb-4 group"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[var(--color-text-tertiary)] group-hover:text-[var(--color-accent-gold)] transition-colors">
+          <span className="text-[var(--color-text-tertiary)] group-hover:text-[var(--color-accent-cyan)] transition-colors">
             {icon}
           </span>
           <h3 className="text-sm font-bold text-[var(--color-text-secondary)] uppercase tracking-wider">
@@ -166,7 +166,7 @@ const FilterSection = ({ title, items, selected, onToggle, icon, isGlobal = fals
             </span>
           )}
           {selected.length > 0 && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-[var(--color-accent-gold)]/10 text-[var(--color-accent-gold)] font-semibold">
+            <span className="text-xs px-1.5 py-0.5 rounded bg-[var(--color-accent-cyan)]/10 text-[var(--color-accent-cyan)] font-semibold">
               {selected.length}
             </span>
           )}
@@ -204,11 +204,11 @@ const FilterSection = ({ title, items, selected, onToggle, icon, isGlobal = fals
               />
               <div className={`w-4 h-4 rounded border-2 transition-all duration-200 flex items-center justify-center ${
                 selected.includes(item.id)
-                  ? 'bg-[var(--color-accent-gold)] border-[var(--color-accent-gold)]'
-                  : 'border-[var(--color-border)] bg-transparent group-hover:border-[var(--color-accent-gold)]/50'
+                  ? 'bg-[var(--color-accent-cyan)] border-[var(--color-accent-cyan)]'
+                  : 'border-[var(--color-border)] bg-transparent group-hover:border-[var(--color-accent-cyan)]/50'
               }`}>
                 {selected.includes(item.id) && (
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0a0e1a" strokeWidth="3">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#08062B" strokeWidth="3">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                 )}

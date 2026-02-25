@@ -80,7 +80,7 @@ const ThreeWhysContent = () => {
         {/* Header */}
         <div className="mb-8 animate-fade-in-up">
           <div className="flex items-center gap-3 mb-3">
-            <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-gold)] to-transparent rounded-full" />
+            <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-cyan)] to-transparent rounded-full" />
             <h2 className="text-3xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
               The 3 Why's
             </h2>
@@ -111,7 +111,7 @@ const ThreeWhysContent = () => {
             >
               <label htmlFor={question.id} className="block mb-4">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-accent-gold)] to-[#f4e5a1] text-[var(--color-bg-primary)] text-sm font-bold">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-accent-cyan)] to-[#0099CC] text-[var(--color-bg-primary)] text-sm font-bold">
                     {index + 1}
                   </span>
                   <h3 className="text-xl font-bold text-[var(--color-text-primary)]" style={{ fontFamily: "'Geist', serif" }}>
@@ -127,8 +127,8 @@ const ThreeWhysContent = () => {
                 rows={10}
                 className="w-full px-4 py-3 bg-[var(--color-bg-secondary)] border border-[var(--color-border-subtle)] rounded-xl
                          text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)]
-                         focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-gold)] focus:ring-opacity-30
-                         focus:border-[var(--color-accent-gold)] transition-all duration-200
+                         focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)] focus:ring-opacity-30
+                         focus:border-[var(--color-accent-cyan)] transition-all duration-200
                          resize-vertical min-h-[200px]"
                 style={{ fontFamily: "'Inter', sans-serif" }}
               />

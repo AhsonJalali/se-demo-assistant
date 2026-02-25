@@ -13,7 +13,7 @@ const COLORS = {
   goldMuted: '#0099CC',
   textPrimary: '#e8eaf0',
   textSecondary: '#a8b0c8',
-  border: '#252d44',
+  border: '#1B1B61',
   success: '#4ade80',
   danger: '#f87171'
 };

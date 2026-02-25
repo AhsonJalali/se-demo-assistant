@@ -47,9 +47,9 @@ const ContentDisplay = () => {
       <div className="max-w-[1600px] mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-gold)] to-transparent rounded-full" />
+            <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-cyan)] to-transparent rounded-full" />
             <p className="text-sm font-semibold text-[var(--color-text-secondary)]">
-              Showing <span className="text-[var(--color-accent-gold)] font-bold">{filteredContent.length}</span> result{filteredContent.length !== 1 ? 's' : ''}
+              Showing <span className="text-[var(--color-accent-cyan)] font-bold">{filteredContent.length}</span> result{filteredContent.length !== 1 ? 's' : ''}
             </p>
           </div>
         </div>
