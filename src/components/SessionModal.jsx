@@ -3,9 +3,9 @@ import { useApp } from '../context/AppContext';
 import { validateSessionName } from '../utils/sessionHelpers';
 
 const SessionModal = () => {
-  const { currentSession, createSession, updateSession, setShowSessionModal } = useApp();
+  const { currentSession, createSession, updateSession, setShowSessionModal, sessionModalMode } = useApp();
 
-  const isEditing = !!currentSession;
+  const isEditing = sessionModalMode === 'edit';
 
   const [formData, setFormData] = useState({
     name: '',

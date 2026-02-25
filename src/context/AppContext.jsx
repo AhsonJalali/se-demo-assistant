@@ -52,6 +52,7 @@ export const AppProvider = ({ children }) => {
   // UI state
   const [showNotesPanel, setShowNotesPanel] = useState(false);
   const [showSessionModal, setShowSessionModal] = useState(false);
+  const [sessionModalMode, setSessionModalMode] = useState('new'); // 'new' | 'edit'
   const [showExportModal, setShowExportModal] = useState(false);
   const [editingNoteItemId, setEditingNoteItemId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
@@ -570,6 +571,8 @@ export const AppProvider = ({ children }) => {
     setShowNotesPanel,
     showSessionModal,
     setShowSessionModal,
+    sessionModalMode,
+    setSessionModalMode,
     showExportModal,
     setShowExportModal,
     editingNoteItemId,

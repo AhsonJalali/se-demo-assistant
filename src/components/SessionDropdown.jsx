@@ -9,6 +9,7 @@ const SessionDropdown = () => {
     loadSession,
     deleteSession,
     setShowSessionModal,
+    setSessionModalMode,
     exportSessionAsJson,
     importSessionFromJson,
   } = useApp();
@@ -38,6 +39,7 @@ const SessionDropdown = () => {
 
   const handleNewSession = () => {
     setIsOpen(false);
+    setSessionModalMode('new');
     setShowSessionModal(true);
   };
 
