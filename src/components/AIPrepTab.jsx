@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { streamAiPrep } from '../utils/claudeApi';
 
@@ -105,8 +105,11 @@ const AIPrepTab = () => {
     setAiPrepError,
     aiPrepAbortRef,
     cancelAiPrep,
+    clearAiPrep,
     showToast,
   } = useApp();
+
+  const [generationKey, setGenerationKey] = React.useState(0);
 
   const apiKeyMissing = !import.meta.env.VITE_ANTHROPIC_API_KEY;
 
@@ -141,6 +144,7 @@ const AIPrepTab = () => {
   const handleGenerate = useCallback(async () => {
     if (!aiPrepInputs.companyName.trim()) return;
 
+    setGenerationKey(k => k + 1);
     setAiPrepError(null);
     setAiPrepResult('');
     setAiPrepIsGenerating(true);
@@ -171,7 +175,10 @@ const AIPrepTab = () => {
     }
   }, [aiPrepInputs, aiPrepAbortRef, setAiPrepResult, setAiPrepIsGenerating, setAiPrepError, showToast]);
 
-  const sections = aiPrepResult ? parseSections(aiPrepResult) : null;
+  const sections = useMemo(
+    () => (aiPrepResult ? parseSections(aiPrepResult) : null),
+    [aiPrepResult]
+  );
   const hasResult = sections && SECTION_KEYS.some(k => sections[k].trim());
   const isInterrupted = !aiPrepIsGenerating && aiPrepResult && !hasResult;
 
@@ -297,6 +304,14 @@ const AIPrepTab = () => {
                 Generate Prep Brief
               </button>
             )}
+            {aiPrepResult && !aiPrepIsGenerating && (
+              <button
+                onClick={clearAiPrep}
+                className="w-full py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] text-xs font-medium transition-all duration-200"
+              >
+                Clear results
+              </button>
+            )}
 
             {/* Error state */}
             {aiPrepError && aiPrepError !== 'no_api_key' && (
@@ -328,7 +343,7 @@ const AIPrepTab = () => {
               <>
                 {SECTION_KEYS.map(key => (
                   <SectionCard
-                    key={key}
+                    key={`${key}-${generationKey}`}
                     sectionKey={key}
                     content={sections[key]}
                     isStreaming={aiPrepIsGenerating}
