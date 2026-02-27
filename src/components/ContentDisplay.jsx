@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import Card from './Card';
 import ThreeWhysContent from './ThreeWhysContent';
+import AIPrepTab from './AIPrepTab';
 
 const ContentDisplay = () => {
   const { activeTab, filteredContent, searchQuery } = useApp();
@@ -9,6 +10,10 @@ const ContentDisplay = () => {
   // Show ThreeWhysContent for three-whys tab
   if (activeTab === 'three-whys') {
     return <ThreeWhysContent />;
+  }
+
+  if (activeTab === 'ai-prep') {
+    return <AIPrepTab />;
   }
 
   const getCardType = () => {

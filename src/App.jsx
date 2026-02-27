@@ -13,7 +13,7 @@ import Toast from './components/Toast';
 import UseCaseDocumentationPanel from './components/UseCaseDocumentationPanel';
 
 const AppContent = () => {
-  const { showSessionModal, showNotesPanel, showExportModal, showUseCasePanel } = useApp();
+  const { showSessionModal, showNotesPanel, showExportModal, showUseCasePanel, activeTab } = useApp();
 
   return (
     <>
@@ -21,7 +21,7 @@ const AppContent = () => {
         <Header />
         <TabNavigation />
         <div className="flex flex-1 overflow-hidden">
-          <FilterPanel />
+          {activeTab !== 'ai-prep' && <FilterPanel />}
           <ContentDisplay />
         </div>
       </Layout>
