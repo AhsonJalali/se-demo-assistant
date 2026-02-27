@@ -61,6 +61,17 @@ export const AppProvider = ({ children }) => {
   const [selectedUseCaseId, setSelectedUseCaseId] = useState(null);
   const [allCardsCollapsed, setAllCardsCollapsed] = useState(false);
 
+  // AI Prep state
+  const [aiPrepInputs, setAiPrepInputs] = useState({
+    companyName: '',
+    linkedinProfiles: [''],
+    additionalContext: '',
+  });
+  const [aiPrepResult, setAiPrepResult] = useState(null);    // full generated text
+  const [aiPrepIsGenerating, setAiPrepIsGenerating] = useState(false);
+  const [aiPrepError, setAiPrepError] = useState(null);
+  const aiPrepAbortRef = useRef(null);
+
   // Auto-save debounce ref
   const autoSaveTimeoutRef = useRef(null);
 
@@ -520,6 +531,20 @@ export const AppProvider = ({ children }) => {
     setEditingNoteItemId(null);
   }, []);
 
+  const cancelAiPrep = useCallback(() => {
+    if (aiPrepAbortRef.current) {
+      aiPrepAbortRef.current.abort();
+      aiPrepAbortRef.current = null;
+    }
+    setAiPrepIsGenerating(false);
+  }, []);
+
+  const clearAiPrep = useCallback(() => {
+    cancelAiPrep();
+    setAiPrepResult(null);
+    setAiPrepError(null);
+  }, [cancelAiPrep]);
+
   const value = {
     // Existing state and methods
     activeTab,
@@ -586,7 +611,20 @@ export const AppProvider = ({ children }) => {
     selectedUseCaseId,
     setSelectedUseCaseId,
     allCardsCollapsed,
-    setAllCardsCollapsed
+    setAllCardsCollapsed,
+
+    // AI Prep
+    aiPrepInputs,
+    setAiPrepInputs,
+    aiPrepResult,
+    setAiPrepResult,
+    aiPrepIsGenerating,
+    setAiPrepIsGenerating,
+    aiPrepError,
+    setAiPrepError,
+    aiPrepAbortRef,
+    cancelAiPrep,
+    clearAiPrep,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
