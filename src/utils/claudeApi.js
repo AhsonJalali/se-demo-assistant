@@ -3,7 +3,7 @@ import differentiatorsData from '../data/differentiators.json';
 import objectionsData from '../data/objections.json';
 import usecasesData from '../data/usecases.json';
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const ANTHROPIC_API_URL = '/anthropic/v1/messages';
 const MODEL = 'claude-sonnet-4-6';
 
 function buildSystemPrompt() {
@@ -79,7 +79,6 @@ export async function streamAiPrep(inputs, onChunk, signal) {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-allow-browser': 'true',
     },
     signal,
     body: JSON.stringify({

@@ -316,7 +316,8 @@ const AIPrepTab = () => {
             {/* Error state */}
             {aiPrepError && aiPrepError !== 'no_api_key' && (
               <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/10 text-xs text-red-400">
-                Generation failed. Check your API key and network connection, then try again.
+                <p className="font-semibold mb-1">Generation failed</p>
+                <p className="font-mono break-all">{aiPrepError}</p>
               </div>
             )}
           </div>
