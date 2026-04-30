@@ -2,6 +2,16 @@ import React, { useCallback, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { streamAiPrep } from '../utils/claudeApi';
 
+// ── LinkedIn URL detection ────────────────────────────────────────────────────
+// Matches an entry that is *only* a LinkedIn URL with no whitespace-separated extras.
+const LINKEDIN_URL_ONLY_RE = /^https?:\/\/(www\.)?linkedin\.com\/\S+$/i;
+
+function isLinkedInUrlOnly(entry) {
+  const trimmed = (entry || '').trim();
+  if (!trimmed) return false;
+  return LINKEDIN_URL_ONLY_RE.test(trimmed);
+}
+
 // ── Section parser ────────────────────────────────────────────────────────────
 const SECTION_KEYS = ['BRIEF', 'DISCOVERY', 'TALKING_POINTS', 'DEMO_FLOW'];
 const SECTION_LABELS = {
@@ -11,16 +21,32 @@ const SECTION_LABELS = {
   DEMO_FLOW: 'Suggested Demo Flow',
 };
 
+const HEADER_RE = /^\s*#{1,4}\s*\**\s*(BRIEF|DISCOVERY|TALKING[ _-]?POINTS|DEMO[ _-]?FLOW)\b/i;
+
+function normalizeHeaderKey(raw) {
+  const k = raw.toUpperCase().replace(/[ -]/g, '_');
+  if (k.startsWith('TALKING')) return 'TALKING_POINTS';
+  if (k.startsWith('DEMO')) return 'DEMO_FLOW';
+  return k;
+}
+
 function parseSections(text) {
   const sections = { BRIEF: '', DISCOVERY: '', TALKING_POINTS: '', DEMO_FLOW: '' };
   let current = null;
+  let sawAnyHeader = false;
   for (const line of text.split('\n')) {
-    const match = line.match(/^## (BRIEF|DISCOVERY|TALKING_POINTS|DEMO_FLOW)$/);
+    const match = line.match(HEADER_RE);
     if (match) {
-      current = match[1];
+      current = normalizeHeaderKey(match[1]);
+      sawAnyHeader = true;
     } else if (current) {
       sections[current] += line + '\n';
     }
+  }
+  // Fallback: model didn't emit recognizable headers — show full output under BRIEF
+  // so the user sees what was generated instead of an empty "interrupted" state.
+  if (!sawAnyHeader && text.trim()) {
+    sections.BRIEF = text;
   }
   return sections;
 }
@@ -222,13 +248,27 @@ const AIPrepTab = () => {
               />
             </div>
 
+            {/* Company website (optional) */}
+            <div>
+              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
+                Company Website
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. acmecorp.com"
+                value={aiPrepInputs.companyWebsite}
+                onChange={e => updateInput('companyWebsite', e.target.value)}
+                className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm"
+              />
+            </div>
+
             {/* LinkedIn profiles */}
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
                 LinkedIn Profile Text
               </label>
               <p className="text-xs text-[var(--color-text-tertiary)] mb-3">
-                Open a LinkedIn profile, select all text (⌘A), copy, and paste below.
+                Paste the full profile text for the best results, or just drop a LinkedIn URL — both work.
               </p>
               <div className="flex flex-col gap-3">
                 {aiPrepInputs.linkedinProfiles.map((profile, index) => (
@@ -245,12 +285,17 @@ const AIPrepTab = () => {
                       </div>
                     )}
                     <textarea
-                      placeholder="Paste LinkedIn profile text here..."
+                      placeholder="Paste profile text or a LinkedIn URL..."
                       value={profile}
                       onChange={e => updateProfile(index, e.target.value)}
                       rows={5}
                       className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm resize-none"
                     />
+                    {isLinkedInUrlOnly(profile) && (
+                      <p className="mt-1.5 text-xs text-amber-300/90">
+                        URL detected — paste the profile text (⌘A → Copy on the profile page) for richer results.
+                      </p>
+                    )}
                   </div>
                 ))}
                 {aiPrepInputs.linkedinProfiles.length < 5 && (

@@ -64,6 +64,7 @@ export const AppProvider = ({ children }) => {
   // AI Prep state
   const [aiPrepInputs, setAiPrepInputs] = useState({
     companyName: '',
+    companyWebsite: '',
     linkedinProfiles: [''],
     additionalContext: '',
   });
