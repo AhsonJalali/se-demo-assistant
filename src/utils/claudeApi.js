@@ -94,8 +94,18 @@ function buildUserPrompt({ companyName, companyWebsite, linkedinProfiles, additi
  * @param {AbortSignal} signal - optional AbortSignal for cancellation
  */
 export async function streamAiPrep(inputs, onChunk, signal) {
+  // In dev, Vite proxies /anthropic/v1/messages to api.anthropic.com and the
+  // browser must supply the key (VITE_ANTHROPIC_API_KEY). In prod, the same
+  // path is handled by api/anthropic/messages.js which adds the key from a
+  // server-only env var, so the browser sends no key at all.
   const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'anthropic-version': '2023-06-01',
+  };
+  if (apiKey) {
+    headers['x-api-key'] = apiKey;
+  } else if (import.meta.env.DEV) {
     throw new Error('NO_API_KEY');
   }
 
@@ -103,11 +113,7 @@ export async function streamAiPrep(inputs, onChunk, signal) {
 
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers,
     signal,
     body: JSON.stringify({
       model: MODEL,

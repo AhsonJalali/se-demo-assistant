@@ -137,7 +137,9 @@ const AIPrepTab = () => {
 
   const [generationKey, setGenerationKey] = React.useState(0);
 
-  const apiKeyMissing = !import.meta.env.VITE_ANTHROPIC_API_KEY;
+  // Only warn about a missing key in dev. In prod, the serverless proxy holds
+  // the key server-side and the browser never sees one.
+  const apiKeyMissing = import.meta.env.DEV && !import.meta.env.VITE_ANTHROPIC_API_KEY;
 
   const updateInput = (field, value) => {
     setAiPrepInputs(prev => ({ ...prev, [field]: value }));
