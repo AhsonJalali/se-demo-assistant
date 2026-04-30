@@ -11,6 +11,7 @@ import NotesPanel from './components/NotesPanel';
 import ExportModal from './components/ExportModal';
 import Toast from './components/Toast';
 import UseCaseDocumentationPanel from './components/UseCaseDocumentationPanel';
+import LoginGate from './components/LoginGate';
 
 const AppContent = () => {
   const { showSessionModal, showNotesPanel, showExportModal, showUseCasePanel, activeTab } = useApp();
@@ -45,9 +46,11 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <LoginGate>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </LoginGate>
   );
 }
 

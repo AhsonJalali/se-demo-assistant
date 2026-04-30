@@ -192,6 +192,10 @@ const AIPrepTab = () => {
       if (err.name === 'AbortError') return;
       if (err.message === 'NO_API_KEY') {
         setAiPrepError('no_api_key');
+      } else if (err.message === 'RATE_LIMITED') {
+        setAiPrepError('rate_limited');
+      } else if (err.message === 'AUTH_EXPIRED') {
+        setAiPrepError('auth_expired');
       } else {
         setAiPrepError(err.message);
         showToast('Generation failed — check console for details', 'error');
@@ -361,7 +365,23 @@ const AIPrepTab = () => {
             )}
 
             {/* Error state */}
-            {aiPrepError && aiPrepError !== 'no_api_key' && (
+            {aiPrepError === 'rate_limited' && (
+              <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-sm text-amber-300">
+                <p className="font-semibold mb-1">Rate limit reached</p>
+                <p className="text-amber-300/70 text-xs">
+                  You've hit the hourly limit for AI queries. Please wait a bit and try again.
+                </p>
+              </div>
+            )}
+            {aiPrepError === 'auth_expired' && (
+              <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300">
+                <p className="font-semibold mb-1">Session expired</p>
+                <p className="text-red-300/70 text-xs">
+                  Please refresh the page and sign in again.
+                </p>
+              </div>
+            )}
+            {aiPrepError && aiPrepError !== 'no_api_key' && aiPrepError !== 'rate_limited' && aiPrepError !== 'auth_expired' && (
               <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/10 text-xs text-red-400">
                 <p className="font-semibold mb-1">Generation failed</p>
                 <p className="font-mono break-all">{aiPrepError}</p>

@@ -1,3 +1,4 @@
+import { getToken, clearToken } from '../hooks/useAuth';
 import discoveryData from '../data/discovery.json';
 import differentiatorsData from '../data/differentiators.json';
 import objectionsData from '../data/objections.json';
@@ -104,9 +105,12 @@ export async function streamAiPrep(inputs, onChunk, signal) {
     'anthropic-version': '2023-06-01',
   };
   if (apiKey) {
-    headers['x-api-key'] = apiKey;
+    headers['x-api-key'] = apiKey; // dev: direct to Anthropic
   } else if (import.meta.env.DEV) {
     throw new Error('NO_API_KEY');
+  } else {
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
   const systemPromptText = buildSystemPrompt();
@@ -134,6 +138,13 @@ export async function streamAiPrep(inputs, onChunk, signal) {
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearToken();
+      throw new Error('AUTH_EXPIRED');
+    }
+    if (response.status === 429) {
+      throw new Error('RATE_LIMITED');
+    }
     const errorText = await response.text();
     throw new Error(`API_ERROR:${response.status}:${errorText}`);
   }
