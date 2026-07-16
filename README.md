@@ -1,83 +1,58 @@
 # ThoughtSpot SE Demo Assistant
 
-A React-based web application to assist Solution Engineers during demos with discovery questions, competitive differentiators, and objection handling.
+A demo-day copilot for Solutions Engineers: curated discovery questions, competitive differentiators, and objection handling in one searchable UI — plus per-prospect sessions with notes, a Claude-powered pre-call prep brief, and one-click PDF/DOCX leave-behinds.
+
+Built by a ThoughtSpot SE for personal use. **Not an official ThoughtSpot product** — all content is general sales-engineering knowledge, editable JSON you can adapt to any product.
+
+![Tab tour](docs/screenshots/tour.gif)
 
 ## Features
 
-- **Discovery Questions**: 15 categorized discovery questions with follow-ups for different industries and use cases
-- **Competitive Differentiators**: Detailed comparisons against Tableau, Power BI, Looker, and Qlik
-- **Objection Handling**: 12 common objections with responses, talking points, and discovery questions
-- **Smart Filtering**: Filter content by industry, use case, competitor, and category
-- **Global Search**: Search across all content in real-time
-- **Dark Mode UI**: Professional dark theme optimized for demos
-- **Expandable Cards**: Click any card to see detailed information
-- **Easy Content Updates**: All content stored in editable JSON files
+### Content library
+- **Discovery Questions** — 15 categorized questions with follow-ups, prioritized and filterable by industry and category
+- **Competitive Differentiators** — 21 feature-by-feature comparisons vs Tableau, Power BI, Looker, and Qlik, each with talking points and a demo tip
+- **Objection Handling** — 12 common objections with responses, talking points, and redirect questions
+- **Use Cases** — 8 use-case briefs (analytics modernization, embedded analytics, self-service BI, …)
+- **Global search + filters** across everything, live as you type
 
-## Getting Started
+### Session workflow
+- **Sessions** — create a session per prospect (deal stage, industry, use cases); everything you select and write is scoped to it and persisted in `localStorage`
+- **Notes** — attach notes to any card, plus general session notes
+- **3 Why's** — capture *Why Change / Why Now / Why ThoughtSpot* answers per session with guided prompts
+- **Use-case documentation** — structured write-ups of the prospect's use cases as you discover them
+- **Export** — generate a PDF or DOCX leave-behind from the session (jsPDF / docx)
 
-### Prerequisites
+### AI Prep
+Paste a company name, website, and LinkedIn profile text — get a streaming, personalized pre-call brief from Claude: prospect summary, targeted discovery questions, talking points, and a suggested demo flow, grounded in the app's own content library.
 
-- Node.js 18+ and npm
+![Discovery tab](docs/screenshots/discovery.png)
 
-### Installation
+## Quick start
 
 ```bash
-# Install dependencies
+git clone https://github.com/AhsonJalali/se-demo-assistant.git
+cd se-demo-assistant
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+npm run dev          # http://localhost:5173
 ```
 
-The application will be available at http://localhost:5173
+The content tabs work with zero configuration. For the **AI Prep** tab locally, copy `.env.example` to `.env` and set `VITE_ANTHROPIC_API_KEY` (the Vite dev proxy forwards requests to the Anthropic API; the key never leaves your machine in dev).
 
-## Project Structure
+## Deploying (Vercel)
 
-```
-se-demo-assistant/
-├── src/
-│   ├── components/          # React components
-│   │   ├── Layout.jsx
-│   │   ├── Header.jsx
-│   │   ├── TabNavigation.jsx
-│   │   ├── FilterPanel.jsx
-│   │   ├── ContentDisplay.jsx
-│   │   └── Card.jsx
-│   ├── context/
-│   │   └── AppContext.jsx   # Global state management
-│   ├── data/                # Content JSON files
-│   │   ├── discovery.json
-│   │   ├── differentiators.json
-│   │   ├── objections.json
-│   │   └── categories.json
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── package.json
-├── vite.config.js
-└── tailwind.config.js
-```
+The repo ships with serverless functions so the deployed app never exposes secrets to the browser:
 
-## Editing Content
+| Env var | Required | Purpose |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | for AI Prep | Read server-side by `api/anthropic/messages.js` (Edge function proxy). Do **not** set `VITE_ANTHROPIC_API_KEY` in prod — it would be bundled into public JS. |
+| `APP_USERNAME` / `APP_PASSWORD` / `APP_SECRET` | optional | Enables the login gate (`api/auth.js`, HMAC-signed tokens). Unset = app is open. |
+| `RATE_LIMIT_MAX` / `RATE_LIMIT_WINDOW_MINUTES` | optional | Best-effort per-IP rate limiting on AI queries (default 20/hour). |
 
-All content is stored in JSON files in `src/data/`. You can edit these files directly to:
+Push to Vercel, set the env vars, done. Any static host works if you don't need AI Prep or auth.
 
-- Add new discovery questions
-- Update competitive differentiators
-- Add new objections and responses
-- Modify categories and filters
+## Editing content
 
-After editing, the dev server will hot-reload automatically.
-
-### Adding a Discovery Question
-
-Edit `src/data/discovery.json`:
+All content lives in `src/data/*.json` — `discovery.json`, `differentiators.json`, `objections.json`, `usecases.json`, `threeWhys.json`, `categories.json`. Edit and the dev server hot-reloads. Example discovery question:
 
 ```json
 {
@@ -85,88 +60,25 @@ Edit `src/data/discovery.json`:
   "question": "Your question here?",
   "category": "technical",
   "industries": ["retail", "finance"],
-  "useCases": ["analytics-modernization"],
   "priority": "high",
-  "followUp": [
-    "Follow-up question 1?",
-    "Follow-up question 2?"
-  ]
+  "followUp": ["Follow-up question 1?"]
 }
 ```
 
-### Adding a Differentiator
+Swap the JSON and the branding and this works as a demo assistant for any product.
 
-Edit `src/data/differentiators.json` under the appropriate competitor:
+## Architecture
 
-```json
-{
-  "id": "diff-tableau-6",
-  "category": "Category Name",
-  "feature": "Feature Name",
-  "thoughtspot": "ThoughtSpot advantage",
-  "competitor": "Competitor limitation",
-  "talkingPoints": [
-    "Point 1",
-    "Point 2"
-  ],
-  "demo": "Demo tip"
-}
-```
+- **React 18 + Vite 6 + Tailwind**, global state via Context (`src/context/AppContext.jsx`)
+- **No backend** for the core app — sessions persist in `localStorage` (`src/utils/storageManager.js`)
+- **AI streaming** with native `fetch` + `ReadableStream`, no SDK; output parsed into sections by markers
+- **Vercel Edge functions** (`api/`) for the Anthropic proxy, auth, and rate limiting
+- Design docs for each feature live in [`docs/plans/`](docs/plans/)
 
-### Adding an Objection
+## Roadmap
 
-Edit `src/data/objections.json`:
+See [ROADMAP.md](ROADMAP.md) — highlights: an objection-handling copilot, post-demo recap generation from session notes, more competitor packs, session sharing, and a test suite.
 
-```json
-{
-  "id": "obj-13",
-  "objection": "The objection statement",
-  "category": "pricing",
-  "response": "Your response",
-  "talkingPoints": [
-    "Point 1",
-    "Point 2"
-  ],
-  "questions": [
-    "Discovery question 1?",
-    "Discovery question 2?"
-  ]
-}
-```
+## Disclaimer
 
-## Usage Tips
-
-1. **Start with Discovery**: Use the Discovery tab to prepare questions before the demo
-2. **Filter by Industry/Use Case**: Narrow down relevant questions based on the prospect
-3. **Use Search**: Quickly find specific topics or keywords
-4. **Click to Expand**: Click any card to see full details and talking points
-5. **Prep Differentiators**: Before competitor discussions, review relevant differentiators
-6. **Handle Objections**: Keep the Objections tab handy for common pushbacks
-
-## Technology Stack
-
-- **React 18** - UI framework
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Styling with dark mode
-- **React Context API** - State management
-
-## Browser Support
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-
-## Deployment
-
-The built application is static files that can be deployed to:
-- Netlify
-- Vercel
-- GitHub Pages
-- AWS S3 + CloudFront
-- Any static hosting service
-
-Simply run `npm run build` and deploy the `dist/` folder.
-
-## License
-
-Internal use only - ThoughtSpot SE Team
+ThoughtSpot is a trademark of ThoughtSpot, Inc. This is a personal project and is not affiliated with or endorsed by ThoughtSpot. No license granted yet — open an issue if you'd like to use this.
