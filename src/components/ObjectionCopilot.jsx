@@ -59,6 +59,8 @@ function errorMessage(err) {
       return 'Your session expired. Refresh the page and sign in again.';
     case 'RATE_LIMITED':
       return 'Rate limit reached — give it a minute and try again.';
+    case 'SERVER_API_KEY_INVALID':
+      return "The server's Anthropic API key was rejected — an admin needs to update ANTHROPIC_API_KEY in Vercel.";
     default:
       return 'Something went wrong generating a response. Try again.';
   }
