@@ -196,6 +196,8 @@ const AIPrepTab = () => {
         setAiPrepError('rate_limited');
       } else if (err.message === 'AUTH_EXPIRED') {
         setAiPrepError('auth_expired');
+      } else if (err.message === 'SERVER_API_KEY_INVALID') {
+        setAiPrepError("The server's Anthropic API key was rejected — an admin needs to update ANTHROPIC_API_KEY in Vercel.");
       } else {
         setAiPrepError(err.message);
         showToast('Generation failed — check console for details', 'error');

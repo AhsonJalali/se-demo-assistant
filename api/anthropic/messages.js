@@ -93,6 +93,18 @@ export default async function handler(req) {
     body,
   });
 
+  // Never forward Anthropic's 401/403 as-is: the client treats 401 from this
+  // proxy as "app session expired" and logs the user out, but an upstream
+  // auth failure means the SERVER's API key is bad — a config problem, not
+  // the user's session.
+  if (upstream.status === 401 || upstream.status === 403) {
+    console.error(`[proxy] Anthropic rejected the server API key (HTTP ${upstream.status}) — check ANTHROPIC_API_KEY in Vercel`);
+    return new Response(JSON.stringify({ error: 'SERVER_API_KEY_INVALID' }), {
+      status: 502,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+
   return new Response(upstream.body, {
     status: upstream.status,
     headers: {

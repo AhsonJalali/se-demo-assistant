@@ -130,6 +130,9 @@ export async function streamClaude(body, onChunk, signal) {
       throw new Error('RATE_LIMITED');
     }
     const errorText = await response.text();
+    if (response.status === 502 && errorText.includes('SERVER_API_KEY_INVALID')) {
+      throw new Error('SERVER_API_KEY_INVALID');
+    }
     throw new Error(`API_ERROR:${response.status}:${errorText}`);
   }
 
