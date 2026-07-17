@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import Card from './Card';
 import ThreeWhysContent from './ThreeWhysContent';
 import AIPrepTab from './AIPrepTab';
+import ObjectionCopilot from './ObjectionCopilot';
 
 const ContentDisplay = () => {
   const { activeTab, filteredContent, searchQuery } = useApp();
@@ -24,9 +25,14 @@ const ContentDisplay = () => {
     return 'discovery';
   };
 
+  // The copilot stays visible on the objections tab even when filters empty
+  // the card list — mid-call is exactly when you can't afford to lose it.
+  const copilot = activeTab === 'objections' ? <ObjectionCopilot /> : null;
+
   if (filteredContent.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-[1600px] mx-auto">{copilot}</div>
         <div className="text-center animate-fade-in-up">
           <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl glass-panel">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -50,6 +56,7 @@ const ContentDisplay = () => {
   return (
     <div className="flex-1 overflow-y-auto p-8">
       <div className="max-w-[1600px] mx-auto">
+        {copilot}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-8 w-1 bg-gradient-to-b from-[var(--color-accent-cyan)] to-transparent rounded-full" />

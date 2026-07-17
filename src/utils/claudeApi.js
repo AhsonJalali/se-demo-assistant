@@ -5,7 +5,7 @@ import objectionsData from '../data/objections.json';
 import usecasesData from '../data/usecases.json';
 
 const ANTHROPIC_API_URL = '/anthropic/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
+export const MODEL = 'claude-sonnet-5';
 
 function buildSystemPrompt() {
   const discovery = JSON.stringify(discoveryData.questions, null, 2);
@@ -88,13 +88,14 @@ function buildUserPrompt({ companyName, companyWebsite, linkedinProfiles, additi
 }
 
 /**
- * Stream a Claude response for the given prospect inputs.
+ * Stream any Claude Messages API request through the app's proxy path.
+ * Shared by AI Prep and the Objection Copilot.
  *
- * @param {Object} inputs - { companyName, companyWebsite, linkedinProfiles, additionalContext }
+ * @param {Object} body - Messages API request body (model, system, messages, ...)
  * @param {Function} onChunk - called with each text chunk as it arrives
  * @param {AbortSignal} signal - optional AbortSignal for cancellation
  */
-export async function streamAiPrep(inputs, onChunk, signal) {
+export async function streamClaude(body, onChunk, signal) {
   // In dev, Vite proxies /anthropic/v1/messages to api.anthropic.com and the
   // browser must supply the key (VITE_ANTHROPIC_API_KEY). In prod, the same
   // path is handled by api/anthropic/messages.js which adds the key from a
@@ -113,28 +114,11 @@ export async function streamAiPrep(inputs, onChunk, signal) {
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const systemPromptText = buildSystemPrompt();
-
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
     headers,
     signal,
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 8000,
-      stream: true,
-      system: [
-        {
-          type: 'text',
-          text: systemPromptText,
-          cache_control: { type: 'ephemeral' },
-        },
-      ],
-      tools: [
-        { type: 'web_search_20250305', name: 'web_search', max_uses: 5 },
-      ],
-      messages: [{ role: 'user', content: buildUserPrompt(inputs) }],
-    }),
+    body: JSON.stringify({ ...body, stream: true }),
   });
 
   if (!response.ok) {
@@ -184,4 +168,33 @@ export async function streamAiPrep(inputs, onChunk, signal) {
       }
     }
   }
+}
+
+/**
+ * Stream a Claude response for the given prospect inputs.
+ *
+ * @param {Object} inputs - { companyName, companyWebsite, linkedinProfiles, additionalContext }
+ * @param {Function} onChunk - called with each text chunk as it arrives
+ * @param {AbortSignal} signal - optional AbortSignal for cancellation
+ */
+export async function streamAiPrep(inputs, onChunk, signal) {
+  return streamClaude(
+    {
+      model: MODEL,
+      max_tokens: 8000,
+      system: [
+        {
+          type: 'text',
+          text: buildSystemPrompt(),
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
+      tools: [
+        { type: 'web_search_20250305', name: 'web_search', max_uses: 5 },
+      ],
+      messages: [{ role: 'user', content: buildUserPrompt(inputs) }],
+    },
+    onChunk,
+    signal
+  );
 }
