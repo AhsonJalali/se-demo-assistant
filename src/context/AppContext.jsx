@@ -49,6 +49,9 @@ export const AppProvider = ({ children }) => {
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [currentSession, setCurrentSession] = useState(null);
 
+  // Objection-copilot-matched library item ids, highlighted in the card grid.
+  const [highlightedItemIds, setHighlightedItemIds] = useState([]);
+
   // UI state
   const [showNotesPanel, setShowNotesPanel] = useState(false);
   const [showSessionModal, setShowSessionModal] = useState(false);
@@ -164,6 +167,8 @@ export const AppProvider = ({ children }) => {
     setSelectedUseCases([]);
     setSearchQuery('');
     setExpandedCard(null);
+    // Copilot highlights are only meaningful on the objections tab.
+    if (activeTab !== 'objections') setHighlightedItemIds([]);
   }, [activeTab]);
 
   // Initialize sessions and migrate data on mount
@@ -547,6 +552,9 @@ export const AppProvider = ({ children }) => {
   }, [cancelAiPrep]);
 
   const value = {
+    // Objection copilot ↔ card grid
+    highlightedItemIds,
+    setHighlightedItemIds,
     // Existing state and methods
     activeTab,
     setActiveTab,

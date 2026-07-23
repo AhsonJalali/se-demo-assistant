@@ -11,11 +11,14 @@ const Card = ({ item, type }) => {
     isItemSelected,
     getItemNote,
     setShowUseCasePanel,
-    setSelectedUseCaseId
+    setSelectedUseCaseId,
+    highlightedItemIds
   } = useApp();
   const isExpanded = expandedCard === item.id;
   const isSelected = currentSession ? isItemSelected(item.id) : false;
   const hasNote = currentSession ? getItemNote(item.id) : null;
+  // Objection copilot matched this card to the prospect's objection.
+  const isMatched = highlightedItemIds?.includes(item.id);
 
   const toggleExpand = () => {
     // For use cases, open documentation panel instead of expanding
@@ -38,7 +41,9 @@ const Card = ({ item, type }) => {
     <div
       className={`group glass-panel rounded-2xl overflow-hidden cursor-pointer
                  transition-all duration-500 hover:scale-[1.01]
-                 ${isExpanded
+                 ${isMatched
+                   ? 'ring-2 ring-amber-400/70 shadow-2xl shadow-amber-400/10'
+                   : isExpanded
                    ? 'ring-2 ring-[var(--color-accent-cyan)]/50 shadow-2xl shadow-[var(--color-accent-cyan)]/10'
                    : isSelected
                    ? 'ring-2 ring-[var(--color-accent-cyan)]/30'
@@ -84,6 +89,16 @@ const Card = ({ item, type }) => {
       {currentSession && (
         <div className="absolute top-3 right-3 z-10">
           <NoteButton itemId={item.id} />
+        </div>
+      )}
+
+      {/* Copilot match chip - bottom-left */}
+      {isMatched && (
+        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-400/15 border border-amber-400/40">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-300">Copilot match</span>
         </div>
       )}
 
