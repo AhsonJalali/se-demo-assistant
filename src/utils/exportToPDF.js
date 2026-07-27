@@ -332,8 +332,8 @@ export const generatePDF = async (session, allContent, appData) => {
         if (itemNote && itemNote.content) {
           checkPageBreak(20);
 
-          doc.setFillColor(COLORS.gold + '33'); // Gold with transparency
-          doc.roundedRect(margin + 3, yPos, contentWidth - 6, 5, 1, 1, 'F'); // Will adjust
+          doc.setFillColor(COLORS.border); // 8-digit hex with alpha isn't a valid PDF fill color
+          doc.roundedRect(margin + 3, yPos, contentWidth - 6, 5, 1, 1, 'F');
 
           yPos += 4;
 
@@ -358,13 +358,12 @@ export const generatePDF = async (session, allContent, appData) => {
           yPos += 3;
         }
 
-        // Update item box height
+        // Outline the full item now that its height is known (stroke only —
+        // a filled redraw here would paint over the content just written)
         const itemHeight = yPos - itemStartY;
-        doc.setFillColor(COLORS.darkSecondary);
-        doc.roundedRect(margin, itemStartY, contentWidth, itemHeight, 2, 2, 'F');
-
-        // Redraw content on top
-        // (In a real implementation, we'd need to buffer the content and draw it after the box)
+        doc.setDrawColor(COLORS.border);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(margin, itemStartY, contentWidth, itemHeight, 2, 2, 'S');
 
         yPos += 8;
       });
