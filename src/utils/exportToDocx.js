@@ -58,7 +58,7 @@ export const generateDocx = async (session, allContent) => {
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: 'Demo Date', bold: true })],
+            children: [new Paragraph({ children: [new TextRun({ text: 'Demo Date', bold: true })] })],
             width: { size: 30, type: WidthType.PERCENTAGE }
           }),
           new TableCell({
@@ -69,7 +69,7 @@ export const generateDocx = async (session, allContent) => {
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: 'Deal Stage', bold: true })]
+            children: [new Paragraph({ children: [new TextRun({ text: 'Deal Stage', bold: true })] })]
           }),
           new TableCell({
             children: [new Paragraph(session.metadata.dealStage)]
@@ -79,7 +79,7 @@ export const generateDocx = async (session, allContent) => {
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: 'Industries', bold: true })]
+            children: [new Paragraph({ children: [new TextRun({ text: 'Industries', bold: true })] })]
           }),
           new TableCell({
             children: [new Paragraph(session.metadata.industries.length > 0 ? session.metadata.industries.join(', ') : 'None')]
@@ -89,7 +89,7 @@ export const generateDocx = async (session, allContent) => {
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: 'Use Cases', bold: true })]
+            children: [new Paragraph({ children: [new TextRun({ text: 'Use Cases', bold: true })] })]
           }),
           new TableCell({
             children: [new Paragraph(session.metadata.useCases.length > 0 ? session.metadata.useCases.join(', ') : 'None')]
@@ -222,8 +222,7 @@ export const generateDocx = async (session, allContent) => {
 
         sections.push(
           new Paragraph({
-            text: title,
-            bold: true,
+            children: [new TextRun({ text: title, bold: true })],
             spacing: { after: 100 }
           })
         );
@@ -242,9 +241,7 @@ export const generateDocx = async (session, allContent) => {
 
         sections.push(
           new Paragraph({
-            text: metadata.join(' | '),
-            italics: true,
-            color: '6b7494',
+            children: [new TextRun({ text: metadata.join(' | '), italics: true, color: '6b7494' })],
             spacing: { after: 150 }
           })
         );
@@ -253,8 +250,7 @@ export const generateDocx = async (session, allContent) => {
         if (section.type === 'discovery' && item.followUp && item.followUp.length > 0) {
           sections.push(
             new Paragraph({
-              text: 'Follow-up Questions:',
-              bold: true,
+              children: [new TextRun({ text: 'Follow-up Questions:', bold: true })],
               spacing: { after: 100 }
             })
           );
@@ -283,9 +279,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.keyBenefits && item.keyBenefits.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Key Benefits:',
-                bold: true,
-                color: '4ade80',
+                children: [new TextRun({ text: 'Key Benefits:', bold: true, color: '4ade80' })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -303,8 +297,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.typicalChallenges && item.typicalChallenges.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Typical Challenges:',
-                bold: true,
+                children: [new TextRun({ text: 'Typical Challenges:', bold: true })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -322,9 +315,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.idealFor && item.idealFor.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Ideal For:',
-                bold: true,
-                color: '00D2FF',
+                children: [new TextRun({ text: 'Ideal For:', bold: true, color: '00D2FF' })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -342,9 +333,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.demoScenarios && item.demoScenarios.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Demo Scenarios:',
-                bold: true,
-                color: '00D2FF',
+                children: [new TextRun({ text: 'Demo Scenarios:', bold: true, color: '00D2FF' })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -364,9 +353,7 @@ export const generateDocx = async (session, allContent) => {
         if (section.type === 'differentiator') {
           sections.push(
             new Paragraph({
-              text: 'ThoughtSpot:',
-              bold: true,
-              color: '4ade80',
+              children: [new TextRun({ text: 'ThoughtSpot:', bold: true, color: '4ade80' })],
               spacing: { before: 100, after: 50 }
             })
           );
@@ -379,9 +366,7 @@ export const generateDocx = async (session, allContent) => {
 
           sections.push(
             new Paragraph({
-              text: `${item.competitorName}:`,
-              bold: true,
-              color: 'f87171',
+              children: [new TextRun({ text: `${item.competitorName}:`, bold: true, color: 'f87171' })],
               spacing: { after: 50 }
             })
           );
@@ -395,8 +380,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.talkingPoints && item.talkingPoints.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Talking Points:',
-                bold: true,
+                children: [new TextRun({ text: 'Talking Points:', bold: true })],
                 spacing: { after: 50 }
               })
             );
@@ -414,9 +398,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.demo) {
             sections.push(
               new Paragraph({
-                text: 'Demo Tip:',
-                bold: true,
-                color: '00D2FF',
+                children: [new TextRun({ text: 'Demo Tip:', bold: true, color: '00D2FF' })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -433,9 +415,7 @@ export const generateDocx = async (session, allContent) => {
         if (section.type === 'objection') {
           sections.push(
             new Paragraph({
-              text: 'Response:',
-              bold: true,
-              color: '00D2FF',
+              children: [new TextRun({ text: 'Response:', bold: true, color: '00D2FF' })],
               spacing: { before: 100, after: 50 }
             })
           );
@@ -449,8 +429,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.talkingPoints && item.talkingPoints.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Talking Points:',
-                bold: true,
+                children: [new TextRun({ text: 'Talking Points:', bold: true })],
                 spacing: { after: 50 }
               })
             );
@@ -468,8 +447,7 @@ export const generateDocx = async (session, allContent) => {
           if (item.questions && item.questions.length > 0) {
             sections.push(
               new Paragraph({
-                text: 'Discovery Questions:',
-                bold: true,
+                children: [new TextRun({ text: 'Discovery Questions:', bold: true })],
                 spacing: { before: 100, after: 50 }
               })
             );
@@ -560,9 +538,7 @@ export const generateDocx = async (session, allContent) => {
 
   sections.push(
     new Paragraph({
-      text: `Generated by ThoughtSpot SE Demo Assistant on ${new Date().toLocaleString()}`,
-      italics: true,
-      color: '6b7494',
+      children: [new TextRun({ text: `Generated by ThoughtSpot SE Demo Assistant on ${new Date().toLocaleString()}`, italics: true, color: '6b7494' })],
       alignment: AlignmentType.CENTER
     })
   );
