@@ -2,197 +2,182 @@
   "questions": [
     {
       "id": "disc-1",
-      "question": "What is your current analytics stack?",
-      "category": "technical",
+      "question": "Walk me through how this process works today, end to end.",
+      "category": "current-state",
       "industries": ["all"],
-      "useCases": ["analytics-modernization", "self-service-bi"],
       "priority": "high",
       "followUp": [
-        "What pain points are you experiencing with your current tools?",
-        "How long have you been using this stack?",
-        "What would you change if you could start over?"
+        "Where does it slow down or break most often?",
+        "Which steps are still manual or live in spreadsheets?",
+        "Who owns each step?"
       ]
     },
     {
       "id": "disc-2",
-      "question": "Who are the primary users of analytics in your organization?",
-      "category": "users",
+      "question": "What tools and systems are involved today?",
+      "category": "current-state",
       "industries": ["all"],
-      "useCases": ["data-democratization", "self-service-bi"],
       "priority": "high",
       "followUp": [
-        "What is their technical skill level?",
-        "How much training have they received?",
-        "What percentage of users actively use analytics tools?"
+        "How long have you had them, and when are the renewals?",
+        "What do you like about them and want to keep?",
+        "What would you change if you could start over?"
       ]
     },
     {
       "id": "disc-3",
-      "question": "How long does it take to get answers to business questions today?",
-      "category": "business",
+      "question": "What prompted you to look at this now?",
+      "category": "pain",
       "industries": ["all"],
-      "useCases": ["analytics-modernization", "operational-analytics"],
       "priority": "high",
       "followUp": [
-        "Who typically fulfills these requests?",
-        "What is the backlog like for your BI team?",
-        "How does this delay impact business decisions?"
+        "Was there a specific event or incident?",
+        "What happens if nothing changes in the next 12 months?",
+        "Who first raised it internally?"
       ]
     },
     {
       "id": "disc-4",
-      "question": "What data sources do you need to analyze?",
-      "category": "data",
+      "question": "How does this problem show up in the numbers?",
+      "category": "pain",
       "industries": ["all"],
-      "useCases": ["analytics-modernization", "operational-analytics"],
       "priority": "high",
       "followUp": [
-        "Is your data in a cloud data warehouse?",
-        "How is data currently integrated?",
-        "What data governance policies are in place?"
+        "Can you put a rough cost on it — hours, revenue, risk?",
+        "Which metric would your leadership watch to judge success?",
+        "What's the target you've been given?"
       ]
     },
     {
       "id": "disc-5",
-      "question": "Are you looking to embed analytics into your product or application?",
-      "category": "business",
-      "industries": ["technology", "finance"],
-      "useCases": ["embedded-analytics"],
+      "question": "Who feels this pain most day to day?",
+      "category": "users",
+      "industries": ["all"],
       "priority": "high",
       "followUp": [
-        "What user experience are you targeting?",
-        "How many end users will access embedded analytics?",
-        "What level of customization do you need?"
+        "How many people are in that group?",
+        "What workarounds have they built?",
+        "What would a great day look like for them?"
       ]
     },
     {
       "id": "disc-6",
-      "question": "What percentage of your organization is data-driven in decision making?",
-      "category": "business",
+      "question": "Who else is involved in evaluating and approving a decision like this?",
+      "category": "decision",
       "industries": ["all"],
-      "useCases": ["data-democratization", "self-service-bi"],
-      "priority": "medium",
+      "priority": "high",
       "followUp": [
-        "What barriers prevent wider adoption?",
-        "How do non-analysts currently access insights?",
-        "What is your vision for data culture?"
+        "Who has final budget sign-off?",
+        "Are procurement, security, or legal involved — and when?",
+        "Who might push back, and why?"
       ]
     },
     {
       "id": "disc-7",
-      "question": "How many people are on your BI/analytics team?",
-      "category": "business",
+      "question": "What criteria will you use to choose a solution?",
+      "category": "decision",
       "industries": ["all"],
-      "useCases": ["analytics-modernization", "self-service-bi"],
-      "priority": "medium",
+      "priority": "high",
       "followUp": [
-        "What is the ratio of analysts to business users?",
-        "How much time is spent on report creation vs analysis?",
-        "Are they spending time on strategic or tactical work?"
+        "Which are must-haves versus nice-to-haves?",
+        "How will you weight price against capability?",
+        "Is there a formal scorecard or RFP?"
       ]
     },
     {
       "id": "disc-8",
-      "question": "What are your key business metrics and KPIs?",
-      "category": "business",
+      "question": "What does your timeline look like from here to a decision?",
+      "category": "decision",
       "industries": ["all"],
-      "useCases": ["operational-analytics", "self-service-bi"],
-      "priority": "high",
+      "priority": "medium",
       "followUp": [
-        "How frequently are these monitored?",
-        "Who is responsible for tracking them?",
-        "How quickly do you need to respond to changes?"
+        "Is there a date you need to be live by?",
+        "What are the steps between now and a signed agreement?",
+        "Have you bought something like this before? How long did it take?"
       ]
     },
     {
       "id": "disc-9",
-      "question": "Do you have experience with search-driven analytics?",
-      "category": "technical",
+      "question": "Have you tried to solve this before? What happened?",
+      "category": "current-state",
       "industries": ["all"],
-      "useCases": ["analytics-modernization", "self-service-bi"],
       "priority": "medium",
       "followUp": [
-        "What was your experience like?",
-        "What did users think about the interface?",
-        "What made you move away from it or consider it?"
+        "What would you do differently this time?",
+        "Are there lessons or scar tissue we should know about?",
+        "Did you evaluate other vendors?"
       ]
     },
     {
       "id": "disc-10",
-      "question": "What is your timeline for making a decision?",
-      "category": "business",
+      "question": "What would success look like six months after rollout?",
+      "category": "pain",
       "industries": ["all"],
-      "useCases": ["all"],
-      "priority": "high",
+      "priority": "medium",
       "followUp": [
-        "What is driving this timeline?",
-        "Who else is involved in the decision?",
-        "What does the procurement process look like?"
+        "How would you measure it?",
+        "Who would notice first?",
+        "What would you do with the time or budget freed up?"
       ]
     },
     {
       "id": "disc-11",
-      "question": "What security and compliance requirements do you have?",
-      "category": "technical",
-      "industries": ["finance", "healthcare"],
-      "useCases": ["all"],
-      "priority": "high",
+      "question": "How tech-savvy are the people who'd use this every day?",
+      "category": "users",
+      "industries": ["all"],
+      "priority": "medium",
       "followUp": [
-        "Do you need SOC 2, HIPAA, or other certifications?",
-        "What data privacy regulations apply to you?",
-        "How do you handle row-level security today?"
+        "How have past rollouts gone with this group?",
+        "What training and enablement do you usually provide?",
+        "Who are your internal champions?"
       ]
     },
     {
       "id": "disc-12",
-      "question": "How do you currently handle ad-hoc analysis requests?",
-      "category": "users",
+      "question": "What systems would this need to integrate with?",
+      "category": "technical",
       "industries": ["all"],
-      "useCases": ["self-service-bi", "data-democratization"],
-      "priority": "medium",
+      "priority": "high",
       "followUp": [
-        "What tools do power users have access to?",
-        "How often do requests fall outside existing reports?",
-        "What happens when users need to explore data differently?"
+        "Which integrations are deal-breakers?",
+        "Who owns those systems?",
+        "Are there data residency or hosting requirements?"
       ]
     },
     {
       "id": "disc-13",
-      "question": "What is your data warehouse or lake platform?",
-      "category": "data",
-      "industries": ["all"],
-      "useCases": ["analytics-modernization"],
+      "question": "What security, compliance, or regulatory requirements apply?",
+      "category": "technical",
+      "industries": ["finance", "healthcare", "public"],
       "priority": "high",
       "followUp": [
-        "Are you on Snowflake, Databricks, BigQuery, Redshift, or other?",
-        "How is data modeled in your warehouse?",
-        "What is your data refresh frequency?"
+        "Which certifications do you require (SOC 2, ISO 27001, HIPAA, FedRAMP)?",
+        "Does security review happen before or after the business decision?",
+        "Is there a standard questionnaire we should start on?"
       ]
     },
     {
       "id": "disc-14",
-      "question": "How do you measure analytics ROI today?",
-      "category": "business",
-      "industries": ["all"],
-      "useCases": ["all"],
+      "question": "How do seasonal peaks or growth affect this today?",
+      "category": "pain",
+      "industries": ["retail", "manufacturing"],
       "priority": "medium",
       "followUp": [
-        "What business outcomes are you tracking?",
-        "How do you quantify analyst productivity?",
-        "What cost savings or revenue impact have you seen?"
+        "What broke during your last peak?",
+        "How much growth are you planning for next year?",
+        "What would it be worth to handle peaks without extra headcount?"
       ]
     },
     {
       "id": "disc-15",
-      "question": "What mobile or on-the-go analytics requirements do you have?",
-      "category": "users",
-      "industries": ["retail", "manufacturing"],
-      "useCases": ["operational-analytics"],
+      "question": "Would you ever need to offer this capability to your own customers?",
+      "category": "technical",
+      "industries": ["technology"],
       "priority": "medium",
       "followUp": [
-        "Who needs mobile access?",
-        "What use cases require real-time alerts?",
-        "How are field teams currently getting data?"
+        "Is it on your product roadmap?",
+        "What would you need to white-label or embed?",
+        "Would it be a paid feature or included?"
       ]
     }
   ]

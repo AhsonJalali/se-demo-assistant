@@ -6,9 +6,7 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
     getUseCaseDocumentation,
     updateUseCaseDocumentation,
     categories,
-    selectedCompetitors,
-    selectedIndustries,
-    selectedCategories
+    currentSession
   } = useApp();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -29,79 +27,32 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
     updateUseCaseDocumentation(useCaseId, updated);
   };
 
-  // Auto-populate Current Tools with selected competitors
+  // Prefill industry from the session so the SE doesn't type it twice.
   useEffect(() => {
-    if (selectedCompetitors.length > 0) {
-      const competitorNames = selectedCompetitors.map(compId => {
-        const competitor = categories.competitors.find(c => c.id === compId);
-        return competitor?.name;
-      }).filter(Boolean);
-
-      const currentTools = context.currentTools || [];
-      const newTools = [...new Set([...currentTools, ...competitorNames])];
-
-      if (newTools.length > currentTools.length) {
-        handleFieldChange('currentTools', newTools);
-      }
-    }
-  }, [useCaseId, selectedCompetitors]);
-
-  // Auto-populate Industry from global filter
-  useEffect(() => {
-    if (selectedIndustries.length > 0) {
-      const industryNames = selectedIndustries
-        .filter(id => id !== 'all')
-        .map(indId => {
-          const industry = categories.industries.find(i => i.id === indId);
-          return industry?.name;
-        })
-        .filter(Boolean);
-
-      const currentIndustries = context.industry || [];
-      const newIndustries = [...new Set([...currentIndustries, ...industryNames])];
-
-      if (newIndustries.length > currentIndustries.length) {
-        handleFieldChange('industry', newIndustries);
-      }
-    }
-  }, [useCaseId, selectedIndustries]);
-
-  // Auto-populate Category from global filter (Discovery categories only)
-  useEffect(() => {
-    if (selectedCategories.length > 0) {
-      const categoryNames = selectedCategories.map(catId => {
-        const category = categories.discoveryCategories?.find(c => c.id === catId);
-        return category?.name;
-      }).filter(Boolean);
-
-      const currentCategories = context.category || [];
-      const newCategories = [...new Set([...currentCategories, ...categoryNames])];
-
-      if (newCategories.length > currentCategories.length) {
-        handleFieldChange('category', newCategories);
-      }
-    }
-  }, [useCaseId, selectedCategories]);
+    const sessionIndustry = currentSession?.metadata?.industries?.[0];
+    if (!sessionIndustry || context.industry?.length) return;
+    const name = categories.industries.find(i => i.id === sessionIndustry)?.name;
+    if (name) handleFieldChange('industry', [name]);
+  }, [useCaseId, currentSession?.metadata?.industries?.[0]]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const urgencyColors = {
-    low: 'bg-[#a8b0c8]/20 text-[#a8b0c8] border-[#a8b0c8]/40',
-    medium: 'bg-amber-500/20 text-amber-400 border-amber-500/40',
-    high: 'bg-orange-500/20 text-orange-400 border-orange-500/40',
-    critical: 'bg-red-500/20 text-red-400 border-red-500/40'
+    low: 'bg-muted text-fg-2 border-line-strong',
+    medium: 'bg-warning-soft text-warning border-warning/40',
+    high: 'bg-warning-soft text-warning border-warning/60',
+    critical: 'bg-danger-soft text-danger border-danger/40'
   };
 
   const isCardCollapsed = collapsed || isCollapsed;
 
   return (
-    <div className="glass-panel-strong rounded-xl p-4 space-y-4">
+    <div className="panel p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
-          <span>🏢</span>
+        <h3 className="text-sm font-semibold text-fg flex items-center gap-2">
           Customer Context
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
+          className="icon-btn -mr-1.5"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,10 +61,10 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
         </button>
       </div>
 
-      <div className={`grid grid-cols-2 gap-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
         {/* Industry */}
         <div>
-          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label className="label">
             Industry
           </label>
           <input
@@ -123,20 +74,20 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
               const industries = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
               handleFieldChange('industry', industries);
             }}
-            placeholder="Auto-filled from global filter"
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
+            placeholder="e.g. Retail"
+            className="field"
           />
         </div>
 
         {/* Company Size */}
         <div>
-          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label className="label">
             Company Size
           </label>
           <select
             value={context.companySize || ''}
             onChange={(e) => handleFieldChange('companySize', e.target.value)}
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+            className="field"
           >
             <option value="">Select size...</option>
             <option value="smb">SMB (&lt; 500 employees)</option>
@@ -147,7 +98,7 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Category */}
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label className="label">
             Category
           </label>
           <input
@@ -157,14 +108,14 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
               const categories = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
               handleFieldChange('category', categories);
             }}
-            placeholder="Auto-filled from global filter"
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
+            placeholder="e.g. Modernization, Efficiency"
+            className="field"
           />
         </div>
 
         {/* Current Tools */}
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label className="label">
             Current Tools
           </label>
           <input
@@ -174,14 +125,14 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
               const tools = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
               handleFieldChange('currentTools', tools);
             }}
-            placeholder="Auto-filled from competitor filter, or add manually"
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors"
+            placeholder="Comma-separated, e.g. Spreadsheets, Legacy CRM"
+            className="field"
           />
         </div>
 
         {/* Urgency Level */}
         <div className="col-span-2">
-          <label className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label className="label">
             Urgency Level
           </label>
           <div className="flex gap-2">
@@ -189,10 +140,10 @@ const CustomerContextCard = ({ useCaseId, collapsed = false }) => {
               <button
                 key={level}
                 onClick={() => handleFieldChange('urgencyLevel', level)}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide border transition-all ${
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold capitalize border transition-colors ${
                   context.urgencyLevel === level
                     ? urgencyColors[level]
-                    : 'bg-[#08062B]/50 text-[#a8b0c8]/50 border-[#1B1B61] hover:border-[#00D2FF]/30'
+                    : 'bg-surface text-fg-3 border-line hover:border-line-strong hover:text-fg-2'
                 }`}
               >
                 {level}

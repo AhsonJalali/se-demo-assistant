@@ -1,195 +1,135 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { formatDateTime } from '../utils/format';
+import Drawer from './ui/Drawer';
+import EmptyState from './ui/EmptyState';
+import Icon from './ui/Icon';
 
 const MAX_CHARS = 50000;
 
 const NotesPanel = () => {
   const {
-    showNotesPanel,
     setShowNotesPanel,
     currentSession,
     updateGeneralNotes,
-    filteredContent
+    openNewSession,
+    openNoteModal,
+    content,
+    categories,
+    saveState,
   } = useApp();
 
-  const [localNotes, setLocalNotes] = useState('');
+  const [localNotes, setLocalNotes] = useState(currentSession?.notes.general || '');
 
-  // Sync local notes with current session
+  // Pick up external changes (e.g. the objection copilot appending an exchange).
   useEffect(() => {
-    if (currentSession) {
-      setLocalNotes(currentSession.notes.general || '');
-    } else {
-      setLocalNotes('');
-    }
-  }, [currentSession]);
+    setLocalNotes(currentSession?.notes.general || '');
+  }, [currentSession?.id, currentSession?.notes.general]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update notes in context (triggers auto-save)
-  const handleNotesChange = (e) => {
-    const newValue = e.target.value;
-    setLocalNotes(newValue);
-    updateGeneralNotes(newValue);
-  };
+  const close = () => setShowNotesPanel(false);
 
-  if (!showNotesPanel) return null;
+  if (!currentSession) {
+    return (
+      <Drawer title="Notes" onClose={close}>
+        <EmptyState
+          icon="notebook"
+          title="No session open"
+          action={<button type="button" className="btn btn-primary btn-sm" onClick={() => { close(); openNewSession(); }}>New session</button>}
+        >
+          Notes belong to a session, so they're saved with the rest of the deal.
+        </EmptyState>
+      </Drawer>
+    );
+  }
 
-  const charCount = localNotes.length;
   const wordCount = localNotes.trim() ? localNotes.trim().split(/\s+/).length : 0;
-  const isOverLimit = charCount > MAX_CHARS;
+  const isOverLimit = localNotes.length > MAX_CHARS;
 
-  // Get selected items count
-  const selectedCount = currentSession
-    ? Object.values(currentSession.selectedItems).flat().length
-    : 0;
+  // Item notes grouped with the title of the card they're attached to.
+  const itemNotes = Object.entries(currentSession.notes.items)
+    .map(([id, note]) => {
+      for (const list of [content.discovery, content.objections, content.differentiators, content.usecases]) {
+        const item = list.find(i => i.id === id);
+        if (item) return { id, note, title: item.question || item.objection || item.feature || item.name };
+      }
+      return { id, note, title: id };
+    })
+    .sort((a, b) => new Date(b.note.lastModified) - new Date(a.note.lastModified));
 
-  // Get item notes count
-  const itemNotesCount = currentSession
-    ? Object.keys(currentSession.notes.items).length
-    : 0;
-
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-  };
+  const industry = currentSession.metadata.industries?.[0];
+  const industryName = industry && categories.industries.find(i => i.id === industry)?.name;
 
   return (
-    <>
-      {/* Mobile Overlay */}
-      <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden animate-fadeIn"
-        onClick={() => setShowNotesPanel(false)}
-      />
-
-      {/* Panel */}
-      <aside className="fixed top-0 right-0 h-full w-full lg:w-[400px] bg-[#08062B] border-l border-[#1B1B61] z-50 flex flex-col animate-slideInRight shadow-2xl">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-[#1B1B61] bg-[#08062B]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-[#00D2FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              <h2 className="text-lg font-bold text-[#e8eaf0]">Notes</h2>
+    <Drawer
+      title="Notes"
+      subtitle={`${currentSession.name} · ${saveState.status === 'saving' ? 'Saving…' : saveState.status === 'error' ? 'Not saved' : 'Saved'}`}
+      onClose={close}
+    >
+      <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="p-5 space-y-6">
+          <div>
+            <label htmlFor="general-notes" className="label">Meeting notes</label>
+            <textarea
+              id="general-notes"
+              data-autofocus
+              value={localNotes}
+              onChange={(e) => { setLocalNotes(e.target.value); updateGeneralNotes(e.target.value); }}
+              placeholder="Observations, quotes, action items…"
+              className={`field min-h-[260px] resize-y leading-relaxed ${isOverLimit ? 'field-error' : ''}`}
+            />
+            <div className="mt-1.5 flex justify-between text-xs text-fg-3">
+              <span>{wordCount.toLocaleString()} words</span>
+              <span className={isOverLimit ? 'text-danger font-medium' : ''}>
+                {localNotes.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}
+              </span>
             </div>
-            <button
-              onClick={() => setShowNotesPanel(false)}
-              className="p-2 rounded-lg hover:bg-[#1B1B61] transition-colors duration-200"
-            >
-              <svg className="w-5 h-5 text-[#a8b0c8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
           </div>
+
+          <section>
+            <h3 className="section-label mb-2">Notes on library items</h3>
+            {itemNotes.length === 0 ? (
+              <p className="text-[13px] text-fg-3">
+                Use the <Icon name="note" size={13} className="inline -mt-0.5" /> button on any card to attach a note.
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {itemNotes.map(({ id, note, title }) => (
+                  <li key={id}>
+                    <button
+                      type="button"
+                      onClick={() => openNoteModal(id)}
+                      className="w-full text-left p-3 rounded-lg border border-line hover:border-line-strong hover:bg-subtle transition-colors"
+                    >
+                      <div className="text-xs font-medium text-fg-2 truncate">{title}</div>
+                      <div className="mt-1 text-[13px] text-fg line-clamp-3 whitespace-pre-wrap">{note.content}</div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section>
+            <h3 className="section-label mb-2">Session</h3>
+            <dl className="text-[13px] divide-y divide-line border border-line rounded-lg">
+              {[
+                ['Prospect', currentSession.name],
+                ['Stage', currentSession.metadata.dealStage],
+                ['Industry', industryName || '—'],
+                ['Meeting', formatDateTime(currentSession.metadata.demoDate)],
+                ['Saved to export', `${Object.values(currentSession.selectedItems).flat().length} items`],
+                ['Last saved', saveState.at ? formatDateTime(saveState.at) : '—'],
+              ].map(([k, v]) => (
+                <div key={k} className="flex justify-between gap-4 px-3 py-2">
+                  <dt className="text-fg-3">{k}</dt>
+                  <dd className="text-fg text-right truncate">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
-          {!currentSession ? (
-            <div className="flex flex-col items-center justify-center h-full px-6 text-center">
-              <svg className="w-16 h-16 text-[#a8b0c8]/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <p className="text-[#a8b0c8] mb-2">No active session</p>
-              <p className="text-sm text-[#a8b0c8]/70">Create or select a session to start taking notes</p>
-            </div>
-          ) : (
-            <div className="p-6 space-y-6">
-              {/* General Notes Section */}
-              <div>
-                <label className="block text-sm font-medium text-[#e8eaf0] mb-2">
-                  General Notes
-                </label>
-                <textarea
-                  value={localNotes}
-                  onChange={handleNotesChange}
-                  placeholder="Add general observations, key points, or action items..."
-                  className="w-full h-64 px-4 py-3 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors duration-200 resize-none custom-scrollbar"
-                />
-                <div className="flex items-center justify-between mt-2 text-xs">
-                  <span className="text-[#a8b0c8]">
-                    {wordCount.toLocaleString()} words
-                  </span>
-                  <span className={isOverLimit ? 'text-red-400' : 'text-[#a8b0c8]'}>
-                    {charCount.toLocaleString()} / {MAX_CHARS.toLocaleString()} chars
-                  </span>
-                </div>
-              </div>
-
-              {/* Session Summary */}
-              <div className="pt-6 border-t border-[#1B1B61]">
-                <h3 className="text-sm font-medium text-[#e8eaf0] mb-3">Session Summary</h3>
-                <div className="space-y-3">
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="px-3 py-2 bg-[#1B1B61]/30 rounded-lg border border-[#1B1B61]">
-                      <div className="text-2xl font-bold text-[#00D2FF]">{selectedCount}</div>
-                      <div className="text-xs text-[#a8b0c8]">Selected Items</div>
-                    </div>
-                    <div className="px-3 py-2 bg-[#1B1B61]/30 rounded-lg border border-[#1B1B61]">
-                      <div className="text-2xl font-bold text-[#00D2FF]">{itemNotesCount}</div>
-                      <div className="text-xs text-[#a8b0c8]">Item Notes</div>
-                    </div>
-                  </div>
-
-                  {/* Content Visible */}
-                  <div className="px-3 py-2 bg-[#1B1B61]/30 rounded-lg border border-[#1B1B61]">
-                    <div className="text-xs text-[#a8b0c8] mb-1">Visible Content</div>
-                    <div className="text-sm font-medium text-[#e8eaf0]">
-                      {filteredContent.length} items
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Session Metadata */}
-              <div className="pt-6 border-t border-[#1B1B61]">
-                <h3 className="text-sm font-medium text-[#e8eaf0] mb-3">Session Details</h3>
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between text-sm">
-                    <span className="text-[#a8b0c8]">Customer</span>
-                    <span className="text-[#e8eaf0] font-medium text-right">{currentSession.name}</span>
-                  </div>
-                  <div className="flex items-start justify-between text-sm">
-                    <span className="text-[#a8b0c8]">Demo Date</span>
-                    <span className="text-[#e8eaf0] text-right">{formatDate(currentSession.metadata.demoDate)}</span>
-                  </div>
-                  <div className="flex items-start justify-between text-sm">
-                    <span className="text-[#a8b0c8]">Deal Stage</span>
-                    <span className="text-[#e8eaf0]">{currentSession.metadata.dealStage}</span>
-                  </div>
-                  {currentSession.metadata.industries && currentSession.metadata.industries.length > 0 && (
-                    <div className="flex items-start justify-between text-sm">
-                      <span className="text-[#a8b0c8]">Industries</span>
-                      <div className="text-right text-[#e8eaf0] max-w-[60%]">
-                        {currentSession.metadata.industries.length} selected
-                      </div>
-                    </div>
-                  )}
-                  {currentSession.metadata.useCases && currentSession.metadata.useCases.length > 0 && (
-                    <div className="flex items-start justify-between text-sm">
-                      <span className="text-[#a8b0c8]">Use Cases</span>
-                      <div className="text-right text-[#e8eaf0] max-w-[60%]">
-                        {currentSession.metadata.useCases.length} selected
-                      </div>
-                    </div>
-                  )}
-                  <div className="flex items-start justify-between text-sm pt-2 border-t border-[#1B1B61]/50">
-                    <span className="text-[#a8b0c8]">Last Updated</span>
-                    <span className="text-[#e8eaf0] text-right text-xs">{formatDate(currentSession.updatedAt)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </aside>
-    </>
+      </div>
+    </Drawer>
   );
 };
 

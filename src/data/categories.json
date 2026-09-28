@@ -1,43 +1,38 @@
 {
   "industries": [
-    { "id": "all", "name": "All Industries" },
-    { "id": "retail", "name": "Retail" },
-    { "id": "finance", "name": "Financial Services" },
-    { "id": "healthcare", "name": "Healthcare" },
+    { "id": "all", "name": "All industries" },
+    { "id": "retail", "name": "Retail & e-commerce" },
+    { "id": "finance", "name": "Financial services" },
+    { "id": "healthcare", "name": "Healthcare & life sciences" },
     { "id": "manufacturing", "name": "Manufacturing" },
-    { "id": "technology", "name": "Technology" }
-  ],
-  "useCases": [
-    { "id": "analytics-modernization", "name": "Analytics Modernization" },
-    { "id": "embedded-analytics", "name": "Embedded Analytics" },
-    { "id": "data-democratization", "name": "Data Democratization" },
-    { "id": "self-service-bi", "name": "Self-Service BI" },
-    { "id": "operational-analytics", "name": "Operational Analytics" }
+    { "id": "technology", "name": "Software & technology" },
+    { "id": "public", "name": "Public sector" }
   ],
   "competitors": [
-    { "id": "tableau", "name": "Tableau" },
-    { "id": "powerbi", "name": "Power BI" },
-    { "id": "looker", "name": "Looker" },
-    { "id": "qlik", "name": "Qlik" }
+    { "id": "status-quo", "name": "Status quo" },
+    { "id": "build", "name": "Build in-house" },
+    { "id": "incumbent", "name": "Incumbent vendor" },
+    { "id": "point-solution", "name": "Point solution" }
   ],
   "objectionCategories": [
     { "id": "pricing", "name": "Pricing" },
-    { "id": "technical", "name": "Technical" },
-    { "id": "implementation", "name": "Implementation" },
-    { "id": "competition", "name": "Competition" }
+    { "id": "timing", "name": "Timing" },
+    { "id": "competition", "name": "Competition" },
+    { "id": "risk", "name": "Risk" },
+    { "id": "technical", "name": "Technical" }
   ],
   "discoveryCategories": [
-    { "id": "technical", "name": "Technical" },
-    { "id": "business", "name": "Business" },
-    { "id": "users", "name": "Users & Adoption" },
-    { "id": "data", "name": "Data & Infrastructure" }
+    { "id": "current-state", "name": "Current state" },
+    { "id": "pain", "name": "Pain & impact" },
+    { "id": "users", "name": "Users & adoption" },
+    { "id": "decision", "name": "Decision process" },
+    { "id": "technical", "name": "Technical fit" }
   ],
   "useCaseCategories": [
     { "id": "modernization", "name": "Modernization" },
-    { "id": "embedded", "name": "Embedded Analytics" },
-    { "id": "self-service", "name": "Self-Service" },
-    { "id": "operational", "name": "Operational" },
-    { "id": "customer-analytics", "name": "Customer Analytics" },
-    { "id": "financial", "name": "Financial Analytics" }
+    { "id": "efficiency", "name": "Efficiency" },
+    { "id": "growth", "name": "Growth" },
+    { "id": "risk", "name": "Risk & compliance" },
+    { "id": "experience", "name": "Customer experience" }
   ]
 }

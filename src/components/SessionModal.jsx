@@ -1,153 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { validateSessionName } from '../utils/sessionHelpers';
+import { DEAL_STAGES } from '../config/views';
+import Dialog from './ui/Dialog';
+
+// datetime-local wants local time without a zone: YYYY-MM-DDTHH:mm
+const toLocalInput = (iso) => {
+  const d = iso ? new Date(iso) : new Date();
+  if (Number.isNaN(d.getTime())) return '';
+  const offset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+};
 
 const SessionModal = () => {
-  const { currentSession, createSession, updateSession, setShowSessionModal, sessionModalMode } = useApp();
+  const { currentSession, createSession, updateSession, setShowSessionModal, sessionModalMode, categories } = useApp();
+  const isEditing = sessionModalMode === 'edit' && Boolean(currentSession);
 
-  const isEditing = sessionModalMode === 'edit';
-
-  const [formData, setFormData] = useState({
-    name: '',
-    demoDate: new Date().toISOString().slice(0, 16),
-  });
-
+  const [form, setForm] = useState(() => ({
+    name: isEditing ? currentSession.name : '',
+    demoDate: toLocalInput(isEditing ? currentSession.metadata.demoDate : null),
+    dealStage: isEditing ? currentSession.metadata.dealStage || 'Discovery' : 'Discovery',
+    industry: isEditing ? currentSession.metadata.industries?.[0] || '' : '',
+  }));
   const [errors, setErrors] = useState({});
 
-  // When editing, load existing session data. When creating, always use current time.
-  useEffect(() => {
-    if (currentSession) {
-      setFormData({
-        name: currentSession.name,
-        demoDate: currentSession.metadata.demoDate.slice(0, 16),
-      });
-    } else {
-      setFormData({
-        name: '',
-        demoDate: new Date().toISOString().slice(0, 16),
-      });
-    }
-  }, [currentSession]);
-
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const set = (field) => (e) => {
+    setForm(prev => ({ ...prev, [field]: e.target.value }));
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: null }));
   };
 
-  const validate = () => {
-    const newErrors = {};
-    const nameError = validateSessionName(formData.name);
-    if (nameError) newErrors.name = nameError;
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const close = () => setShowSessionModal(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-
+    const nameError = validateSessionName(form.name);
+    if (nameError) {
+      setErrors({ name: nameError });
+      return;
+    }
+    const metadata = {
+      demoDate: form.demoDate ? new Date(form.demoDate).toISOString() : new Date().toISOString(),
+      dealStage: form.dealStage,
+      industries: form.industry ? [form.industry] : [],
+    };
     try {
       if (isEditing) {
-        updateSession({
-          name: formData.name.trim(),
-          metadata: { demoDate: formData.demoDate }
-        });
+        updateSession({ name: form.name.trim(), metadata: { ...currentSession.metadata, ...metadata } });
       } else {
-        createSession(formData.name.trim(), { demoDate: formData.demoDate });
+        createSession(form.name.trim(), metadata);
       }
-      setShowSessionModal(false);
+      close();
     } catch (error) {
       setErrors({ submit: error.message });
     }
   };
 
-  const handleClose = () => setShowSessionModal(false);
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
-      onClick={handleBackdropClick}
-    >
-      <div className="w-full max-w-md bg-[#08062B] border border-[#1B1B61] rounded-xl shadow-2xl animate-scaleIn">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1B1B61]">
-          <h2 className="text-xl font-bold text-[#e8eaf0]">
-            {isEditing ? 'Edit Session' : 'New Session'}
-          </h2>
-          <button
-            onClick={handleClose}
-            className="p-2 rounded-lg hover:bg-[#1B1B61] transition-colors duration-200"
-          >
-            <svg className="w-5 h-5 text-[#a8b0c8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+    <Dialog
+      title={isEditing ? 'Edit session' : 'New session'}
+      description={isEditing ? undefined : 'One session per prospect. Notes, selections and your 3 Why’s are saved to it automatically.'}
+      onClose={close}
+      size="sm"
+      footer={
+        <>
+          <button type="button" className="btn btn-secondary" onClick={close}>Cancel</button>
+          <button type="submit" form="session-form" className="btn btn-primary">
+            {isEditing ? 'Save changes' : 'Create session'}
           </button>
+        </>
+      }
+    >
+      <form id="session-form" onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <div>
+          <label htmlFor="session-name" className="label">Prospect</label>
+          <input
+            id="session-name"
+            data-autofocus
+            type="text"
+            value={form.name}
+            onChange={set('name')}
+            maxLength={100}
+            placeholder="e.g. Northwind Traders"
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? 'session-name-error' : undefined}
+            className={`field ${errors.name ? 'field-error' : ''}`}
+          />
+          {errors.name && <p id="session-name-error" className="mt-1.5 text-xs text-danger">{errors.name}</p>}
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Customer / Prospect Name */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-[#e8eaf0] mb-2">
-              Customer / Prospect Name <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              maxLength={100}
-              placeholder="e.g., Acme Corp"
-              autoFocus
-              className={`w-full px-4 py-2.5 bg-[#0D0A35] border ${errors.name ? 'border-red-400' : 'border-[#1B1B61]'} rounded-lg text-[#e8eaf0] placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors duration-200`}
-            />
-            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+            <label htmlFor="session-stage" className="label">Deal stage</label>
+            <select id="session-stage" value={form.dealStage} onChange={set('dealStage')} className="field">
+              {DEAL_STAGES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
           </div>
-
-          {/* Date & Time */}
           <div>
-            <label htmlFor="demoDate" className="block text-sm font-medium text-[#e8eaf0] mb-2">
-              Date &amp; Time
-            </label>
-            <input
-              type="datetime-local"
-              id="demoDate"
-              value={formData.demoDate}
-              onChange={(e) => handleChange('demoDate', e.target.value)}
-              className="w-full px-4 py-2.5 bg-[#0D0A35] border border-[#1B1B61] rounded-lg text-[#e8eaf0] focus:outline-none focus:border-[#00D2FF] transition-colors duration-200"
-            />
+            <label htmlFor="session-industry" className="label">Industry</label>
+            <select id="session-industry" value={form.industry} onChange={set('industry')} className="field">
+              <option value="">Not set</option>
+              {categories.industries.filter(i => i.id !== 'all').map(i => (
+                <option key={i.id} value={i.id}>{i.name}</option>
+              ))}
+            </select>
           </div>
+        </div>
 
-          {/* Error */}
-          {errors.submit && (
-            <div className="px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-              <p className="text-sm text-red-400">{errors.submit}</p>
-            </div>
-          )}
+        <div>
+          <label htmlFor="session-date" className="label">Meeting date</label>
+          <input id="session-date" type="datetime-local" value={form.demoDate} onChange={set('demoDate')} className="field" />
+        </div>
 
-          {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-[#1B1B61]">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-5 py-2 rounded-lg border border-[#1B1B61] text-[#e8eaf0] hover:bg-[#1B1B61] transition-colors duration-200"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-lg bg-[#00D2FF] text-[#08062B] font-medium hover:bg-[#00D2FF]/90 transition-colors duration-200"
-            >
-              {isEditing ? 'Update' : 'Create Session'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {errors.submit && (
+          <p role="alert" className="px-3 py-2 rounded-lg bg-danger-soft text-sm text-danger">{errors.submit}</p>
+        )}
+      </form>
+    </Dialog>
   );
 };
 

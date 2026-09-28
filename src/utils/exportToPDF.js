@@ -1,415 +1,270 @@
 /**
- * PDF Export Utility
- * Generates professional PDF documents with dark theme and gold accents
+ * PDF export — a clean, print-friendly session summary.
+ *
+ * Every block is measured before it is drawn, so backgrounds are painted
+ * first and text always lands on top, and blocks never split awkwardly
+ * across a page break.
  */
 
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import { ACCENTS, titleCase } from '../config/workspace';
 
-const COLORS = {
-  dark: '#08062B',
-  darkSecondary: '#0D0A35',
-  gold: '#00D2FF',
-  goldMuted: '#0099CC',
-  textPrimary: '#e8eaf0',
-  textSecondary: '#a8b0c8',
-  border: '#1B1B61',
-  success: '#4ade80',
-  danger: '#f87171'
+const INK = '#111827';
+const INK_2 = '#4B5563';
+const INK_3 = '#6B7280';
+const LINE = '#E5E7EB';
+const SUBTLE = '#F9FAFB';
+
+const hexToRgb = (hex) => {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+};
+const tint = (hex, amount) => hexToRgb(hex).map(c => Math.round(c + (255 - c) * amount));
+
+const formatDate = (value) => {
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
 };
 
 /**
- * Generate PDF from session data
+ * @param {Object} session
+ * @param {Object} allContent - { discovery, usecases, differentiators, objections } (already filled)
+ * @param {Object} ctx - { settings, threeWhys, categories }
  */
-export const generatePDF = async (session, allContent, appData) => {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  });
+export const generatePDF = async (session, allContent, { settings, threeWhys = [], categories } = {}) => {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const accent = ACCENTS.find(a => a.id === settings?.accent)?.swatch || ACCENTS[0].swatch;
+  const product = titleCase(settings?.productName || 'our platform');
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
-  const contentWidth = pageWidth - (margin * 2);
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const M = 18; // margin
+  const W = pageW - M * 2;
+  const TOP = 22;
+  const BOTTOM = pageH - 16;
+  let y = TOP;
 
-  let yPos = margin;
-  let pageNumber = 1;
-
-  // Helper: Add header to each page
-  const addPageHeader = (isFirstPage = false) => {
-    if (!isFirstPage) {
-      // Dark background
-      doc.setFillColor(COLORS.dark);
-      doc.rect(0, 0, pageWidth, 15, 'F');
-
-      // ThoughtSpot branding
-      doc.setFontSize(10);
-      doc.setTextColor(COLORS.gold);
-      doc.setFont('helvetica', 'bold');
-      doc.text('ThoughtSpot', margin, 10);
-
-      // Session name
-      doc.setFontSize(8);
-      doc.setTextColor(COLORS.textSecondary);
-      doc.setFont('helvetica', 'normal');
-      doc.text(session.name, pageWidth - margin, 10, { align: 'right' });
-    }
+  const setText = (size, color = INK, style = 'normal') => {
+    doc.setFont('helvetica', style);
+    doc.setFontSize(size);
+    doc.setTextColor(color);
+  };
+  const lineH = (size) => size * 0.42; // mm per line for a given pt size
+  const wrap = (text, width, size) => {
+    doc.setFontSize(size);
+    return doc.splitTextToSize(String(text ?? ''), width);
   };
 
-  // Helper: Add footer to each page
-  const addPageFooter = () => {
-    doc.setFillColor(COLORS.dark);
-    doc.rect(0, pageHeight - 10, pageWidth, 10, 'F');
-
-    doc.setFontSize(8);
-    doc.setTextColor(COLORS.textSecondary);
-    doc.text(
-      `Page ${pageNumber}`,
-      pageWidth / 2,
-      pageHeight - 5,
-      { align: 'center' }
-    );
-
-    const now = new Date().toLocaleDateString();
-    doc.text(now, pageWidth - margin, pageHeight - 5, { align: 'right' });
-
-    pageNumber++;
-  };
-
-  // Helper: Check if need new page
-  const checkPageBreak = (requiredSpace = 40) => {
-    if (yPos + requiredSpace > pageHeight - 20) {
-      addPageFooter();
-      doc.addPage();
-      addPageHeader();
-      yPos = 25;
-    }
-  };
-
-  // Helper: Add section header
-  const addSectionHeader = (title, icon = '') => {
-    checkPageBreak(25);
-
-    // Gold line above
-    doc.setDrawColor(COLORS.gold);
-    doc.setLineWidth(0.5);
-    doc.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 8;
-
-    doc.setFontSize(16);
-    doc.setTextColor(COLORS.gold);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`${icon} ${title}`, margin, yPos);
-    yPos += 8;
-  };
-
-  // ===== COVER PAGE =====
-  // Dark background
-  doc.setFillColor(COLORS.dark);
-  doc.rect(0, 0, pageWidth, pageHeight, 'F');
-
-  // Gold accent bar
-  doc.setFillColor(COLORS.gold);
-  doc.rect(0, 60, pageWidth, 2, 'F');
-  doc.rect(0, 140, pageWidth, 2, 'F');
-
-  // Title
-  doc.setFontSize(28);
-  doc.setTextColor(COLORS.gold);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Demo Session', pageWidth / 2, 85, { align: 'center' });
-
-  // Session name
-  doc.setFontSize(20);
-  doc.setTextColor(COLORS.textPrimary);
-  doc.setFont('helvetica', 'normal');
-  const sessionNameLines = doc.splitTextToSize(session.name, contentWidth - 40);
-  doc.text(sessionNameLines, pageWidth / 2, 105, { align: 'center' });
-
-  // Metadata box
-  yPos = 160;
-  const metadataHeight = 55;
-  doc.setFillColor(COLORS.darkSecondary);
-  doc.roundedRect(margin + 20, yPos, contentWidth - 40, metadataHeight, 3, 3, 'F');
-
-  doc.setFontSize(10);
-  doc.setTextColor(COLORS.textSecondary);
-  doc.setFont('helvetica', 'normal');
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-  };
-
-  const metadataLines = [
-    { label: 'Demo Date:', value: formatDate(session.metadata.demoDate) },
-    { label: 'Deal Stage:', value: session.metadata.dealStage },
-    { label: 'Industries:', value: session.metadata.industries.length > 0 ? session.metadata.industries.join(', ') : 'None' },
-    { label: 'Use Cases:', value: session.metadata.useCases.length > 0 ? session.metadata.useCases.join(', ') : 'None' }
-  ];
-
-  let metaYPos = yPos + 10;
-  metadataLines.forEach(line => {
-    doc.setTextColor(COLORS.textSecondary);
-    doc.text(line.label, margin + 30, metaYPos);
-    doc.setTextColor(COLORS.textPrimary);
-    const valueLines = doc.splitTextToSize(line.value, contentWidth - 90);
-    doc.text(valueLines, margin + 70, metaYPos);
-    metaYPos += valueLines.length * 5 + 3;
-  });
-
-  // Branding
-  doc.setFontSize(8);
-  doc.setTextColor(COLORS.textSecondary);
-  doc.text('ThoughtSpot SE Demo Assistant', pageWidth / 2, pageHeight - 20, { align: 'center' });
-  doc.text(`Generated on ${new Date().toLocaleString()}`, pageWidth / 2, pageHeight - 15, { align: 'center' });
-
-  addPageFooter();
-
-  // ===== GENERAL NOTES PAGE =====
-  if (session.notes.general && session.notes.general.trim().length > 0) {
+  const newPage = () => {
     doc.addPage();
-    addPageHeader();
-    yPos = 25;
+    y = TOP;
+  };
+  const ensure = (h) => {
+    if (y + h > BOTTOM) newPage();
+  };
 
-    addSectionHeader('General Notes', '📝');
+  const industryName = (id) => categories?.industries?.find(i => i.id === id)?.name || id;
+  const catName = (list, id) => categories?.[list]?.find(c => c.id === id)?.name || id;
 
-    doc.setFontSize(10);
-    doc.setTextColor(COLORS.textPrimary);
-    doc.setFont('helvetica', 'normal');
+  // ── Cover ─────────────────────────────────────────────────────────────────
+  doc.setFillColor(...hexToRgb(accent));
+  doc.rect(0, 0, pageW, 4, 'F');
 
-    const notesLines = doc.splitTextToSize(session.notes.general, contentWidth);
-    notesLines.forEach(line => {
-      checkPageBreak(7);
-      doc.text(line, margin, yPos);
-      yPos += 5;
-    });
+  setText(9, INK_3, 'bold');
+  doc.text(product.toUpperCase(), M, 20);
 
-    yPos += 10;
-    addPageFooter();
-  }
+  setText(26, INK, 'bold');
+  const nameLines = wrap(session.name, W, 26);
+  doc.text(nameLines, M, 34);
+  y = 34 + nameLines.length * lineH(26) + 2;
 
-  // ===== 3 WHY'S PAGE =====
-  if (session.threeWhys && Object.values(session.threeWhys).some(answer => answer && answer.trim().length > 0)) {
-    doc.addPage();
-    addPageHeader();
-    yPos = 25;
+  setText(12, INK_2);
+  doc.text('Session summary', M, y);
+  y += 12;
 
-    addSectionHeader('3 Why\'s', '💡');
-
-    const whyQuestions = [
-      { id: 'why-change', label: 'Why change' },
-      { id: 'why-now', label: 'Why now' },
-      { id: 'why-thoughtspot', label: 'Why ThoughtSpot' }
-    ];
-
-    whyQuestions.forEach((question, index) => {
-      const answer = session.threeWhys[question.id];
-      if (answer && answer.trim().length > 0) {
-        checkPageBreak(30);
-
-        // Question number badge
-        doc.setFillColor(COLORS.gold);
-        doc.circle(margin + 3, yPos - 1, 3, 'F');
-        doc.setFontSize(8);
-        doc.setTextColor(COLORS.dark);
-        doc.setFont('helvetica', 'bold');
-        doc.text(String(index + 1), margin + 3, yPos, { align: 'center' });
-
-        // Question title
-        doc.setFontSize(12);
-        doc.setTextColor(COLORS.gold);
-        doc.setFont('helvetica', 'bold');
-        doc.text(question.label, margin + 10, yPos);
-
-        yPos += 7;
-
-        // Answer
-        doc.setFontSize(10);
-        doc.setTextColor(COLORS.textPrimary);
-        doc.setFont('helvetica', 'normal');
-
-        const answerLines = doc.splitTextToSize(answer, contentWidth - 5);
-        answerLines.forEach(line => {
-          checkPageBreak(7);
-          doc.text(line, margin + 3, yPos);
-          yPos += 5;
-        });
-
-        yPos += 10;
-      }
-    });
-
-    addPageFooter();
-  }
-
-  // ===== CONTENT SECTIONS =====
-  const sections = [
-    { title: 'Discovery Questions', data: allContent.discovery, type: 'discovery', icon: '❓' },
-    { title: 'Use Cases', data: allContent.usecases, type: 'usecase', icon: '📋' },
-    { title: 'Differentiators', data: allContent.differentiators, type: 'differentiator', icon: '⭐' },
-    { title: 'Objections', data: allContent.objections, type: 'objection', icon: '⚠️' }
+  const meta = [
+    ['Meeting', formatDate(session.metadata.demoDate)],
+    ['Stage', session.metadata.dealStage || '—'],
+    ['Industry', session.metadata.industries?.length ? session.metadata.industries.map(industryName).join(', ') : '—'],
+    ['Prepared', formatDate(new Date())],
   ];
+  const colW = W / meta.length;
+  doc.setDrawColor(LINE);
+  doc.setLineWidth(0.3);
+  doc.line(M, y - 5, M + W, y - 5);
+  meta.forEach(([k, v], i) => {
+    const x = M + colW * i;
+    setText(8, INK_3, 'bold');
+    doc.text(k.toUpperCase(), x, y);
+    setText(10, INK);
+    doc.text(wrap(v, colW - 4, 10), x, y + 5.5);
+  });
+  y += 16;
+  doc.line(M, y - 3, M + W, y - 3);
+  y += 6;
 
-  sections.forEach(section => {
-    if (section.data && section.data.length > 0) {
-      doc.addPage();
-      addPageHeader();
-      yPos = 25;
+  // ── Section helpers ───────────────────────────────────────────────────────
+  const sectionTitle = (title, count) => {
+    ensure(24);
+    setText(14, INK, 'bold');
+    doc.text(title, M, y);
+    if (count != null) {
+      const tw = doc.getTextWidth(title);
+      setText(10, INK_3);
+      doc.text(String(count), M + tw + 3, y);
+    }
+    y += 3;
+    doc.setDrawColor(...hexToRgb(accent));
+    doc.setLineWidth(0.6);
+    doc.line(M, y, M + 12, y);
+    y += 7;
+  };
 
-      addSectionHeader(section.title, section.icon);
+  const paragraph = (text, { size = 10, color = INK, indent = 0, style = 'normal', gap = 2 } = {}) => {
+    const lines = wrap(text, W - indent, size);
+    lines.forEach(line => {
+      ensure(lineH(size) + 1);
+      setText(size, color, style);
+      doc.text(line, M + indent, y);
+      y += lineH(size) + 0.8;
+    });
+    y += gap;
+  };
 
-      section.data.forEach((item, index) => {
-        // Item box
-        checkPageBreak(60);
+  /**
+   * A card: title, meta line, optional body, optional note. Measured up front
+   * so the background is drawn before the text.
+   */
+  const card = ({ title, metaLine, body, note }) => {
+    const pad = 5;
+    const inner = W - pad * 2;
+    const titleLines = wrap(title, inner, 11);
+    const bodyLines = body ? wrap(body, inner, 9.5) : [];
+    const noteLines = note ? wrap(note, inner - 6, 9) : [];
+    const h =
+      pad +
+      titleLines.length * (lineH(11) + 0.8) +
+      (metaLine ? 5 : 0) +
+      (bodyLines.length ? 2 + bodyLines.length * (lineH(9.5) + 0.8) : 0) +
+      (noteLines.length ? 6 + noteLines.length * (lineH(9) + 0.8) + 3 : 0) +
+      pad - 1;
 
-        // Item background
-        doc.setFillColor(COLORS.darkSecondary);
-        const itemStartY = yPos;
-        doc.roundedRect(margin, yPos, contentWidth, 5, 2, 2, 'F'); // Will adjust height after
+    if (h < BOTTOM - TOP) ensure(h + 4);
+    const top = y;
 
-        yPos += 5;
+    doc.setFillColor(SUBTLE);
+    doc.setDrawColor(LINE);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(M, top, W, h, 2, 2, 'FD');
 
-        // Item number
-        doc.setFontSize(8);
-        doc.setTextColor(COLORS.gold);
-        doc.setFont('helvetica', 'bold');
-        doc.text(`#${index + 1}`, margin + 3, yPos);
-
-        yPos += 2;
-
-        // Item title
-        doc.setFontSize(11);
-        doc.setTextColor(COLORS.textPrimary);
-        doc.setFont('helvetica', 'bold');
-
-        let title = '';
-        if (section.type === 'discovery') {
-          title = item.question;
-        } else if (section.type === 'usecase') {
-          title = item.name;
-        } else if (section.type === 'differentiator') {
-          title = item.feature;
-        } else if (section.type === 'objection') {
-          title = `"${item.objection}"`;
-        }
-
-        const titleLines = doc.splitTextToSize(title, contentWidth - 10);
-        titleLines.forEach(line => {
-          checkPageBreak(7);
-          doc.text(line, margin + 3, yPos);
-          yPos += 5;
-        });
-
-        yPos += 3;
-
-        // Category badge
-        doc.setFontSize(8);
-        doc.setTextColor(COLORS.textSecondary);
-        doc.setFont('helvetica', 'normal');
-        doc.text(`• ${item.category}`, margin + 3, yPos);
-
-        // Priority (for discovery)
-        if (section.type === 'discovery' && item.priority) {
-          doc.text(`• Priority: ${item.priority}`, margin + 40, yPos);
-        }
-
-        // Competitor (for differentiators)
-        if (section.type === 'differentiator' && item.competitorName) {
-          doc.text(`• vs ${item.competitorName}`, margin + 40, yPos);
-        }
-
-        yPos += 7;
-
-        // Item note if exists
-        const itemNote = session.notes.items[item.id];
-        if (itemNote && itemNote.content) {
-          checkPageBreak(20);
-
-          doc.setFillColor(COLORS.gold + '33'); // Gold with transparency
-          doc.roundedRect(margin + 3, yPos, contentWidth - 6, 5, 1, 1, 'F'); // Will adjust
-
-          yPos += 4;
-
-          doc.setFontSize(8);
-          doc.setTextColor(COLORS.gold);
-          doc.setFont('helvetica', 'bold');
-          doc.text('📌 Note:', margin + 5, yPos);
-
-          yPos += 4;
-
-          doc.setFontSize(9);
-          doc.setTextColor(COLORS.textPrimary);
-          doc.setFont('helvetica', 'italic');
-
-          const noteLines = doc.splitTextToSize(itemNote.content, contentWidth - 14);
-          noteLines.forEach(line => {
-            checkPageBreak(5);
-            doc.text(line, margin + 5, yPos);
-            yPos += 4;
-          });
-
-          yPos += 3;
-        }
-
-        // Update item box height
-        const itemHeight = yPos - itemStartY;
-        doc.setFillColor(COLORS.darkSecondary);
-        doc.roundedRect(margin, itemStartY, contentWidth, itemHeight, 2, 2, 'F');
-
-        // Redraw content on top
-        // (In a real implementation, we'd need to buffer the content and draw it after the box)
-
-        yPos += 8;
+    y = top + pad + 3;
+    titleLines.forEach(line => {
+      setText(11, INK, 'bold');
+      doc.text(line, M + pad, y);
+      y += lineH(11) + 0.8;
+    });
+    if (metaLine) {
+      setText(8.5, INK_3);
+      doc.text(metaLine, M + pad, y + 0.5);
+      y += 5;
+    }
+    if (bodyLines.length) {
+      y += 2;
+      bodyLines.forEach(line => {
+        setText(9.5, INK_2);
+        doc.text(line, M + pad, y);
+        y += lineH(9.5) + 0.8;
       });
-
-      addPageFooter();
     }
-  });
-
-  // ===== SUMMARY PAGE =====
-  doc.addPage();
-  addPageHeader();
-  yPos = 25;
-
-  addSectionHeader('Session Summary', '📊');
-
-  const stats = {
-    'Selected Items': Object.values(session.selectedItems).flat().length,
-    'Item Notes': Object.keys(session.notes.items).length,
-    'Discovery Questions': allContent.discovery?.length || 0,
-    'Use Cases': allContent.usecases?.length || 0,
-    'Differentiators': allContent.differentiators?.length || 0,
-    'Objections': allContent.objections?.length || 0
+    if (noteLines.length) {
+      y += 2;
+      const noteTop = y - 1;
+      const noteH = 4 + noteLines.length * (lineH(9) + 0.8) + 2;
+      doc.setFillColor(...tint(accent, 0.9));
+      doc.roundedRect(M + pad, noteTop, inner, noteH, 1.5, 1.5, 'F');
+      doc.setFillColor(...hexToRgb(accent));
+      doc.rect(M + pad, noteTop, 0.8, noteH, 'F');
+      y += 3;
+      setText(8, accent, 'bold');
+      doc.text('NOTE', M + pad + 3, y);
+      y += 4;
+      noteLines.forEach(line => {
+        setText(9, INK);
+        doc.text(line, M + pad + 3, y);
+        y += lineH(9) + 0.8;
+      });
+    }
+    y = top + h + 4;
   };
 
-  Object.entries(stats).forEach(([label, value]) => {
-    checkPageBreak(10);
+  // ── 3 Why's ───────────────────────────────────────────────────────────────
+  const whys = threeWhys.filter(q => session.threeWhys?.[q.id]?.trim());
+  if (whys.length) {
+    sectionTitle("The 3 Why's");
+    whys.forEach(q => {
+      ensure(16);
+      setText(11, INK, 'bold');
+      doc.text(q.question, M, y);
+      y += 5.5;
+      paragraph(session.threeWhys[q.id].trim(), { color: INK_2, gap: 4 });
+    });
+    y += 4;
+  }
 
-    doc.setFontSize(10);
-    doc.setTextColor(COLORS.textSecondary);
-    doc.setFont('helvetica', 'normal');
-    doc.text(label + ':', margin + 5, yPos);
+  // ── Meeting notes ─────────────────────────────────────────────────────────
+  if (session.notes.general?.trim()) {
+    sectionTitle('Meeting notes');
+    session.notes.general.trim().split(/\n{2,}/).forEach(p => paragraph(p, { color: INK_2, gap: 3 }));
+    y += 4;
+  }
 
-    doc.setFontSize(12);
-    doc.setTextColor(COLORS.gold);
-    doc.setFont('helvetica', 'bold');
-    doc.text(String(value), margin + 80, yPos);
+  // ── Library items ─────────────────────────────────────────────────────────
+  const noteFor = (id) => session.notes.items[id]?.content?.trim() || null;
+  const groups = [
+    {
+      title: 'Discovery questions',
+      items: allContent.discovery,
+      map: q => ({ title: q.question, metaLine: catName('discoveryCategories', q.category), body: q.followUp?.map(f => `– ${f}`).join('\n'), note: noteFor(q.id) }),
+    },
+    {
+      title: 'Use cases',
+      items: allContent.usecases,
+      map: u => ({ title: u.name, metaLine: catName('useCaseCategories', u.category), body: u.description, note: noteFor(u.id) }),
+    },
+    {
+      title: 'Positioning',
+      items: allContent.differentiators,
+      map: d => ({ title: d.feature, metaLine: `vs ${d.competitorName} · ${d.category}`, body: d.ours, note: noteFor(d.id) }),
+    },
+    {
+      title: 'Objections',
+      items: allContent.objections,
+      map: o => ({ title: `“${o.objection}”`, metaLine: catName('objectionCategories', o.category), body: o.response, note: noteFor(o.id) }),
+    },
+  ];
 
-    yPos += 8;
+  groups.forEach(group => {
+    if (!group.items?.length) return;
+    sectionTitle(group.title, group.items.length);
+    group.items.forEach(item => card(group.map(item)));
+    y += 4;
   });
 
-  addPageFooter();
+  // ── Footer on every page ──────────────────────────────────────────────────
+  const pages = doc.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(LINE);
+    doc.setLineWidth(0.25);
+    doc.line(M, pageH - 11, pageW - M, pageH - 11);
+    setText(8, INK_3);
+    doc.text(`${session.name} · ${product}`, M, pageH - 6.5);
+    doc.text(`${i} / ${pages}`, pageW - M, pageH - 6.5, { align: 'right' });
+  }
 
-  // Save the PDF
-  const fileName = `${session.name.replace(/[^a-z0-9]/gi, '_')}_Demo_Session.pdf`;
+  const fileName = `${session.name.replace(/[^a-z0-9]+/gi, '_')}_Session_Summary.pdf`;
   doc.save(fileName);
-
   return fileName;
 };

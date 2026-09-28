@@ -2,231 +2,194 @@
   "objections": [
     {
       "id": "obj-1",
-      "objection": "ThoughtSpot is too expensive",
+      "objection": "It's too expensive.",
       "category": "pricing",
-      "response": "Let's discuss the total cost of ownership. While our list price may be higher than some alternatives, ThoughtSpot typically delivers significantly lower TCO when you factor in implementation time, training costs, and analyst productivity gains.",
+      "response": "That's fair to raise, and I'd rather talk about it now than at the end. Can we look at it against what the problem costs you today? When teams add up the hours, the tools they'd retire, and the risk they carry, the comparison usually looks very different from list price alone.",
       "talkingPoints": [
-        "Faster time to insight reduces analyst hours by 50-70%",
-        "Lower training costs - hours vs weeks for traditional BI",
-        "Reduced maintenance - no extract pipelines or report backlogs",
-        "Self-service reduces bottlenecks on IT teams",
-        "Calculate cost per insight, not just license cost"
+        "Anchor on the cost of the problem, not the price of the product",
+        "Total cost of ownership includes people, maintenance, and tools retired",
+        "Phased rollouts let you prove value before scaling spend"
       ],
       "questions": [
-        "What is your current BI tool costing (licenses + maintenance + FTEs)?",
-        "How many hours do analysts spend creating reports vs analyzing?",
-        "What is the cost of delayed decisions due to slow insights?",
-        "How many people are waiting for analytics access?"
+        "Expensive compared to what — another vendor, or the budget you have?",
+        "What would solving this be worth to the business this year?",
+        "If price were equal, which option would you choose?"
       ]
     },
     {
       "id": "obj-2",
-      "objection": "We already invested heavily in [Tableau/Power BI/etc]",
+      "objection": "We already have a tool that does this.",
       "category": "competition",
-      "response": "We understand and respect that investment. ThoughtSpot isn't about replacing everything overnight. Many customers start with a specific use case where their current tools aren't meeting needs - like embedded analytics, self-service for business users, or modern cloud analytics. We can coexist and even complement your existing tools.",
+      "response": "Makes sense — most teams we talk to do. The question is whether it's delivering what you need. Many customers run {{product}} alongside what they have and start with the use case where the current tool falls short. What's the gap that made this conversation worth having?",
       "talkingPoints": [
-        "Start with a pilot for a specific use case",
-        "Many customers run ThoughtSpot alongside existing BI",
-        "Focus on gaps in current solution",
-        "Phased approach reduces risk",
-        "ROI from new capabilities, not replacement"
+        "Coexist first, consolidate later — no rip-and-replace required",
+        "Focus on the gap, not a feature-by-feature bake-off",
+        "Retiring overlapping tools often funds the change"
       ],
       "questions": [
-        "What use cases is your current tool struggling with?",
-        "Are there user groups not being served well today?",
-        "What would make this evaluation worth your time?",
-        "How do you handle ad-hoc analysis requests now?"
+        "What does your current tool do well?",
+        "Where do people work around it today?",
+        "When does that contract renew?"
       ]
     },
     {
       "id": "obj-3",
-      "objection": "Our users won't adopt another tool",
-      "category": "implementation",
-      "response": "Change management is always a concern, but ThoughtSpot typically sees much higher adoption than traditional BI tools because it's actually easier to use. The search interface is familiar - everyone knows how to use Google. Most users are productive within minutes, not weeks.",
+      "objection": "Now isn't the right time.",
+      "category": "timing",
+      "response": "Understood — timing matters. Can I ask what would make it the right time? Often the cost of waiting is higher than it looks, especially if the problem compounds every quarter. If it's a resourcing question, we can scope a first phase that fits around what you have on your plate.",
       "talkingPoints": [
-        "Search interface requires no training - it's familiar",
-        "Higher adoption rates than traditional BI (typically 3-5x)",
-        "Users choose ThoughtSpot because it's easier",
-        "Champion program helps drive grassroots adoption",
-        "Mobile access increases engagement"
+        "Quantify the cost of waiting per month or quarter",
+        "Tie back to deadlines and initiatives they already mentioned",
+        "Offer a smaller first phase that fits current capacity"
       ],
       "questions": [
-        "What is your current BI tool adoption rate?",
-        "How much training did that require?",
-        "What would success look like for adoption?",
-        "Who are your analytics champions?"
+        "What's competing for priority right now?",
+        "What happens if this waits six months?",
+        "What would need to be true to start next quarter?"
       ]
     },
     {
       "id": "obj-4",
-      "objection": "We need to see more customer references in our industry",
+      "objection": "We could build this ourselves.",
       "category": "competition",
-      "response": "I understand wanting to see proven success in your industry. We have customers across [mention relevant industries], and I can connect you with references. That said, analytics challenges are often similar across industries - data democratization, self-service, and faster insights are universal needs.",
+      "response": "You probably could — you clearly have a strong team. The question is whether this is the best use of them. Building the first version is the easy part; maintaining, securing, and scaling it for years is where the cost hides. Most teams would rather put those engineers on the work that differentiates your business.",
       "talkingPoints": [
-        "Can provide references in similar-sized companies",
-        "Many customers started without industry peers",
-        "Focus on use case similarity vs industry",
-        "Offer to connect with customer success team",
-        "Highlight transferable success patterns"
+        "Build cost is the tip of the iceberg; maintenance is the rest",
+        "Opportunity cost: engineers on core product versus internal tooling",
+        "Time to value: weeks with {{product}} versus quarters to build"
       ],
       "questions": [
-        "What specific industry challenges are you concerned about?",
-        "Would use case alignment matter more than industry?",
-        "What would you want to learn from a reference call?",
-        "Are there adjacent industries that would be relevant?"
+        "Have you scoped what it would take to build and maintain?",
+        "Who would own it long term?",
+        "What would that team work on otherwise?"
       ]
     },
     {
       "id": "obj-5",
-      "objection": "Search-based analytics didn't work for us before",
-      "category": "technical",
-      "response": "I hear this occasionally, and it's usually about older search tools or poor implementations. ThoughtSpot is purpose-built for search - it's not a traditional BI tool with search bolted on. Our NLP engine, SpotIQ AI, and semantic modeling make search actually work at scale.",
+      "objection": "Implementation will take too long.",
+      "category": "risk",
+      "response": "That's a common worry, usually based on past projects. We scope to a first use case that goes live quickly, then expand. I can walk you through a typical rollout plan for a team your size, and put you in touch with a customer who's been through it.",
       "talkingPoints": [
-        "What was your previous experience with search analytics?",
-        "ThoughtSpot's search is fundamentally different from others",
-        "Built from ground up for search, not retrofitted",
-        "Continuous NLP improvements and learning",
-        "Show live demo to prove the difference"
+        "Start with one high-value use case and a clear go-live date",
+        "A proven implementation playbook and named owners on our side",
+        "Customer references with similar scope and timelines"
       ],
       "questions": [
-        "What tool did you try before?",
-        "What specifically didn't work?",
-        "What would it take to give search another chance?",
-        "Can we show you the difference in a live demo?"
+        "What was your experience with past implementations?",
+        "How much time can your team commit each week?",
+        "What date would make this a success?"
       ]
     },
     {
       "id": "obj-6",
-      "objection": "Implementation will take too long",
-      "category": "implementation",
-      "response": "ThoughtSpot implementations are typically faster than traditional BI tools. Most customers are live with their first use case in 4-8 weeks. Because we connect directly to your cloud data warehouse, there's no complex ETL or extract layer to build. Our Professional Services team has a proven methodology.",
+      "objection": "Our team won't adopt another tool.",
+      "category": "risk",
+      "response": "Adoption is the whole game, so I'm glad you raised it. We see strong adoption when the tool fits into how people already work and makes their day easier on day one. Let's identify the group that feels the most pain — they tend to become the champions.",
       "talkingPoints": [
-        "Agile implementation approach with quick wins",
-        "No extracts or separate data pipeline needed",
-        "Typical time to first insights: 4-8 weeks",
-        "Proven implementation methodology",
-        "Can start with limited scope and expand"
+        "Meet users where they work with integrations and familiar workflows",
+        "Enablement and success resources included, not extra",
+        "Start with the most motivated team and let results spread"
       ],
       "questions": [
-        "What is your timeline for needing analytics?",
-        "What does your data infrastructure look like?",
-        "Have you defined the initial use case?",
-        "What resources can you dedicate to the project?"
+        "Which past rollouts went well, and why?",
+        "Who would be the first team to benefit?",
+        "What would make this easier than what they do today?"
       ]
     },
     {
       "id": "obj-7",
-      "objection": "Our data isn't ready for this",
+      "objection": "We need to get IT and security involved first.",
       "category": "technical",
-      "response": "Perfect data is a myth - no one has it. ThoughtSpot works with your data as it is. We can help you prioritize what data to make available first. Most customers start with a subset of data for a specific use case and expand over time.",
+      "response": "Absolutely — and the earlier the better. We can share our security documentation and completed questionnaires now so review runs in parallel rather than at the end. Who's the right person on that team to connect with?",
       "talkingPoints": [
-        "Start with available data, expand later",
-        "Data modeling layer helps clean up inconsistencies",
-        "Iterative approach to data quality",
-        "Focus on business value, not perfection",
-        "Data governance can be implemented over time"
+        "Security package ready to share: certifications, questionnaires, architecture",
+        "Run security review in parallel with the business evaluation",
+        "Offer a technical session with their architects"
       ],
       "questions": [
-        "What data quality issues are you concerned about?",
-        "Is your data in a cloud warehouse?",
-        "What data would deliver the most business value?",
-        "Do you have a data catalog or governance program?"
+        "What does your security review process look like?",
+        "Are there requirements that are typically deal-breakers?",
+        "Can we get time with them this week or next?"
       ]
     },
     {
       "id": "obj-8",
-      "objection": "We want to build this ourselves with open source",
-      "category": "competition",
-      "response": "Building with open source seems appealing, but the hidden costs are significant - engineering time, maintenance, scaling, security, and support. Most companies that try this approach end up spending 18-24 months and significant resources before realizing the complexity. ThoughtSpot lets you focus on your core business instead.",
+      "objection": "Just send me some information.",
+      "category": "timing",
+      "response": "Happy to. So I send you something useful rather than a generic deck, can I ask two quick questions about what you're trying to solve? Then I'll tailor it and suggest a short follow-up once you've had a look.",
       "talkingPoints": [
-        "True cost includes engineering time, not just licenses",
-        "Ongoing maintenance and scaling challenges",
-        "Security, compliance, and enterprise features take years",
-        "Opportunity cost of engineering resources",
-        "Time to market advantage with ThoughtSpot"
+        "Earn two minutes of discovery before sending anything",
+        "Tailored material beats a generic deck",
+        "Always leave with a next step on the calendar"
       ],
       "questions": [
-        "How many engineers would work on this?",
-        "What is the timeline to reach production?",
-        "Have you calculated the total cost of engineering time?",
-        "What is the opportunity cost of this vs other projects?"
+        "What would make this worth another conversation?",
+        "Who else should see what I send?",
+        "Can we pencil in 20 minutes next week to go through it?"
       ]
     },
     {
       "id": "obj-9",
-      "objection": "We need to support on-premises deployment",
-      "category": "technical",
-      "response": "While ThoughtSpot is cloud-first, we do support on-premises and private cloud deployments for customers with specific requirements. However, I'd encourage exploring cloud options first - the benefits in terms of scale, performance, and reduced operational overhead are significant.",
+      "objection": "We're locked into a contract with another vendor.",
+      "category": "competition",
+      "response": "That's helpful to know. When does it renew? Teams often use the months before renewal to validate an alternative, so they have leverage and a clear plan instead of an automatic renewal. We can also start in an area your current contract doesn't cover.",
       "talkingPoints": [
-        "Cloud deployment recommended for best experience",
-        "On-prem available for specific requirements",
-        "Private cloud options (VPC, BYOC)",
-        "Hybrid architectures possible",
-        "Total cost of ownership lower in cloud"
+        "Use the renewal window to evaluate with no switching pressure",
+        "Start with an adjacent use case outside the existing contract",
+        "Build the business case now so the decision is ready at renewal"
       ],
       "questions": [
-        "What drives the on-premises requirement?",
-        "Are there specific compliance concerns?",
-        "Have you considered private cloud options?",
-        "What is your broader cloud strategy?"
+        "When is the renewal date, and when does the notice period start?",
+        "How happy is the team with the current vendor?",
+        "Who decides whether to renew?"
       ]
     },
     {
       "id": "obj-10",
-      "objection": "The learning curve seems steep",
-      "category": "implementation",
-      "response": "Actually, ThoughtSpot has one of the lowest learning curves in analytics. The search interface is intuitive - if you can use Google, you can use ThoughtSpot. Our data shows most users are productive within minutes, and we provide comprehensive enablement resources.",
+      "objection": "We don't have the budget this year.",
+      "category": "pricing",
+      "response": "Understood. Budget usually follows priorities — if the business case is strong enough, where would the money typically come from? Some customers fund this by retiring existing tools, others start small this year and expand next budget cycle.",
       "talkingPoints": [
-        "Search interface is familiar to everyone",
-        "Minimal training required for end users",
-        "Comprehensive learning resources and documentation",
-        "Champion program for power users",
-        "Support and customer success team available"
+        "Find the budget owner and the business case they need",
+        "Tools retired and hours saved can self-fund the change",
+        "Phased commercial options to match the budget cycle"
       ],
       "questions": [
-        "What is your concern about the learning curve?",
-        "How much training did your current BI tool require?",
-        "Would a hands-on trial help address this concern?",
-        "Who would be the primary users?"
+        "When does your next budget cycle start?",
+        "Who would need to sponsor this for budget to appear?",
+        "What existing spend overlaps with this?"
       ]
     },
     {
       "id": "obj-11",
-      "objection": "We have concerns about data security",
-      "category": "technical",
-      "response": "Security is foundational to ThoughtSpot. We're SOC 2 Type II certified, support SSO/SAML, and have granular row-level security. Your data stays in your warehouse - we query it, we don't copy it. We work with heavily regulated industries like financial services and healthcare.",
+      "objection": "You're too small / we haven't heard of you.",
+      "category": "risk",
+      "response": "Fair question — you should know who you're betting on. I can share who else in your industry uses {{product}}, how we support customers, and our roadmap. Many customers find they get more attention and influence working with us than they would with a larger vendor.",
       "talkingPoints": [
-        "SOC 2 Type II certified",
-        "Row-level and column-level security",
-        "Data stays in your warehouse (live query mode)",
-        "SSO/SAML integration",
-        "Encryption at rest and in transit",
-        "Audit logging and compliance features"
+        "Relevant customer references and case studies",
+        "Clear support model and named contacts",
+        "Customer influence on the roadmap"
       ],
       "questions": [
-        "What specific security requirements do you have?",
-        "What compliance frameworks do you need to meet?",
-        "How do you handle security in your current BI tool?",
-        "Would you like to review our security documentation?"
+        "What would you need to see to feel confident?",
+        "Would a reference call with a similar customer help?",
+        "What has your experience been with larger vendors?"
       ]
     },
     {
       "id": "obj-12",
-      "objection": "We're not sure about the ROI",
-      "category": "pricing",
-      "response": "ROI comes from three main areas: analyst productivity gains, faster decision making, and broader data democratization. Our customers typically see 50-70% reduction in time spent creating reports, 10x more users with data access, and measurable business impact from faster insights.",
+      "objection": "It's missing a feature we need.",
+      "category": "technical",
+      "response": "Thanks for being direct. Can you tell me more about how you'd use that feature? Sometimes there's another way to get the same outcome, and if it's truly a gap I'd rather tell you honestly and show you where it sits on the roadmap.",
       "talkingPoints": [
-        "Analyst time savings: 50-70% on report creation",
-        "Faster decisions lead to measurable business impact",
-        "Broader access: 5-10x more users with analytics",
-        "Reduced backlog and IT bottlenecks",
-        "Customer case studies with quantified ROI"
+        "Dig into the outcome behind the feature request",
+        "Show alternatives and workarounds that meet the need",
+        "Be honest about gaps and roadmap timing"
       ],
       "questions": [
-        "How do you measure analytics ROI today?",
-        "What is the cost of delayed decisions?",
-        "How many people need but don't have analytics access?",
-        "What would a successful outcome look like?"
+        "What outcome does that feature give you?",
+        "How often would you use it?",
+        "Is it a must-have for day one, or for later?"
       ]
     }
   ]

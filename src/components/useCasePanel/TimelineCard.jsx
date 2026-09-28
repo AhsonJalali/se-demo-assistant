@@ -23,12 +23,12 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
   };
 
   const timelineColors = {
-    'no-timeline': 'bg-[#a8b0c8]/20 text-[#a8b0c8] border-[#a8b0c8]/40',
-    'within-1-month': 'bg-red-500/20 text-red-400 border-red-500/40',
-    '1-3-months': 'bg-orange-500/20 text-orange-400 border-orange-500/40',
-    '3-6-months': 'bg-amber-500/20 text-amber-400 border-amber-500/40',
-    '6-12-months': 'bg-[#a8b0c8]/20 text-[#a8b0c8] border-[#a8b0c8]/40',
-    '12-plus-months': 'bg-[#a8b0c8]/20 text-[#a8b0c8] border-[#a8b0c8]/40'
+    'no-timeline': 'bg-muted text-fg-2 border-line-strong',
+    'within-1-month': 'bg-danger-soft text-danger border-danger/40',
+    '1-3-months': 'bg-warning-soft text-warning border-warning/60',
+    '3-6-months': 'bg-warning-soft text-warning border-warning/40',
+    '6-12-months': 'bg-muted text-fg-2 border-line-strong',
+    '12-plus-months': 'bg-muted text-fg-2 border-line-strong'
   };
 
   const timelineLabels = {
@@ -43,15 +43,14 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
   const isCardCollapsed = collapsed || isCollapsed;
 
   return (
-    <div className="glass-panel-strong rounded-xl p-4 space-y-4">
+    <div className="panel p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
-          <span>📅</span>
+        <h3 className="text-sm font-semibold text-fg flex items-center gap-2">
           Timeline & Project Scope
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
+          className="icon-btn -mr-1.5"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,14 +62,14 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
       <div className={`space-y-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
         {/* Decision Timeline */}
         <div>
-          <label htmlFor="decisionTimeline" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label htmlFor="decisionTimeline" className="label">
             Decision Timeline
           </label>
           <select
             id="decisionTimeline"
             value={timeline.decisionTimeline || ''}
             onChange={(e) => handleFieldChange('decisionTimeline', e.target.value)}
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+            className="field"
           >
             <option value="">Select timeline...</option>
             <option value="no-timeline">No timeline set</option>
@@ -82,24 +81,24 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
           </select>
           {timeline.decisionTimeline && (
             <div className="mt-2">
-              <span className={`inline-block px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide border ${timelineColors[timeline.decisionTimeline]}`}>
+              <span className={`inline-block px-3 py-1 rounded-lg text-xs font-medium border ${timelineColors[timeline.decisionTimeline]}`}>
                 {timelineLabels[timeline.decisionTimeline]}
               </span>
             </div>
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Budget Status */}
           <div>
-            <label htmlFor="budgetStatus" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+            <label htmlFor="budgetStatus" className="label">
               Budget Status
             </label>
             <select
               id="budgetStatus"
               value={timeline.budgetStatus || ''}
               onChange={(e) => handleFieldChange('budgetStatus', e.target.value)}
-              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+              className="field"
             >
               <option value="">Select status...</option>
               <option value="not-discussed">Not discussed</option>
@@ -111,14 +110,14 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
 
           {/* Current Phase */}
           <div>
-            <label htmlFor="currentPhase" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+            <label htmlFor="currentPhase" className="label">
               Current Phase
             </label>
             <select
               id="currentPhase"
               value={timeline.currentPhase || ''}
               onChange={(e) => handleFieldChange('currentPhase', e.target.value)}
-              className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+              className="field"
             >
               <option value="">Select phase...</option>
               <option value="initial-discovery">Initial discovery</option>
@@ -133,7 +132,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Expected Start Date */}
         <div>
-          <label htmlFor="expectedStartDate" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label htmlFor="expectedStartDate" className="label">
             Expected Start Date
           </label>
           <input
@@ -141,13 +140,13 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
             type="date"
             value={timeline.expectedStartDate || ''}
             onChange={(e) => handleFieldChange('expectedStartDate', e.target.value)}
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+            className="field"
           />
         </div>
 
         {/* Key Milestones */}
         <div>
-          <label htmlFor="keyMilestones" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+          <label htmlFor="keyMilestones" className="label">
             Key Milestones
           </label>
           <textarea
@@ -156,7 +155,7 @@ const TimelineCard = ({ useCaseId, collapsed = false }) => {
             onChange={(e) => handleFieldChange('keyMilestones', e.target.value)}
             placeholder="List key dates and milestones..."
             rows={4}
-            className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors resize-none"
+            className="field resize-y"
           />
         </div>
       </div>

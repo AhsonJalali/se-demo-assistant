@@ -1,50 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { formatDateTime } from '../utils/format';
+import Dialog from './ui/Dialog';
 
 const MAX_CHARS = 2000;
 
+/** Finds the library item a note is attached to, for the dialog title. */
+const findItemTitle = (content, itemId) => {
+  for (const list of Object.values(content)) {
+    const item = Array.isArray(list) && list.find(i => i.id === itemId);
+    if (item) return item.question || item.objection || item.feature || item.name || null;
+  }
+  return null;
+};
+
 const NoteModal = () => {
-  const {
-    editingNoteItemId,
-    getItemNote,
-    addItemNote,
-    removeItemNote,
-    closeNoteModal
-  } = useApp();
+  const { editingNoteItemId, getItemNote, addItemNote, removeItemNote, closeNoteModal, content } = useApp();
+  const [text, setText] = useState('');
 
-  const [content, setContent] = useState('');
-  const textareaRef = useRef(null);
-
-  // Load existing note content
   useEffect(() => {
-    if (editingNoteItemId) {
-      const note = getItemNote(editingNoteItemId);
-      setContent(note?.content || '');
-    }
-  }, [editingNoteItemId, getItemNote]);
-
-  // Auto-focus textarea
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  }, [editingNoteItemId]);
+    if (editingNoteItemId) setText(getItemNote(editingNoteItemId)?.content || '');
+  }, [editingNoteItemId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!editingNoteItemId) return null;
 
   const note = getItemNote(editingNoteItemId);
-  const charCount = content.length;
-  const isOverLimit = charCount > MAX_CHARS;
+  const isOverLimit = text.length > MAX_CHARS;
+  const itemTitle = findItemTitle(content, editingNoteItemId);
 
   const handleSave = () => {
-    if (!isOverLimit) {
-      if (content.trim()) {
-        addItemNote(editingNoteItemId, content);
-      } else {
-        removeItemNote(editingNoteItemId);
-      }
-      closeNoteModal();
-    }
+    if (isOverLimit) return;
+    if (text.trim()) addItemNote(editingNoteItemId, text);
+    else removeItemNote(editingNoteItemId);
+    closeNoteModal();
   };
 
   const handleDelete = () => {
@@ -52,127 +40,45 @@ const NoteModal = () => {
     closeNoteModal();
   };
 
-  const handleCancel = () => {
-    closeNoteModal();
-  };
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      handleCancel();
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      handleCancel();
-    }
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-      handleSave();
-    }
-  };
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return '';
-    const date = new Date(timestamp);
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
-      onClick={handleBackdropClick}
-      onKeyDown={handleKeyDown}
+    <Dialog
+      title={note?.content ? 'Edit note' : 'Add note'}
+      description={itemTitle || undefined}
+      onClose={closeNoteModal}
+      size="lg"
+      footer={
+        <>
+          {note?.content && (
+            <button type="button" onClick={handleDelete} className="btn btn-danger-ghost mr-auto">Delete note</button>
+          )}
+          <span className="hidden sm:flex items-center gap-1 text-xs text-fg-3 mr-2"><kbd>⌘</kbd><kbd>↵</kbd> to save</span>
+          <button type="button" className="btn btn-secondary" onClick={closeNoteModal}>Cancel</button>
+          <button type="button" className="btn btn-primary" onClick={handleSave} disabled={isOverLimit}>Save note</button>
+        </>
+      }
     >
-      <div className="w-full max-w-2xl max-h-[80vh] bg-[#08062B] border border-[#1B1B61] rounded-xl shadow-2xl animate-scaleIn flex flex-col">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-[#1B1B61]">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-[#e8eaf0]">Note</h3>
-              {note && note.timestamp && (
-                <p className="text-xs text-[#a8b0c8] mt-1">
-                  {note.lastModified !== note.timestamp ? 'Modified' : 'Created'}: {formatTimestamp(note.lastModified || note.timestamp)}
-                </p>
-              )}
-            </div>
-            <button
-              onClick={handleCancel}
-              className="p-2 rounded-lg hover:bg-[#1B1B61] transition-colors duration-200"
-            >
-              <svg className="w-5 h-5 text-[#a8b0c8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 p-6 overflow-hidden flex flex-col">
-          <textarea
-            ref={textareaRef}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Add your notes here..."
-            className="w-full h-full min-h-[300px] px-4 py-3 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] placeholder-[#a8b0c8]/50 focus:outline-none focus:border-[#00D2FF] transition-colors duration-200 resize-none custom-scrollbar"
-          />
-
-          {/* Character Count */}
-          <div className={`mt-2 text-xs text-right ${isOverLimit ? 'text-red-400' : 'text-[#a8b0c8]'}`}>
-            {charCount.toLocaleString()} / {MAX_CHARS.toLocaleString()} characters
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="px-6 py-4 border-t border-[#1B1B61] flex items-center justify-between">
-          <div>
-            {note && note.content && (
-              <button
-                onClick={handleDelete}
-                className="px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors duration-200"
-              >
-                Delete Note
-              </button>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleCancel}
-              className="px-6 py-2 rounded-lg border border-[#1B1B61] text-[#e8eaf0] hover:bg-[#1B1B61] transition-colors duration-200"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={isOverLimit}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                isOverLimit
-                  ? 'bg-[#1B1B61] text-[#a8b0c8] cursor-not-allowed'
-                  : 'bg-[#00D2FF] text-[#08062B] hover:bg-[#00D2FF]/90'
-              }`}
-            >
-              Save Note
-            </button>
-          </div>
-        </div>
-
-        {/* Keyboard Shortcuts Help */}
-        <div className="px-6 py-2 text-xs text-[#a8b0c8] border-t border-[#1B1B61]/50">
-          <span className="inline-flex items-center gap-1">
-            <kbd className="px-1.5 py-0.5 bg-[#1B1B61] rounded text-[10px]">Esc</kbd> to cancel
-          </span>
-          <span className="inline-flex items-center gap-1 ml-4">
-            <kbd className="px-1.5 py-0.5 bg-[#1B1B61] rounded text-[10px]">⌘/Ctrl</kbd>
-            <kbd className="px-1.5 py-0.5 bg-[#1B1B61] rounded text-[10px]">Enter</kbd> to save
-          </span>
-        </div>
+      <label htmlFor="note-text" className="sr-only">Note</label>
+      <textarea
+        id="note-text"
+        data-autofocus
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            e.preventDefault();
+            handleSave();
+          }
+        }}
+        placeholder="What did the prospect say? What should you follow up on?"
+        className={`field min-h-[220px] resize-y leading-relaxed ${isOverLimit ? 'field-error' : ''}`}
+      />
+      <div className="mt-2 flex justify-between text-xs text-fg-3">
+        <span>{note?.lastModified ? `Last edited ${formatDateTime(note.lastModified)}` : ''}</span>
+        <span className={isOverLimit ? 'text-danger font-medium' : ''}>
+          {text.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}
+        </span>
       </div>
-    </div>
+    </Dialog>
   );
 };
 
