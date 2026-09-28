@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { streamObjectionCopilot } from '../utils/objectionCopilot';
+import { streamObjectionCopilot, parseMatchedIds } from '../utils/objectionCopilot';
 
 // ── Section parser ────────────────────────────────────────────────────────────
 const SECTION_KEYS = ['READ', 'RESPONSE', 'REDIRECT'];
@@ -68,11 +68,13 @@ function errorMessage(err) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 const ObjectionCopilot = () => {
-  const { currentSession } = useApp();
+  const { currentSession, setHighlightedItemIds, updateGeneralNotes, showToast } = useApp();
   const [text, setText] = useState('');
   const [output, setOutput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState(null);
+  const [lastObjection, setLastObjection] = useState('');
+  const [saved, setSaved] = useState(false);
   const abortRef = useRef(null);
 
   const sections = parseCopilotSections(output);
@@ -83,15 +85,24 @@ const ObjectionCopilot = () => {
     if (!objectionText || isStreaming) return;
     setError(null);
     setOutput('');
+    setHighlightedItemIds([]);
+    setSaved(false);
+    setLastObjection(objectionText);
     setIsStreaming(true);
     const controller = new AbortController();
     abortRef.current = controller;
+    let full = '';
     try {
       await streamObjectionCopilot(
         { objectionText, session: currentSession },
-        chunk => setOutput(prev => prev + chunk),
+        chunk => {
+          full += chunk;
+          setOutput(prev => prev + chunk);
+        },
         controller.signal
       );
+      // Highlight the library cards the model matched (READ section's Matches: line).
+      setHighlightedItemIds(parseMatchedIds(full));
     } catch (err) {
       if (err?.name !== 'AbortError') setError(errorMessage(err));
     } finally {
@@ -107,6 +118,21 @@ const ObjectionCopilot = () => {
   function handleClear() {
     setOutput('');
     setError(null);
+    setHighlightedItemIds([]);
+    setSaved(false);
+  }
+
+  function handleSaveToNotes() {
+    if (!currentSession || !hasOutput) return;
+    const stamp = new Date().toLocaleString();
+    const block =
+      `— Objection Copilot · ${stamp} —\n` +
+      `Objection: "${lastObjection}"\n\n` +
+      `${output.trim()}\n`;
+    const existing = currentSession.notes?.general ?? '';
+    updateGeneralNotes(existing ? `${existing.trimEnd()}\n\n${block}` : block);
+    setSaved(true);
+    showToast('Saved to session notes', 'success');
   }
 
   function handleKeyDown(e) {
@@ -149,6 +175,15 @@ const ObjectionCopilot = () => {
               className="text-sm px-4 py-2 rounded-lg bg-[var(--color-accent-cyan)] text-black font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
             >
               Help me respond
+            </button>
+          )}
+          {hasOutput && !isStreaming && currentSession && (
+            <button
+              onClick={handleSaveToNotes}
+              disabled={saved}
+              className="text-sm px-3 py-2 rounded-lg border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-accent-cyan)] hover:border-[var(--color-accent-cyan)]/50 disabled:opacity-50 disabled:cursor-default transition-all duration-200"
+            >
+              {saved ? 'Saved ✓' : 'Save to session notes'}
             </button>
           )}
           {hasOutput && !isStreaming && (

@@ -2,6 +2,20 @@ import differentiatorsData from '../data/differentiators.json';
 import objectionsData from '../data/objections.json';
 import { streamClaude, MODEL } from './claudeApi';
 
+// The READ section ends with a line like "Matches: obj-1, obj-7" (or
+// "Matches: none"). Pull the objection ids out of it so the card grid can
+// highlight them. Tolerant of casing, bold/asterisks, and trailing punctuation.
+export function parseMatchedIds(text) {
+  if (!text) return [];
+  const line = text.split('\n').find(l => /^\s*\**\s*matches\s*:/i.test(l));
+  if (!line) return [];
+  const value = line.replace(/^\s*\**\s*matches\s*:\s*/i, '').replace(/\**/g, '');
+  if (/^\s*none\b/i.test(value)) return [];
+  const ids = value.match(/obj-\d+/gi) || [];
+  // De-dupe, preserve order, normalize to lowercase (ids in the data are lowercase).
+  return [...new Set(ids.map(id => id.toLowerCase()))];
+}
+
 function buildSystemPrompt() {
   const objections = JSON.stringify(objectionsData.objections, null, 2);
   const differentiators = JSON.stringify(differentiatorsData.competitors, null, 2);
