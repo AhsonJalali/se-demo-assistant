@@ -1,26 +1,38 @@
 import { getToken, clearToken } from '../hooks/useAuth';
-import discoveryData from '../data/discovery.json';
-import differentiatorsData from '../data/differentiators.json';
-import objectionsData from '../data/objections.json';
-import usecasesData from '../data/usecases.json';
-
 const ANTHROPIC_API_URL = '/anthropic/v1/messages';
 export const MODEL = 'claude-sonnet-5';
 
-function buildSystemPrompt() {
-  const discovery = JSON.stringify(discoveryData.questions, null, 2);
-  const differentiators = JSON.stringify(differentiatorsData.competitors, null, 2);
-  const objections = JSON.stringify(objectionsData.objections, null, 2);
-  const usecases = JSON.stringify(usecasesData.useCases, null, 2);
+/**
+ * Describes what the SE sells, from Settings. Shared by every AI feature so
+ * the model never assumes a particular vendor.
+ */
+export function describeProduct(settings) {
+  const product = settings?.productName?.trim() || 'our platform';
+  const company = settings?.companyName?.trim();
+  const pitch = settings?.productPitch?.trim();
+  let text = `The SE sells ${product}${company && company !== 'our team' ? ` (from ${company})` : ''}.`;
+  if (pitch) text += `\n\nWhat ${product} does, in the SE's words:\n${pitch}`;
+  else text += ` No product description was provided, so stay grounded in the content library below and avoid inventing specific product features, certifications, or customer names.`;
+  return text;
+}
 
-  return `You are an expert ThoughtSpot Solution Engineer assistant. Your job is to help SEs prepare highly personalized, relevant demos for specific prospects.
+function buildSystemPrompt({ content, settings }) {
+  const discovery = JSON.stringify(content.discovery, null, 2);
+  const differentiators = JSON.stringify(content.differentiators, null, 2);
+  const objections = JSON.stringify(content.objections, null, 2);
+  const usecases = JSON.stringify(content.usecases, null, 2);
+  const product = settings?.productName?.trim() || 'our platform';
 
-You have access to ThoughtSpot's complete sales content library:
+  return `You are an expert Solutions Engineer (pre-sales) assistant. Your job is to help SEs prepare highly personalized, relevant demos for specific prospects.
+
+${describeProduct(settings)}
+
+You have access to the SE's sales content library:
 
 DISCOVERY QUESTIONS:
 ${discovery}
 
-COMPETITIVE DIFFERENTIATORS:
+COMPETITIVE POSITIONING (versus common alternatives):
 ${differentiators}
 
 OBJECTION HANDLING:
@@ -47,15 +59,15 @@ ${usecases}
    - You have up to 5 web searches per brief. Use them. Do not produce a brief based purely on guessing when search would clarify.
 
 4. **Make explicit, useful assumptions when info is still sparse after searching.** Do not hedge passively. State the assumption out loud and proceed. Example phrasing:
-   > "Based on the company name pattern and limited public footprint, Gabooja appears to be an early-stage [guess: marketplace / SaaS / agency] — this brief assumes that. Adjust during discovery if the SE confirms otherwise."
+   > "Based on the company name pattern and limited public footprint, Acme Labs appears to be an early-stage [guess: marketplace / SaaS / agency] — this brief assumes that. Adjust during discovery if the SE confirms otherwise."
    This is far more useful to an SE than a refusal or a request for clarification.
 
-5. **Ground every recommendation in the prospect's specifics.** Reframe library content (discovery questions, differentiators, objections, use cases) so it speaks directly to this company and these stakeholders — not generic ThoughtSpot pitch.
+5. **Ground every recommendation in the prospect's specifics.** Reframe library content (discovery questions, differentiators, objections, use cases) so it speaks directly to this company and these stakeholders — not a generic pitch for ${product}.
 
 # OUTPUT FORMAT
 
 ## BRIEF
-Write 2-3 paragraphs covering: (a) company context — what they do, industry, scale, any signals from web search; (b) what the stakeholder(s) likely care about based on their LinkedIn role/background; (c) likely analytics pain points for a company of this profile; (d) the recommended ThoughtSpot angle for this specific prospect. If you had to make assumptions due to sparse input, state them explicitly here in one sentence.
+Write 2-3 paragraphs covering: (a) company context — what they do, industry, scale, any signals from web search; (b) what the stakeholder(s) likely care about based on their LinkedIn role/background; (c) likely pain points relevant to ${product} for a company of this profile; (d) the recommended ${product} angle for this specific prospect. If you had to make assumptions due to sparse input, state them explicitly here in one sentence.
 
 ## DISCOVERY
 List the 8-10 most relevant discovery questions from the library above, reframed specifically for this prospect. Number each question and add 1-2 sentences below explaining why it's relevant for this specific company/person.
@@ -179,8 +191,9 @@ export async function streamClaude(body, onChunk, signal) {
  * @param {Object} inputs - { companyName, companyWebsite, linkedinProfiles, additionalContext }
  * @param {Function} onChunk - called with each text chunk as it arrives
  * @param {AbortSignal} signal - optional AbortSignal for cancellation
+ * @param {Object} ctx - { content, settings } — the filled content library and workspace settings
  */
-export async function streamAiPrep(inputs, onChunk, signal) {
+export async function streamAiPrep(inputs, onChunk, signal, { content, settings }) {
   return streamClaude(
     {
       model: MODEL,
@@ -188,7 +201,7 @@ export async function streamAiPrep(inputs, onChunk, signal) {
       system: [
         {
           type: 'text',
-          text: buildSystemPrompt(),
+          text: buildSystemPrompt({ content, settings }),
           cache_control: { type: 'ephemeral' },
         },
       ],

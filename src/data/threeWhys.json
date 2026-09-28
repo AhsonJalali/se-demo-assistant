@@ -2,17 +2,20 @@
   "questions": [
     {
       "id": "why-change",
-      "question": "Why change",
+      "question": "Why change?",
+      "prompt": "What's broken or limiting about how they work today? What does it cost them?",
       "order": 1
     },
     {
       "id": "why-now",
-      "question": "Why now",
+      "question": "Why now?",
+      "prompt": "What event, deadline, or initiative makes this urgent this quarter rather than next year?",
       "order": 2
     },
     {
-      "id": "why-thoughtspot",
-      "question": "Why ThoughtSpot",
+      "id": "why-us",
+      "question": "Why {{Product}}?",
+      "prompt": "Which capabilities map to their must-haves, and why would they pick us over the alternatives?",
       "order": 3
     }
   ]

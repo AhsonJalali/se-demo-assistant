@@ -1,316 +1,178 @@
 {
   "competitors": {
-    "tableau": {
-      "name": "Tableau",
+    "status-quo": {
+      "name": "Status quo",
       "differentiators": [
         {
-          "id": "diff-tableau-1",
-          "category": "Search & AI",
-          "feature": "Natural Language Search",
-          "thoughtspot": "AI-powered search built from ground up with SpotIQ. Understands context, relationships, and can handle complex multi-step queries naturally.",
-          "competitor": "Ask Data feature is basic natural language bolt-on. Primarily drag-and-drop interface with limited natural language capability.",
+          "id": "diff-sq-1",
+          "category": "Cost of inaction",
+          "feature": "The hidden cost of \"good enough\"",
+          "ours": "{{Product}} removes the manual work and delays that the current process absorbs every week, and makes the cost of the problem visible.",
+          "theirs": "Doing nothing feels free, but the cost shows up as hours on workarounds, slow decisions, errors, and missed opportunities.",
           "talkingPoints": [
-            "Search-first architecture vs bolt-on feature",
-            "Handles complex queries with multiple filters and aggregations",
-            "SpotIQ automatically surfaces insights without queries",
-            "Natural language is core to UX, not an add-on"
+            "Quantify the weekly hours spent on workarounds",
+            "Put a number on the risk and errors of the current process",
+            "Every quarter of delay compounds the cost"
           ],
-          "demo": "Show complex multi-fact query in search vs Tableau's limited Ask Data"
+          "demo": "Recreate one painful workflow from discovery and time it live, before and after."
         },
         {
-          "id": "diff-tableau-2",
-          "category": "User Experience",
-          "feature": "Ease of Use",
-          "thoughtspot": "Google-like search interface. Business users get answers in seconds without training. No need to understand dimensions, measures, or viz types.",
-          "competitor": "Requires understanding of data relationships, shelf concepts, and visualization grammar. Steep learning curve for business users.",
+          "id": "diff-sq-2",
+          "category": "Scale",
+          "feature": "Growing past spreadsheets and manual processes",
+          "ours": "Built to scale with the business: more users, more data, more volume without adding headcount.",
+          "theirs": "Spreadsheets and manual handoffs work until they don't. They break silently as the team and volume grow.",
           "talkingPoints": [
-            "Minutes to value vs weeks of training",
-            "Search is familiar to all users",
-            "No need to know 'how' to build visualizations",
-            "Automatic chart type selection based on data"
+            "What works for ten people rarely works for a hundred",
+            "Single source of truth instead of copies and versions",
+            "Audit trail and governance come built in"
           ],
-          "demo": "Have prospect try search vs building in Tableau from scratch"
+          "demo": "Show the same task at 10x volume with no extra effort."
         },
         {
-          "id": "diff-tableau-3",
-          "category": "Embedded Analytics",
-          "feature": "Embedding Capabilities",
-          "thoughtspot": "Full low-code embedding with React, Angular, Vue components. Entire search experience embeds seamlessly. Developer-friendly APIs and SDKs.",
-          "competitor": "Limited embedding options. Typically just iframe embedding. Requires significant custom development for native feel.",
+          "id": "diff-sq-3",
+          "category": "Risk",
+          "feature": "Key-person dependency",
+          "ours": "Process and knowledge live in {{product}}, not in one person's head or one fragile spreadsheet.",
+          "theirs": "The current process often depends on a few people who know how it works. When they are out or leave, it stops.",
           "talkingPoints": [
-            "True headless BI with visual embed SDK",
-            "Embed entire search bar or specific visualizations",
-            "Customizable look and feel to match your brand",
-            "REST APIs for programmatic access"
+            "Ask who would be missed most if they left tomorrow",
+            "Documented, repeatable workflows",
+            "Access controls instead of shared files"
           ],
-          "demo": "Show embedded search in sample app vs Tableau embedded dashboard"
-        },
-        {
-          "id": "diff-tableau-4",
-          "category": "Scale & Performance",
-          "feature": "Cloud-Native Architecture",
-          "thoughtspot": "Built for cloud scale from day one. Optimized for modern cloud data warehouses. Pushes compute to the warehouse.",
-          "competitor": "Desktop origins with cloud added later. Extract-based architecture limits scale and freshness.",
-          "talkingPoints": [
-            "Live query mode leverages warehouse compute",
-            "No extracts needed for most use cases",
-            "Elastic scaling in cloud",
-            "Real-time data access"
-          ],
-          "demo": "Show query performance on large datasets"
-        },
-        {
-          "id": "diff-tableau-5",
-          "category": "AI & Automation",
-          "feature": "SpotIQ Insights",
-          "thoughtspot": "Automated insight discovery with SpotIQ. Proactively finds anomalies, trends, and patterns without user queries.",
-          "competitor": "Manual exploration required. Explain Data feature is limited and reactive, not proactive.",
-          "talkingPoints": [
-            "AI finds insights users wouldn't think to look for",
-            "Anomaly detection and forecasting built-in",
-            "Natural language explanations of insights",
-            "Reduces time from question to insight"
-          ],
-          "demo": "Run SpotIQ analysis and show auto-discovered insights"
+          "demo": "Hand the workflow to a new user and have them complete it without training."
         }
       ]
     },
-    "powerbi": {
-      "name": "Power BI",
+    "build": {
+      "name": "Build in-house",
       "differentiators": [
         {
-          "id": "diff-powerbi-1",
-          "category": "Search & AI",
-          "feature": "Search-Driven Analytics",
-          "thoughtspot": "Purpose-built search engine for analytics. Every interaction starts with search. Sophisticated NLP understands business terminology.",
-          "competitor": "Q&A feature is limited and often fails on complex queries. Primarily a report consumption tool.",
+          "id": "diff-build-1",
+          "category": "Total cost",
+          "feature": "Build cost versus total cost of ownership",
+          "ours": "A predictable subscription that includes hosting, security, upgrades, and support.",
+          "theirs": "The first version is the cheap part. Maintenance, on-call, security patches, and new requests typically cost several times the initial build.",
           "talkingPoints": [
-            "Search is the primary interface, not a side feature",
-            "Better handling of synonyms and business terms",
-            "Multi-step queries work naturally",
-            "Faster time to insight"
+            "Maintenance typically dwarfs the initial build",
+            "Hidden costs: on-call, security, compliance, documentation",
+            "Predictable spend versus open-ended engineering time"
           ],
-          "demo": "Compare ThoughtSpot search to Power BI Q&A on same dataset"
+          "demo": "Walk through the admin, security, and upgrade features they would otherwise have to build."
         },
         {
-          "id": "diff-powerbi-2",
-          "category": "Data Modeling",
-          "feature": "Ease of Data Modeling",
-          "thoughtspot": "Simple, intuitive data modeling. Define relationships and synonyms through UI. No DAX required for most use cases.",
-          "competitor": "Requires learning DAX and Power Query M. Complex data modeling for anything beyond basics. Steep learning curve.",
+          "id": "diff-build-2",
+          "category": "Time to value",
+          "feature": "Weeks, not quarters",
+          "ours": "Go live on a first use case in weeks with a proven rollout playbook.",
+          "theirs": "Internal builds compete with the product roadmap for engineers and routinely slip by quarters.",
           "talkingPoints": [
-            "No proprietary formula language to learn",
-            "Visual relationship editor",
-            "Leverages semantic layer",
-            "Business users can create content without IT"
+            "Value starts in weeks, not after a build cycle",
+            "No competition for scarce engineering time",
+            "Benefit from years of customer-driven product development"
           ],
-          "demo": "Show how easy it is to create relationships and calculations"
+          "demo": "Configure a working version of their use case live during the call."
         },
         {
-          "id": "diff-powerbi-3",
-          "category": "Enterprise Scale",
-          "feature": "Multi-Cloud Support",
-          "thoughtspot": "Deploy on any cloud (AWS, Azure, GCP) or bring your own cloud. Not locked into Microsoft ecosystem.",
-          "competitor": "Tightly coupled with Microsoft Azure ecosystem. Limited flexibility for multi-cloud strategies.",
+          "id": "diff-build-3",
+          "category": "Focus",
+          "feature": "Engineers on what differentiates you",
+          "ours": "Frees engineering to focus on the product and experiences that set the business apart.",
+          "theirs": "Every engineer maintaining internal tooling is one not working on the core product.",
           "talkingPoints": [
-            "Cloud-agnostic deployment",
-            "Works with any data warehouse",
-            "No vendor lock-in",
-            "Supports hybrid architectures"
+            "Opportunity cost of engineering time",
+            "Buy commodity, build differentiation",
+            "Extensible APIs when they do need something custom"
           ],
-          "demo": "Show connections to multiple cloud data sources"
-        },
-        {
-          "id": "diff-powerbi-4",
-          "category": "Embedded Analytics",
-          "feature": "Embedding for ISVs",
-          "thoughtspot": "Built for ISV embedding. Full white-labeling, multi-tenancy, and usage-based pricing model. Developer-friendly.",
-          "competitor": "Embedding is complex and expensive. Per-user pricing model doesn't work for external use cases. Limited customization.",
-          "talkingPoints": [
-            "Embed entire search experience, not just reports",
-            "Multi-tenant architecture out of the box",
-            "Usage-based pricing for embedded scenarios",
-            "Complete API control"
-          ],
-          "demo": "Show multi-tenant embedded demo with different customer data"
-        },
-        {
-          "id": "diff-powerbi-5",
-          "category": "User Experience",
-          "feature": "Self-Service for All Users",
-          "thoughtspot": "True self-service without training. Business users get insights without IT intervention.",
-          "competitor": "Power BI Desktop required for content creation. Business users limited to consuming reports created by developers.",
-          "talkingPoints": [
-            "No desktop application needed",
-            "Everyone can ask questions, not just view dashboards",
-            "Reduces bottleneck on IT and BI teams",
-            "Democratizes data access"
-          ],
-          "demo": "Show business user workflow in ThoughtSpot vs Power BI"
-        },
-        {
-          "id": "diff-powerbi-6",
-          "category": "AI & Automation",
-          "feature": "Intelligent Insights",
-          "thoughtspot": "AI-generated insights with natural language explanations. SpotIQ automatically finds what's important.",
-          "competitor": "Insights features are basic. Requires manual exploration and configuration.",
-          "talkingPoints": [
-            "Automated anomaly detection",
-            "Proactive insight delivery",
-            "Natural language summaries",
-            "Machine learning without data science"
-          ],
-          "demo": "Show SpotIQ finding insights automatically"
+          "demo": "Show the APIs and extension points that cover custom needs without a full build."
         }
       ]
     },
-    "looker": {
-      "name": "Looker",
+    "incumbent": {
+      "name": "Incumbent vendor",
       "differentiators": [
         {
-          "id": "diff-looker-1",
-          "category": "User Experience",
-          "feature": "Business User Accessibility",
-          "thoughtspot": "Search interface for business users. No need to understand LookML or data models. Get answers immediately.",
-          "competitor": "Requires developers to create Looks and dashboards. Business users limited to consuming pre-built content. LookML is developer-only.",
+          "id": "diff-inc-1",
+          "category": "User experience",
+          "feature": "Built for the people who use it every day",
+          "ours": "A modern, intuitive experience that business users adopt without weeks of training.",
+          "theirs": "Legacy platforms were designed for specialists. Business users depend on a few power users or avoid the tool entirely.",
           "talkingPoints": [
-            "Business users can explore without developer help",
-            "Search interface vs building Looks",
-            "Reduced bottleneck on data team",
-            "Faster time to insight"
+            "Adoption is the real measure of ROI",
+            "Less training, fewer tickets to the admin team",
+            "Self-service for business users"
           ],
-          "demo": "Show business user asking ad-hoc questions vs waiting for Look to be built"
+          "demo": "Have a business stakeholder complete a task themselves during the demo."
         },
         {
-          "id": "diff-looker-2",
-          "category": "Data Modeling",
-          "feature": "Modeling Approach",
-          "thoughtspot": "Visual UI-based modeling. Business-friendly interface. Changes take effect immediately.",
-          "competitor": "Code-based LookML modeling. Requires Git workflow, reviews, deployment. Developer-centric approach.",
+          "id": "diff-inc-2",
+          "category": "Innovation",
+          "feature": "Pace of innovation",
+          "ours": "Frequent releases with capabilities delivered to every customer automatically.",
+          "theirs": "Large incumbents often ship slowly, gate new features behind upgrades or add-on SKUs, and prioritise their largest accounts.",
           "talkingPoints": [
-            "No code required for data modeling",
-            "Faster iteration and changes",
-            "Business users can contribute to models",
-            "Lower barrier to entry"
+            "Recent release highlights and roadmap",
+            "No painful upgrade projects",
+            "Customer input shapes the roadmap"
           ],
-          "demo": "Show creating relationships and calculations in UI vs writing LookML"
+          "demo": "Show two capabilities released in the last quarter."
         },
         {
-          "id": "diff-looker-3",
-          "category": "Search & AI",
-          "feature": "Natural Language Search",
-          "thoughtspot": "Core product capability. Sophisticated NLP engine. Handles complex queries naturally.",
-          "competitor": "No equivalent natural language capability. Users must know how to navigate Explores and build Looks.",
+          "id": "diff-inc-3",
+          "category": "Commercials",
+          "feature": "Simple, transparent pricing",
+          "ours": "Clear pricing that scales with value, without surprise add-ons.",
+          "theirs": "Complex licensing, bundles, and add-ons make the real cost hard to predict and harder to reduce.",
           "talkingPoints": [
-            "Search is familiar to all users",
-            "No training on Explores and dimensions",
-            "Handles ambiguous queries well",
-            "Faster answers to business questions"
+            "Compare the full cost, including add-ons and services",
+            "Pricing that grows with usage and value",
+            "Room to start small and expand"
           ],
-          "demo": "Show complex search query that would require multiple steps in Looker"
+          "demo": "Walk through a pricing scenario that matches their rollout plan."
         },
         {
-          "id": "diff-looker-4",
-          "category": "Deployment",
-          "feature": "Deployment Flexibility",
-          "thoughtspot": "Multi-cloud deployment. Bring your own cloud. Not locked to Google Cloud.",
-          "competitor": "Now Google Cloud only (post-acquisition). Forces GCP adoption. Limited deployment options.",
+          "id": "diff-inc-4",
+          "category": "Openness",
+          "feature": "Works with your stack, not just ours",
+          "ours": "Open integrations and APIs that work with the tools they already have.",
+          "theirs": "Incumbent suites often work best only inside their own ecosystem, creating lock-in.",
           "talkingPoints": [
-            "Works on AWS, Azure, GCP",
-            "No cloud vendor lock-in",
-            "Flexibility for multi-cloud strategy",
-            "Not dependent on Google roadmap"
+            "Keep the tools you like; connect them",
+            "Avoid single-vendor lock-in",
+            "Standard APIs and export options"
           ],
-          "demo": "Discuss architecture options and flexibility"
-        },
-        {
-          "id": "diff-looker-5",
-          "category": "AI & Automation",
-          "feature": "Automated Insights",
-          "thoughtspot": "SpotIQ automatically discovers insights, anomalies, and trends. Proactive intelligence.",
-          "competitor": "No automated insight discovery. Users must know what to look for. Purely reactive.",
-          "talkingPoints": [
-            "AI surfaces insights users wouldn't find manually",
-            "Reduces analysis time",
-            "Proactive vs reactive",
-            "Natural language explanations"
-          ],
-          "demo": "Run SpotIQ and show auto-discovered patterns"
+          "demo": "Connect {{product}} to one of their existing systems live."
         }
       ]
     },
-    "qlik": {
-      "name": "Qlik",
+    "point-solution": {
+      "name": "Point solution",
       "differentiators": [
         {
-          "id": "diff-qlik-1",
-          "category": "User Experience",
-          "feature": "Modern Interface",
-          "thoughtspot": "Clean, modern Google-like interface. Intuitive for any user. Mobile-optimized experience.",
-          "competitor": "Dated interface with associative selection model that confuses users. Green/white/gray states are not intuitive.",
+          "id": "diff-pt-1",
+          "category": "Platform",
+          "feature": "One platform instead of another silo",
+          "ours": "Covers the whole workflow, so data and process stay connected as needs grow.",
+          "theirs": "A point tool solves today's narrow problem and adds one more silo, login, and integration to maintain.",
           "talkingPoints": [
-            "Familiar search paradigm",
-            "No need to understand associative logic",
-            "Modern design language",
-            "Better user adoption rates"
+            "Fewer tools, fewer integrations, fewer contracts",
+            "Room to grow into adjacent use cases",
+            "One place for security and governance"
           ],
-          "demo": "Show clean ThoughtSpot interface vs Qlik's selection model"
+          "demo": "Show how a second use case builds on the first without new tooling."
         },
         {
-          "id": "diff-qlik-2",
-          "category": "Cloud Architecture",
-          "feature": "Cloud-Native Design",
-          "thoughtspot": "Built for cloud from the start. Modern microservices architecture. Elastic scaling.",
-          "competitor": "QlikView is desktop-based. Qlik Sense Cloud is retrofit of on-prem product. Not truly cloud-native.",
+          "id": "diff-pt-2",
+          "category": "Enterprise readiness",
+          "feature": "Security, governance, and scale",
+          "ours": "Enterprise-grade security, access controls, and support from day one.",
+          "theirs": "Smaller point tools may lack certifications, admin controls, or support needed as usage grows.",
           "talkingPoints": [
-            "True SaaS architecture",
-            "Automatic updates and maintenance",
-            "Better performance and reliability",
-            "Lower TCO"
+            "Certifications and security documentation ready",
+            "Granular roles and permissions",
+            "Support and SLAs that match the business"
           ],
-          "demo": "Discuss architecture and operational benefits"
-        },
-        {
-          "id": "diff-qlik-3",
-          "category": "Search & AI",
-          "feature": "Search Sophistication",
-          "thoughtspot": "Advanced NLP with context awareness. Understands relationships and business logic. Handles complex multi-step queries.",
-          "competitor": "Insight Advisor and NL search are basic. Often fails to understand user intent. Limited query complexity.",
-          "talkingPoints": [
-            "Better natural language understanding",
-            "Handles ambiguity well",
-            "Context-aware suggestions",
-            "More accurate results"
-          ],
-          "demo": "Compare search capabilities on complex queries"
-        },
-        {
-          "id": "diff-qlik-4",
-          "category": "Data Architecture",
-          "feature": "Live Data Access",
-          "thoughtspot": "Live query to cloud data warehouses. No in-memory limitations. Leverages warehouse compute and scale.",
-          "competitor": "In-memory model requires data extracts and reload schedules. Limited by available memory. Stale data issues.",
-          "talkingPoints": [
-            "Always current data",
-            "No memory constraints",
-            "Scales with your warehouse",
-            "Simpler data pipeline"
-          ],
-          "demo": "Show live query performance vs extract limitations"
-        },
-        {
-          "id": "diff-qlik-5",
-          "category": "Embedded Analytics",
-          "feature": "Modern Embedding",
-          "thoughtspot": "Full SDK with React/Angular/Vue components. RESTful APIs. Developer-friendly documentation.",
-          "competitor": "Limited embedding APIs. Older mashup approach. Not designed for modern app development.",
-          "talkingPoints": [
-            "Modern developer experience",
-            "Component-based embedding",
-            "Better customization options",
-            "Easier integration"
-          ],
-          "demo": "Show embedded components and API examples"
+          "demo": "Show admin controls, audit logs, and permissions."
         }
       ]
     }

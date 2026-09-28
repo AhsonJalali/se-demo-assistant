@@ -1,9 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ThoughtSpot SE Demo Assistant</title>
+    <meta name="description" content="A demo-day copilot for Solutions Engineers: discovery, positioning, objection handling, and per-deal notes." />
+    <title>Demo Assistant</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234F46E5'/%3E%3Cpath d='M16 7 7 11.5l9 4.5 9-4.5L16 7Zm-9 9.5 9 4.5 9-4.5M7 21l9 4.5 9-4.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <script>
+      // Apply the saved theme before first paint to avoid a light/dark flash.
+      (function () {
+        try {
+          var s = JSON.parse(localStorage.getItem('sda-workspace-settings') || '{}');
+          var t = s.theme === 'light' || s.theme === 'dark' ? s.theme
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.dataset.theme = t;
+          document.documentElement.dataset.accent = s.accent || 'indigo';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

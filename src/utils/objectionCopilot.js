@@ -1,6 +1,4 @@
-import differentiatorsData from '../data/differentiators.json';
-import objectionsData from '../data/objections.json';
-import { streamClaude, MODEL } from './claudeApi';
+import { streamClaude, describeProduct, MODEL } from './claudeApi';
 
 // The READ section ends with a line like "Matches: obj-1, obj-7" (or
 // "Matches: none"). Pull the objection ids out of it so the card grid can
@@ -16,18 +14,20 @@ export function parseMatchedIds(text) {
   return [...new Set(ids.map(id => id.toLowerCase()))];
 }
 
-function buildSystemPrompt() {
-  const objections = JSON.stringify(objectionsData.objections, null, 2);
-  const differentiators = JSON.stringify(differentiatorsData.competitors, null, 2);
+function buildSystemPrompt({ content, settings }) {
+  const objections = JSON.stringify(content.objections, null, 2);
+  const differentiators = JSON.stringify(content.differentiators, null, 2);
 
-  return `You are a live-call objection coach for a ThoughtSpot Solution Engineer. The SE is in a demo RIGHT NOW: a prospect just pushed back, and the SE has seconds to respond. Speed and usability beat completeness.
+  return `You are a live-call objection coach for a Solutions Engineer. The SE is in a demo RIGHT NOW: a prospect just pushed back, and the SE has seconds to respond. Speed and usability beat completeness.
+
+${describeProduct(settings)}
 
 Your library:
 
 OBJECTION HANDLING:
 ${objections}
 
-COMPETITIVE DIFFERENTIATORS:
+COMPETITIVE POSITIONING (versus common alternatives):
 ${differentiators}
 
 # OPERATING RULES
@@ -50,7 +50,8 @@ Three to five sentences the SE can say out loud, in a natural, confident, conver
 Two or three numbered discovery questions that move the conversation forward and put the SE back in control. Each tailored to this objection, not generic.`;
 }
 
-function buildUserPrompt(objectionText, session) {
+function buildUserPrompt(objectionText, session, settings) {
+  const product = settings?.productName?.trim() || 'our platform';
   let prompt = `The prospect just said:\n\n"${objectionText.trim()}"\n`;
 
   if (session) {
@@ -62,7 +63,8 @@ function buildUserPrompt(objectionText, session) {
     const whys = session.threeWhys ?? {};
     if (whys['why-change']?.trim()) ctx.push(`Why change (captured): ${whys['why-change'].trim()}`);
     if (whys['why-now']?.trim()) ctx.push(`Why now (captured): ${whys['why-now'].trim()}`);
-    if (whys['why-thoughtspot']?.trim()) ctx.push(`Why ThoughtSpot (captured): ${whys['why-thoughtspot'].trim()}`);
+    const whyUs = whys['why-us'];
+    if (whyUs?.trim()) ctx.push(`Why ${product} (captured): ${whyUs.trim()}`);
     if (ctx.length) {
       prompt += `\nSession context:\n${ctx.map(l => `- ${l}`).join('\n')}\n`;
     }
@@ -76,11 +78,11 @@ function buildUserPrompt(objectionText, session) {
  * Stream an objection-copilot answer.
  * No web search tools: this is a live-call feature — latency is the enemy.
  *
- * @param {Object} inputs - { objectionText, session } (session may be null)
+ * @param {Object} inputs - { objectionText, session, content, settings } (session may be null)
  * @param {Function} onChunk - called with each text chunk as it arrives
  * @param {AbortSignal} signal - optional AbortSignal for cancellation
  */
-export async function streamObjectionCopilot({ objectionText, session }, onChunk, signal) {
+export async function streamObjectionCopilot({ objectionText, session, content, settings }, onChunk, signal) {
   return streamClaude(
     {
       model: MODEL,
@@ -88,11 +90,11 @@ export async function streamObjectionCopilot({ objectionText, session }, onChunk
       system: [
         {
           type: 'text',
-          text: buildSystemPrompt(),
+          text: buildSystemPrompt({ content, settings }),
           cache_control: { type: 'ephemeral' },
         },
       ],
-      messages: [{ role: 'user', content: buildUserPrompt(objectionText, session) }],
+      messages: [{ role: 'user', content: buildUserPrompt(objectionText, session, settings) }],
     },
     onChunk,
     signal

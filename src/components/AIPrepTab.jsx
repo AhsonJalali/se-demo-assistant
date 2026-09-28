@@ -1,6 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { streamAiPrep } from '../utils/claudeApi';
+import { getView } from '../config/views';
+import PageHeader from './PageHeader';
+import Icon from './ui/Icon';
+import { aiKeyMissing, aiErrorMessage, AiSetupNotice, CopyButton, ErrorNotice, RichText } from './ai/AiShared';
 
 // ── LinkedIn URL detection ────────────────────────────────────────────────────
 // Matches an entry that is *only* a LinkedIn URL with no whitespace-separated extras.
@@ -14,11 +18,11 @@ function isLinkedInUrlOnly(entry) {
 
 // ── Section parser ────────────────────────────────────────────────────────────
 const SECTION_KEYS = ['BRIEF', 'DISCOVERY', 'TALKING_POINTS', 'DEMO_FLOW'];
-const SECTION_LABELS = {
-  BRIEF: 'Pre-Call Research Brief',
-  DISCOVERY: 'Targeted Discovery Questions',
-  TALKING_POINTS: 'Personalized Talking Points',
-  DEMO_FLOW: 'Suggested Demo Flow',
+const SECTIONS = {
+  BRIEF: { label: 'Pre-call brief', icon: 'building', blurb: 'Who they are, what the stakeholders care about, and the angle to take.' },
+  DISCOVERY: { label: 'Discovery questions', icon: 'compass', blurb: 'The most relevant questions from your library, reframed for this prospect.' },
+  TALKING_POINTS: { label: 'Talking points', icon: 'message', blurb: 'Positioning and objection responses tuned to their situation.' },
+  DEMO_FLOW: { label: 'Demo flow', icon: 'play', blurb: 'A 4–5 step demo sequence and why each step fits.' },
 };
 
 const HEADER_RE = /^\s*#{1,4}\s*\**\s*(BRIEF|DISCOVERY|TALKING[ _-]?POINTS|DEMO[ _-]?FLOW)\b/i;
@@ -51,70 +55,48 @@ function parseSections(text) {
   return sections;
 }
 
-// ── Copy button ───────────────────────────────────────────────────────────────
-function CopyButton({ text }) {
-  const [copied, setCopied] = React.useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text.trim());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-  return (
-    <button
-      onClick={handleCopy}
-      className="text-xs px-2 py-1 rounded-md border border-[var(--color-border)] text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-cyan)] hover:border-[var(--color-accent-cyan)]/50 transition-all duration-200"
-    >
-      {copied ? 'Copied!' : 'Copy'}
-    </button>
-  );
-}
-
-// ── Output section card ───────────────────────────────────────────────────────
-function SectionCard({ sectionKey, content, isStreaming }) {
-  const [collapsed, setCollapsed] = React.useState(false);
+// ── Output section ────────────────────────────────────────────────────────────
+function SectionCard({ sectionKey, content, isStreaming, isActive }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const meta = SECTIONS[sectionKey];
   const isEmpty = !content.trim();
 
-  if (isEmpty && !isStreaming) return null;
-
   return (
-    <div className="glass-panel rounded-xl border border-[var(--color-border)] overflow-hidden animate-fade-in-up">
-      <div
-        className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-white/5 transition-colors duration-200"
-        onClick={() => setCollapsed(c => !c)}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-[var(--color-accent-cyan)]" />
-          <h3 className="font-semibold text-[var(--color-text-primary)] text-sm">
-            {SECTION_LABELS[sectionKey]}
-          </h3>
-          {isStreaming && isEmpty && (
-            <span className="text-xs text-[var(--color-text-tertiary)] animate-pulse">
-              Generating...
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {!isEmpty && <CopyButton text={content} />}
-          <svg
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2"
-            className={`text-[var(--color-text-tertiary)] transition-transform duration-200 ${collapsed ? '' : 'rotate-180'}`}
-          >
-            <path d="M18 15l-6-6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
+    <section className={`panel overflow-hidden ${isEmpty ? 'opacity-70' : ''}`}>
+      <div className="flex items-center gap-3 px-4 h-12 border-b border-line">
+        <Icon name={meta.icon} size={15} className="text-fg-3" />
+        <button
+          type="button"
+          className="flex-1 text-left text-[13px] font-semibold text-fg"
+          onClick={() => setCollapsed(c => !c)}
+          aria-expanded={!collapsed}
+        >
+          {meta.label}
+        </button>
+        {isStreaming && isActive && (
+          <span className="flex items-center gap-1.5 text-xs text-fg-3">
+            <Icon name="loader" size={13} className="animate-spin" /> Writing…
+          </span>
+        )}
+        {!isEmpty && !isStreaming && <CopyButton text={content} />}
+        <button type="button" className="icon-btn w-7 h-7" onClick={() => setCollapsed(c => !c)} aria-label={collapsed ? 'Expand section' : 'Collapse section'}>
+          <Icon name="chevron-down" size={15} className={`transition-transform ${collapsed ? '-rotate-90' : ''}`} />
+        </button>
       </div>
       {!collapsed && (
-        <div className="px-5 pb-5">
-          <div className="text-sm text-[var(--color-text-secondary)] leading-relaxed whitespace-pre-wrap">
-            {content}
-            {isStreaming && content && (
-              <span className="inline-block w-1.5 h-4 bg-[var(--color-accent-cyan)] ml-0.5 animate-pulse align-middle" />
-            )}
-          </div>
+        <div className="px-4 py-4">
+          {isEmpty ? (
+            <div className="space-y-2" aria-hidden="true">
+              <div className="h-3 rounded bg-muted w-11/12 animate-pulse" />
+              <div className="h-3 rounded bg-muted w-9/12 animate-pulse" />
+              <div className="h-3 rounded bg-muted w-10/12 animate-pulse" />
+            </div>
+          ) : (
+            <RichText text={content} streaming={isStreaming && isActive} />
+          )}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -132,18 +114,19 @@ const AIPrepTab = () => {
     aiPrepAbortRef,
     cancelAiPrep,
     clearAiPrep,
+    currentSession,
+    updateGeneralNotes,
     showToast,
+    content,
+    settings,
   } = useApp();
 
-  const [generationKey, setGenerationKey] = React.useState(0);
+  const [generationKey, setGenerationKey] = useState(0);
+  const [savedToNotes, setSavedToNotes] = useState(false);
+  const keyMissing = aiKeyMissing();
+  const view = getView('ai-prep');
 
-  // Only warn about a missing key in dev. In prod, the serverless proxy holds
-  // the key server-side and the browser never sees one.
-  const apiKeyMissing = import.meta.env.DEV && !import.meta.env.VITE_ANTHROPIC_API_KEY;
-
-  const updateInput = (field, value) => {
-    setAiPrepInputs(prev => ({ ...prev, [field]: value }));
-  };
+  const updateInput = (field, value) => setAiPrepInputs(prev => ({ ...prev, [field]: value }));
 
   const updateProfile = (index, value) => {
     setAiPrepInputs(prev => {
@@ -155,26 +138,22 @@ const AIPrepTab = () => {
 
   const addProfile = () => {
     if (aiPrepInputs.linkedinProfiles.length < 5) {
-      setAiPrepInputs(prev => ({
-        ...prev,
-        linkedinProfiles: [...prev.linkedinProfiles, ''],
-      }));
+      setAiPrepInputs(prev => ({ ...prev, linkedinProfiles: [...prev.linkedinProfiles, ''] }));
     }
   };
 
   const removeProfile = (index) => {
-    setAiPrepInputs(prev => ({
-      ...prev,
-      linkedinProfiles: prev.linkedinProfiles.filter((_, i) => i !== index),
-    }));
+    setAiPrepInputs(prev => ({ ...prev, linkedinProfiles: prev.linkedinProfiles.filter((_, i) => i !== index) }));
   };
 
-  const handleGenerate = useCallback(async () => {
-    if (!aiPrepInputs.companyName.trim()) return;
+  const handleGenerate = useCallback(async (e) => {
+    e?.preventDefault();
+    if (!aiPrepInputs.companyName.trim() || aiPrepIsGenerating) return;
 
     setGenerationKey(k => k + 1);
     setAiPrepError(null);
     setAiPrepResult('');
+    setSavedToNotes(false);
     setAiPrepIsGenerating(true);
 
     const controller = new AbortController();
@@ -183,253 +162,199 @@ const AIPrepTab = () => {
     try {
       await streamAiPrep(
         aiPrepInputs,
-        (chunk) => {
-          setAiPrepResult(prev => (prev ?? '') + chunk);
-        },
-        controller.signal
+        (chunk) => setAiPrepResult(prev => (prev ?? '') + chunk),
+        controller.signal,
+        { content, settings }
       );
     } catch (err) {
       if (err.name === 'AbortError') return;
-      if (err.message === 'NO_API_KEY') {
-        setAiPrepError('no_api_key');
-      } else if (err.message === 'RATE_LIMITED') {
-        setAiPrepError('rate_limited');
-      } else if (err.message === 'AUTH_EXPIRED') {
-        setAiPrepError('auth_expired');
-      } else if (err.message === 'SERVER_API_KEY_INVALID') {
-        setAiPrepError("The server's Anthropic API key was rejected — an admin needs to update ANTHROPIC_API_KEY in Vercel.");
-      } else {
-        setAiPrepError(err.message);
-        showToast('Generation failed — check console for details', 'error');
-        console.error('AI Prep error:', err);
-      }
+      console.error('AI Prep error:', err);
+      setAiPrepError(aiErrorMessage(err));
     } finally {
       aiPrepAbortRef.current = null;
       setAiPrepIsGenerating(false);
     }
-  }, [aiPrepInputs, aiPrepAbortRef, setAiPrepResult, setAiPrepIsGenerating, setAiPrepError, showToast]);
+  }, [aiPrepInputs, aiPrepIsGenerating, aiPrepAbortRef, setAiPrepResult, setAiPrepIsGenerating, setAiPrepError, content, settings]);
 
-  const sections = useMemo(
-    () => (aiPrepResult ? parseSections(aiPrepResult) : null),
-    [aiPrepResult]
-  );
+  const sections = useMemo(() => (aiPrepResult ? parseSections(aiPrepResult) : null), [aiPrepResult]);
   const hasResult = sections && SECTION_KEYS.some(k => sections[k].trim());
   const isInterrupted = !aiPrepIsGenerating && aiPrepResult && !hasResult;
+  const activeKey = sections ? [...SECTION_KEYS].reverse().find(k => sections[k].trim()) || 'BRIEF' : null;
+  const showOutput = aiPrepIsGenerating || hasResult;
+
+  const handleSaveToNotes = () => {
+    if (!currentSession || !aiPrepResult) return;
+    const block = `— Prep brief · ${aiPrepInputs.companyName.trim()} · ${new Date().toLocaleString()} —\n\n${aiPrepResult.trim()}\n`;
+    const existing = currentSession.notes?.general ?? '';
+    updateGeneralNotes(existing ? `${existing.trimEnd()}\n\n${block}` : block);
+    setSavedToNotes(true);
+    showToast('Brief saved to session notes', 'success');
+  };
+
+  const prefillFromSession = currentSession && !aiPrepInputs.companyName && (
+    <button type="button" className="text-xs font-medium text-accent-text hover:underline" onClick={() => updateInput('companyName', currentSession.name)}>
+      Use “{currentSession.name}”
+    </button>
+  );
 
   return (
-    <div className="flex-1 overflow-y-auto p-8">
-      <div className="max-w-[1600px] mx-auto">
-        <div className="flex gap-8">
-
-          {/* ── Left column: Input form ── */}
-          <div className="w-[420px] shrink-0 flex flex-col gap-5">
-            <div>
-              <h2 className="text-lg font-bold text-[var(--color-text-primary)] mb-1" style={{ fontFamily: "'Geist', sans-serif" }}>
-                AI Prep Brief
-              </h2>
-              <p className="text-sm text-[var(--color-text-tertiary)]">
-                Enter prospect details to generate a personalized pre-call brief powered by Claude.
-              </p>
-            </div>
-
-            {/* API key warning */}
-            {apiKeyMissing && (
-              <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-sm text-amber-300">
-                <p className="font-semibold mb-1">API key not configured</p>
-                <p className="text-amber-300/70">
-                  Add <code className="font-mono bg-amber-500/20 px-1 rounded">VITE_ANTHROPIC_API_KEY</code> to your <code className="font-mono bg-amber-500/20 px-1 rounded">.env</code> file and restart the dev server.
-                </p>
-              </div>
+    <div className="flex-1 flex flex-col min-h-0">
+      <PageHeader
+        title={view.label}
+        description={view.description}
+        actions={hasResult && !aiPrepIsGenerating && (
+          <>
+            <CopyButton text={aiPrepResult} label="Copy all" />
+            {currentSession && (
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleSaveToNotes} disabled={savedToNotes}>
+                <Icon name={savedToNotes ? 'check' : 'notebook'} size={14} />
+                {savedToNotes ? 'Saved to notes' : 'Save to notes'}
+              </button>
             )}
+          </>
+        )}
+      />
 
-            {/* Company name */}
+      <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] items-start">
+          {/* ── Inputs ── */}
+          <form onSubmit={handleGenerate} className="panel p-5 space-y-4 lg:sticky lg:top-0" aria-label="Prospect details">
+            {keyMissing && <AiSetupNotice />}
+
             <div>
-              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
-                Company Name <span className="text-[var(--color-accent-cyan)]">*</span>
-              </label>
+              <div className="flex items-baseline justify-between">
+                <label htmlFor="prep-company" className="label">Company <span className="text-danger" aria-hidden="true">*</span></label>
+                {prefillFromSession}
+              </div>
               <input
+                id="prep-company"
                 type="text"
-                placeholder="e.g. Acme Corp"
+                required
+                placeholder="e.g. Northwind Traders"
                 value={aiPrepInputs.companyName}
                 onChange={e => updateInput('companyName', e.target.value)}
-                className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm"
+                className="field"
               />
             </div>
 
-            {/* Company website (optional) */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
-                Company Website
-              </label>
+              <label htmlFor="prep-website" className="label">Website <span className="font-normal text-fg-3">(optional)</span></label>
               <input
+                id="prep-website"
                 type="text"
-                placeholder="e.g. acmecorp.com"
+                inputMode="url"
+                placeholder="northwind.com"
                 value={aiPrepInputs.companyWebsite}
                 onChange={e => updateInput('companyWebsite', e.target.value)}
-                className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm"
+                className="field"
               />
             </div>
 
-            {/* LinkedIn profiles */}
-            <div>
-              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
-                LinkedIn Profile Text
-              </label>
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-3">
-                Paste the full profile text for the best results, or just drop a LinkedIn URL — both work.
-              </p>
-              <div className="flex flex-col gap-3">
+            <fieldset>
+              <legend className="label">Stakeholders <span className="font-normal text-fg-3">(optional)</span></legend>
+              <p className="hint -mt-0.5 mb-2">Paste LinkedIn profile text for the best results. A profile URL also works.</p>
+              <div className="space-y-2.5">
                 {aiPrepInputs.linkedinProfiles.map((profile, index) => (
-                  <div key={index} className="relative">
+                  <div key={index}>
                     {aiPrepInputs.linkedinProfiles.length > 1 && (
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-[var(--color-text-tertiary)]">Profile {index + 1}</span>
-                        <button
-                          onClick={() => removeProfile(index)}
-                          className="text-xs text-[var(--color-text-tertiary)] hover:text-red-400 transition-colors duration-200"
-                        >
+                        <span className="text-xs text-fg-3">Person {index + 1}</span>
+                        <button type="button" onClick={() => removeProfile(index)} className="text-xs text-fg-3 hover:text-danger">
                           Remove
                         </button>
                       </div>
                     )}
                     <textarea
-                      placeholder="Paste profile text or a LinkedIn URL..."
+                      aria-label={`Stakeholder ${index + 1} profile`}
+                      placeholder="Profile text or linkedin.com/in/…"
                       value={profile}
                       onChange={e => updateProfile(index, e.target.value)}
-                      rows={5}
-                      className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm resize-none"
+                      rows={3}
+                      className="field resize-y"
                     />
                     {isLinkedInUrlOnly(profile) && (
-                      <p className="mt-1.5 text-xs text-amber-300/90">
-                        URL detected — paste the profile text (⌘A → Copy on the profile page) for richer results.
+                      <p className="mt-1 text-xs text-warning">
+                        Just a URL — pasting the profile text (⌘A, ⌘C on the profile page) gives richer results.
                       </p>
                     )}
                   </div>
                 ))}
                 {aiPrepInputs.linkedinProfiles.length < 5 && (
-                  <button
-                    onClick={addProfile}
-                    className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-cyan)] transition-colors duration-200 self-start"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                    </svg>
-                    Add another profile
+                  <button type="button" onClick={addProfile} className="btn btn-ghost btn-sm -ml-2">
+                    <Icon name="plus" size={14} /> Add a person
                   </button>
                 )}
               </div>
-            </div>
+            </fieldset>
 
-            {/* Additional context */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide mb-2">
-                Additional Context
-              </label>
+              <label htmlFor="prep-context" className="label">Context <span className="font-normal text-fg-3">(optional)</span></label>
               <textarea
-                placeholder="e.g. They're evaluating Tableau, deal is late-stage, champion is VP of Finance"
+                id="prep-context"
+                placeholder="e.g. Evaluating an incumbent, late stage, champion is the VP of Operations"
                 value={aiPrepInputs.additionalContext}
                 onChange={e => updateInput('additionalContext', e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 glass-panel rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-cyan)]/50 transition-all duration-200 text-sm resize-none"
+                className="field resize-y"
               />
             </div>
 
-            {/* Generate / Cancel button */}
-            {aiPrepIsGenerating ? (
-              <button
-                onClick={cancelAiPrep}
-                className="w-full py-3 rounded-xl border border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/20 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="4" y="4" width="16" height="16" rx="2" />
-                </svg>
-                Stop Generating
-              </button>
-            ) : (
-              <button
-                onClick={handleGenerate}
-                disabled={!aiPrepInputs.companyName.trim() || apiKeyMissing}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00D2FF] to-[#0099CC] text-[#08062B] font-bold text-sm hover:opacity-90 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-[#00D2FF]/20"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Generate Prep Brief
-              </button>
-            )}
-            {aiPrepResult && !aiPrepIsGenerating && (
-              <button
-                onClick={clearAiPrep}
-                className="w-full py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border-subtle)] text-xs font-medium transition-all duration-200"
-              >
-                Clear results
-              </button>
-            )}
+            <div className="flex gap-2 pt-1">
+              {aiPrepIsGenerating ? (
+                <button type="button" onClick={cancelAiPrep} className="btn btn-secondary flex-1">
+                  <Icon name="square" size={14} /> Stop
+                </button>
+              ) : (
+                <button type="submit" disabled={!aiPrepInputs.companyName.trim() || keyMissing} className="btn btn-primary flex-1">
+                  <Icon name="sparkles" size={15} /> {hasResult ? 'Regenerate brief' : 'Generate brief'}
+                </button>
+              )}
+              {aiPrepResult && !aiPrepIsGenerating && (
+                <button type="button" onClick={() => { clearAiPrep(); setSavedToNotes(false); }} className="btn btn-ghost">
+                  Clear
+                </button>
+              )}
+            </div>
+            <p className="hint">Uses web search to research the company. Takes about 30–60 seconds.</p>
+          </form>
 
-            {/* Error state */}
-            {aiPrepError === 'rate_limited' && (
-              <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-sm text-amber-300">
-                <p className="font-semibold mb-1">Rate limit reached</p>
-                <p className="text-amber-300/70 text-xs">
-                  You've hit the hourly limit for AI queries. Please wait a bit and try again.
-                </p>
-              </div>
-            )}
-            {aiPrepError === 'auth_expired' && (
-              <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-sm text-red-300">
-                <p className="font-semibold mb-1">Session expired</p>
-                <p className="text-red-300/70 text-xs">
-                  Please refresh the page and sign in again.
-                </p>
-              </div>
-            )}
-            {aiPrepError && aiPrepError !== 'no_api_key' && aiPrepError !== 'rate_limited' && aiPrepError !== 'auth_expired' && (
-              <div className="p-3 rounded-xl border border-red-500/30 bg-red-500/10 text-xs text-red-400">
-                <p className="font-semibold mb-1">Generation failed</p>
-                <p className="font-mono break-all">{aiPrepError}</p>
-              </div>
-            )}
-          </div>
-
-          {/* ── Right column: Output ── */}
-          <div className="flex-1 min-w-0 flex flex-col gap-4">
-            {!aiPrepResult && !aiPrepIsGenerating && (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center max-w-sm">
-                  <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-2xl glass-panel">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-text-tertiary)]">
-                      <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <p className="text-[var(--color-text-tertiary)] text-sm">
-                    Fill in prospect details to generate a personalized prep brief.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Streaming / completed sections */}
-            {(aiPrepResult || aiPrepIsGenerating) && sections && (
-              <>
-                {SECTION_KEYS.map(key => (
-                  <SectionCard
-                    key={`${key}-${generationKey}`}
-                    sectionKey={key}
-                    content={sections[key]}
-                    isStreaming={aiPrepIsGenerating}
-                  />
-                ))}
-              </>
-            )}
-
-            {/* Interrupted notice */}
+          {/* ── Output ── */}
+          <div className="space-y-3 min-w-0" aria-live="polite" aria-busy={aiPrepIsGenerating}>
+            {aiPrepError && <ErrorNotice onRetry={keyMissing ? undefined : handleGenerate}>{aiPrepError}</ErrorNotice>}
             {isInterrupted && (
-              <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300 text-center">
-                Generation was interrupted — try again to get a complete brief.
+              <ErrorNotice onRetry={handleGenerate}>The brief was interrupted before any sections arrived.</ErrorNotice>
+            )}
+
+            {showOutput ? (
+              SECTION_KEYS.map(key => (
+                <SectionCard
+                  key={`${key}-${generationKey}`}
+                  sectionKey={key}
+                  content={sections?.[key] || ''}
+                  isStreaming={aiPrepIsGenerating}
+                  isActive={key === activeKey}
+                />
+              ))
+            ) : (
+              <div className="rounded-xl border border-dashed border-line-strong p-6">
+                <h2 className="text-[15px] font-semibold text-fg">What you’ll get</h2>
+                <p className="mt-1 text-[13px] text-fg-2">A brief built from public information and your content library, ready to skim before the call.</p>
+                <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {SECTION_KEYS.map(key => (
+                    <li key={key} className="flex gap-3 p-3 rounded-lg bg-subtle">
+                      <div className="w-8 h-8 rounded-lg bg-surface border border-line flex items-center justify-center text-fg-3 shrink-0">
+                        <Icon name={SECTIONS[key].icon} size={15} />
+                      </div>
+                      <div>
+                        <div className="text-[13px] font-medium text-fg">{SECTIONS[key].label}</div>
+                        <div className="text-xs text-fg-2 mt-0.5 leading-snug">{SECTIONS[key].blurb}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>

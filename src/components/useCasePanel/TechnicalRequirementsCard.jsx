@@ -65,14 +65,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
   const isCardCollapsed = collapsed || isCollapsed;
 
   return (
-    <div className="glass-panel-strong rounded-xl p-4 space-y-4">
+    <div className="panel p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#00D2FF] uppercase tracking-wider flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-fg flex items-center gap-2">
           Technical Requirements
         </h3>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-[#a8b0c8] hover:text-[#00D2FF] transition-colors"
+          className="icon-btn -mr-1.5"
           aria-label={isCardCollapsed ? "Expand card" : "Collapse card"}
         >
           <svg className={`w-5 h-5 transition-transform duration-300 ${isCardCollapsed ? 'rotate-0' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,21 +84,21 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
       <div className={`space-y-4 transition-all duration-300 ${isCardCollapsed ? 'hidden' : 'block'}`}>
         {/* Overview Section Header */}
         <div>
-          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
+          <h4 className="section-label mb-3">
             Overview
           </h4>
 
           <div className="space-y-4">
             {/* Integration Needs */}
             <div>
-              <label htmlFor="integrationNeeds" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="integrationNeeds" className="label">
                 Integration Needs
               </label>
               <select
                 id="integrationNeeds"
                 value={overview.integrationNeeds || ''}
                 onChange={(e) => handleFieldChange('overview', 'integrationNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="none">None</option>
@@ -110,14 +110,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Data Volume */}
             <div>
-              <label htmlFor="dataVolume" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="dataVolume" className="label">
                 Data Volume
               </label>
               <select
                 id="dataVolume"
                 value={overview.dataVolume || ''}
                 onChange={(e) => handleFieldChange('overview', 'dataVolume', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="small">Small (&lt;1GB)</option>
@@ -129,14 +129,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Performance Needs */}
             <div>
-              <label htmlFor="performanceNeeds" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="performanceNeeds" className="label">
                 Performance Needs
               </label>
               <select
                 id="performanceNeeds"
                 value={overview.performanceNeeds || ''}
                 onChange={(e) => handleFieldChange('overview', 'performanceNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="standard">Standard</option>
@@ -148,7 +148,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
             {/* Security Requirements */}
             <div>
               <fieldset>
-                <legend className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                <legend className="label">
                   Security Requirements
                 </legend>
                 <div className="space-y-2">
@@ -159,11 +159,11 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                         type="checkbox"
                         checked={(overview.securityRequirements || []).includes(option.id)}
                         onChange={() => handleSecurityRequirementChange(option.id)}
-                        className="w-4 h-4 bg-[#08062B] border border-[#1B1B61] rounded text-[#00D2FF] focus:ring-[#00D2FF] focus:ring-offset-0 focus:ring-2 cursor-pointer"
+                        className="w-4 h-4 rounded border-line-strong accent-[rgb(var(--accent))] cursor-pointer"
                       />
                       <label
                         htmlFor={`security-${option.id}`}
-                        className="ml-2 text-sm text-[#e8eaf0] cursor-pointer select-none"
+                        className="ml-2 text-sm text-fg cursor-pointer select-none"
                       >
                         {option.label}
                       </label>
@@ -177,21 +177,21 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* API Integration Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
+          <h4 className="section-label mb-3">
             API Integration
           </h4>
 
           <div className="space-y-4">
             {/* API Type */}
             <div>
-              <label htmlFor="apiType" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="apiType" className="label">
                 API Type
               </label>
               <select
                 id="apiType"
                 value={apiIntegration.apiType || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'apiType', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="rest">REST API</option>
@@ -203,14 +203,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Authentication Method */}
             <div>
-              <label htmlFor="authMethod" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="authMethod" className="label">
                 Authentication Method
               </label>
               <select
                 id="authMethod"
                 value={apiIntegration.authMethod || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'authMethod', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="oauth2">OAuth 2.0</option>
@@ -223,7 +223,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Required Endpoints */}
             <div>
-              <label htmlFor="requiredEndpoints" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="requiredEndpoints" className="label">
                 Required Endpoints
               </label>
               <textarea
@@ -232,13 +232,13 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('apiIntegration', 'requiredEndpoints', e.target.value)}
                 placeholder="List required API endpoints..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
+                className="field resize-y"
               />
             </div>
 
             {/* Rate Limits */}
             <div>
-              <label htmlFor="rateLimits" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="rateLimits" className="label">
                 Rate Limits
               </label>
               <input
@@ -247,7 +247,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 value={apiIntegration.rateLimits || ''}
                 onChange={(e) => handleFieldChange('apiIntegration', 'rateLimits', e.target.value)}
                 placeholder="e.g., 1000 requests/hour"
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               />
             </div>
           </div>
@@ -255,21 +255,21 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Data Model Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
+          <h4 className="section-label mb-3">
             Data Model
           </h4>
 
           <div className="space-y-4">
             {/* Schema Complexity */}
             <div>
-              <label htmlFor="schemaComplexity" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="schemaComplexity" className="label">
                 Schema Complexity
               </label>
               <select
                 id="schemaComplexity"
                 value={dataModel.schemaComplexity || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'schemaComplexity', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="simple">Simple (1-5 tables)</option>
@@ -281,14 +281,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Data Relationships */}
             <div>
-              <label htmlFor="dataRelationships" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="dataRelationships" className="label">
                 Data Relationships
               </label>
               <select
                 id="dataRelationships"
                 value={dataModel.dataRelationships || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'dataRelationships', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="flat">Flat/No relationships</option>
@@ -300,7 +300,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Key Entities */}
             <div>
-              <label htmlFor="keyEntities" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="keyEntities" className="label">
                 Key Entities
               </label>
               <textarea
@@ -309,20 +309,20 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('dataModel', 'keyEntities', e.target.value)}
                 placeholder="List key data entities and their relationships..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
+                className="field resize-y"
               />
             </div>
 
             {/* Data Refresh Rate */}
             <div>
-              <label htmlFor="dataRefreshRate" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="dataRefreshRate" className="label">
                 Data Refresh Rate
               </label>
               <select
                 id="dataRefreshRate"
                 value={dataModel.dataRefreshRate || ''}
                 onChange={(e) => handleFieldChange('dataModel', 'dataRefreshRate', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="real-time">Real-time</option>
@@ -338,21 +338,21 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Infrastructure Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
+          <h4 className="section-label mb-3">
             Infrastructure
           </h4>
 
           <div className="space-y-4">
             {/* Hosting Preference */}
             <div>
-              <label htmlFor="hostingPreference" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="hostingPreference" className="label">
                 Hosting Preference
               </label>
               <select
                 id="hostingPreference"
                 value={infrastructure.hostingPreference || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'hostingPreference', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="cloud">Cloud (AWS/Azure/GCP)</option>
@@ -364,14 +364,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Scalability Needs */}
             <div>
-              <label htmlFor="scalabilityNeeds" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="scalabilityNeeds" className="label">
                 Scalability Needs
               </label>
               <select
                 id="scalabilityNeeds"
                 value={infrastructure.scalabilityNeeds || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'scalabilityNeeds', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not applicable</option>
                 <option value="low">Low (static users)</option>
@@ -383,14 +383,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Availability Requirements */}
             <div>
-              <label htmlFor="availabilityRequirements" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="availabilityRequirements" className="label">
                 Availability Requirements
               </label>
               <select
                 id="availabilityRequirements"
                 value={infrastructure.availabilityRequirements || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'availabilityRequirements', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="standard">Standard (99%)</option>
@@ -402,14 +402,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Disaster Recovery */}
             <div>
-              <label htmlFor="disasterRecovery" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="disasterRecovery" className="label">
                 Disaster Recovery
               </label>
               <select
                 id="disasterRecovery"
                 value={infrastructure.disasterRecovery || ''}
                 onChange={(e) => handleFieldChange('infrastructure', 'disasterRecovery', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not required</option>
                 <option value="basic-backup">Basic backup</option>
@@ -423,7 +423,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
         {/* Compliance Section */}
         <div className="mt-6">
-          <h4 className="text-xs font-semibold text-[#00D2FF] uppercase tracking-wider mb-3">
+          <h4 className="section-label mb-3">
             Compliance
           </h4>
 
@@ -431,7 +431,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
             {/* Regulatory Requirements */}
             <div>
               <fieldset>
-                <legend className="block text-xs font-medium text-[#a8b0c8] mb-2">
+                <legend className="label">
                   Regulatory Requirements
                 </legend>
                 <div className="space-y-2">
@@ -442,11 +442,11 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                         type="checkbox"
                         checked={(compliance.regulatoryRequirements || []).includes(option.id)}
                         onChange={() => handleRegulatoryRequirementChange(option.id)}
-                        className="w-4 h-4 bg-[#08062B] border border-[#1B1B61] rounded text-[#00D2FF] focus:ring-[#00D2FF] focus:ring-offset-0 focus:ring-2 cursor-pointer"
+                        className="w-4 h-4 rounded border-line-strong accent-[rgb(var(--accent))] cursor-pointer"
                       />
                       <label
                         htmlFor={`regulatory-${option.id}`}
-                        className="ml-2 text-sm text-[#e8eaf0] cursor-pointer select-none"
+                        className="ml-2 text-sm text-fg cursor-pointer select-none"
                       >
                         {option.label}
                       </label>
@@ -458,14 +458,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Data Residency */}
             <div>
-              <label htmlFor="dataResidency" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="dataResidency" className="label">
                 Data Residency
               </label>
               <select
                 id="dataResidency"
                 value={compliance.dataResidency || ''}
                 onChange={(e) => handleFieldChange('compliance', 'dataResidency', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not specified</option>
                 <option value="us-only">US only</option>
@@ -478,14 +478,14 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Audit Requirements */}
             <div>
-              <label htmlFor="auditRequirements" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="auditRequirements" className="label">
                 Audit Requirements
               </label>
               <select
                 id="auditRequirements"
                 value={compliance.auditRequirements || ''}
                 onChange={(e) => handleFieldChange('compliance', 'auditRequirements', e.target.value)}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors"
+                className="field"
               >
                 <option value="">Not required</option>
                 <option value="basic-logging">Basic logging</option>
@@ -497,7 +497,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
 
             {/* Compliance Notes */}
             <div>
-              <label htmlFor="complianceNotes" className="block text-xs font-medium text-[#a8b0c8] mb-2">
+              <label htmlFor="complianceNotes" className="label">
                 Compliance Notes
               </label>
               <textarea
@@ -506,7 +506,7 @@ const TechnicalRequirementsCard = ({ useCaseId, collapsed = false }) => {
                 onChange={(e) => handleFieldChange('compliance', 'complianceNotes', e.target.value)}
                 placeholder="Additional compliance requirements or notes..."
                 rows={4}
-                className="w-full px-3 py-2 bg-[#08062B] border border-[#1B1B61] rounded-lg text-[#e8eaf0] text-sm focus:outline-none focus:border-[#00D2FF] transition-colors resize-y"
+                className="field resize-y"
               />
             </div>
           </div>

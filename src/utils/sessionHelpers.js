@@ -34,12 +34,31 @@ export const createSession = (name = 'New Session', metadata = {}) => {
     threeWhys: {
       'why-change': '',
       'why-now': '',
-      'why-thoughtspot': ''
+      'why-us': ''
     },
-    // NEW: Use case documentation
     useCaseDocumentation: {},
     createdAt: now,
     updatedAt: now
+  };
+};
+
+/**
+ * Fill in fields that older sessions may be missing so the UI can rely on
+ * the current shape. Sessions saved before the product-agnostic rewrite kept
+ * the third "why" under 'why-thoughtspot'; it now lives under 'why-us'.
+ */
+export const normalizeSession = (session) => {
+  if (!session || typeof session !== 'object') return session;
+  const whys = { 'why-change': '', 'why-now': '', 'why-us': '', ...(session.threeWhys || {}) };
+  if (!whys['why-us'] && whys['why-thoughtspot']) whys['why-us'] = whys['why-thoughtspot'];
+  delete whys['why-thoughtspot'];
+  return {
+    ...session,
+    metadata: { dealStage: 'Discovery', industries: [], useCases: [], ...(session.metadata || {}) },
+    notes: { items: {}, general: '', ...(session.notes || {}) },
+    selectedItems: { discovery: [], usecases: [], differentiators: [], objections: [], ...(session.selectedItems || {}) },
+    threeWhys: whys,
+    useCaseDocumentation: session.useCaseDocumentation || {},
   };
 };
 
@@ -48,7 +67,7 @@ export const createSession = (name = 'New Session', metadata = {}) => {
  */
 export const loadAllSessions = () => {
   try {
-    return loadSessions();
+    return loadSessions().map(normalizeSession);
   } catch (e) {
     console.error('Error loading sessions:', e);
     return [];

@@ -1,131 +1,71 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { generatePDF } from '../utils/exportToPDF';
-import { generateDocx } from '../utils/exportToDocx';
-import discoveryData from '../data/discovery.json';
-import differentiatorsData from '../data/differentiators.json';
-import objectionsData from '../data/objections.json';
-import usecasesData from '../data/usecases.json';
+import Dialog from './ui/Dialog';
+import EmptyState from './ui/EmptyState';
+import Icon from './ui/Icon';
+
+const FORMATS = [
+  { id: 'pdf', label: 'PDF', hint: 'Polished, read-only', icon: 'file-text' },
+  { id: 'docx', label: 'Word', hint: 'Editable', icon: 'edit' },
+];
 
 const ExportModal = () => {
-  const {
-    currentSession,
-    setShowExportModal,
-    filteredContent,
-    activeTab,
-    showToast
-  } = useApp();
-
-  const [exportFormat, setExportFormat] = useState('pdf');
+  const { currentSession, setShowExportModal, showToast, content, settings, categories, openNewSession } = useApp();
+  const [format, setFormat] = useState('pdf');
+  const [scope, setScope] = useState('selected');
   const [isExporting, setIsExporting] = useState(false);
 
-  if (!currentSession) return null;
+  const close = () => { if (!isExporting) setShowExportModal(false); };
 
-  const handleClose = () => {
-    setShowExportModal(false);
-  };
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
-  };
-
-  const getContentToExport = () => {
-    // Get all content organized by category
-    const discovery = [];
-    const usecases = [];
-    const differentiators = [];
-    const objections = [];
-
-    // Check if user has explicitly selected items
-    const hasSelections =
-      currentSession.selectedItems.discovery.length > 0 ||
-      currentSession.selectedItems.usecases?.length > 0 ||
-      currentSession.selectedItems.differentiators.length > 0 ||
-      currentSession.selectedItems.objections.length > 0;
-
-    if (hasSelections) {
-      // Export only selected items
-      // Discovery
-      discoveryData.questions.forEach(q => {
-        if (currentSession.selectedItems.discovery.includes(q.id)) {
-          discovery.push(q);
-        }
-      });
-
-      // Use Cases
-      usecasesData.useCases.forEach(uc => {
-        if (currentSession.selectedItems.usecases?.includes(uc.id)) {
-          usecases.push(uc);
-        }
-      });
-
-      // Differentiators
-      Object.values(differentiatorsData.competitors).forEach(competitor => {
-        competitor.differentiators.forEach(diff => {
-          const itemId = diff.id;
-          if (currentSession.selectedItems.differentiators.includes(itemId)) {
-            differentiators.push({
-              ...diff,
-              competitorName: competitor.name,
-              competitorId: Object.keys(differentiatorsData.competitors).find(
-                key => differentiatorsData.competitors[key].name === competitor.name
-              )
-            });
-          }
-        });
-      });
-
-      // Objections
-      objectionsData.objections.forEach(obj => {
-        if (currentSession.selectedItems.objections.includes(obj.id)) {
-          objections.push(obj);
-        }
-      });
-    } else {
-      // Export all items from all tabs
-      discovery.push(...discoveryData.questions);
-      usecases.push(...usecasesData.useCases);
-
-      Object.values(differentiatorsData.competitors).forEach(competitor => {
-        competitor.differentiators.forEach(diff => {
-          differentiators.push({
-            ...diff,
-            competitorName: competitor.name,
-            competitorId: Object.keys(differentiatorsData.competitors).find(
-              key => differentiatorsData.competitors[key].name === competitor.name
-            )
-          });
-        });
-      });
-
-      objections.push(...objectionsData.objections);
-    }
-
+  const selected = useMemo(() => {
+    if (!currentSession) return null;
+    const pick = (list, key) => list.filter(i => currentSession.selectedItems[key]?.includes(i.id));
     return {
-      discovery,
-      usecases,
-      differentiators,
-      objections
+      discovery: pick(content.discovery, 'discovery'),
+      usecases: pick(content.usecases, 'usecases'),
+      differentiators: pick(content.differentiators, 'differentiators'),
+      objections: pick(content.objections, 'objections'),
     };
+  }, [currentSession, content]);
+
+  if (!currentSession) {
+    return (
+      <Dialog title="Export session" onClose={close} size="sm">
+        <EmptyState
+          icon="download"
+          title="No session open"
+          action={<button type="button" className="btn btn-primary btn-sm" onClick={() => { setShowExportModal(false); openNewSession(); }}>New session</button>}
+          className="py-8"
+        >
+          Exports summarise one prospect’s session: their 3 Why’s, your notes, and the library items you saved.
+        </EmptyState>
+      </Dialog>
+    );
+  }
+
+  const selectedCount = Object.values(selected).reduce((n, list) => n + list.length, 0);
+  const effectiveScope = selectedCount === 0 ? 'all' : scope;
+  const items = effectiveScope === 'selected' ? selected : {
+    discovery: content.discovery,
+    usecases: content.usecases,
+    differentiators: content.differentiators,
+    objections: content.objections,
   };
+
+  const hasWhys = Object.values(currentSession.threeWhys || {}).some(a => a?.trim());
+  const hasNotes = Boolean(currentSession.notes.general?.trim());
+  const itemNoteCount = Object.keys(currentSession.notes.items).length;
 
   const handleExport = async () => {
     setIsExporting(true);
-
     try {
-      const content = getContentToExport();
-
-      let fileName;
-      if (exportFormat === 'pdf') {
-        fileName = await generatePDF(currentSession, content);
-      } else {
-        fileName = await generateDocx(currentSession, content);
-      }
-
-      showToast(`Successfully exported: ${fileName}`, 'success');
-      handleClose();
+      const ctx = { settings, threeWhys: content.threeWhys, categories };
+      // Export libraries are large, so they load on demand.
+      const fileName = format === 'pdf'
+        ? await (await import('../utils/exportToPDF')).generatePDF(currentSession, items, ctx)
+        : await (await import('../utils/exportToDocx')).generateDocx(currentSession, items, ctx);
+      showToast(`Downloaded ${fileName}`, 'success');
+      setShowExportModal(false);
     } catch (error) {
       console.error('Export error:', error);
       showToast(`Export failed: ${error.message}`, 'error');
@@ -134,188 +74,98 @@ const ExportModal = () => {
     }
   };
 
-  const content = getContentToExport();
-  const noteCount = Object.keys(currentSession.notes.items).length;
-  const hasGeneralNotes = currentSession.notes.general && currentSession.notes.general.trim().length > 0;
-  const hasThreeWhys = currentSession.threeWhys && Object.values(currentSession.threeWhys).some(answer => answer && answer.trim().length > 0);
-  const selectedCount = Object.values(currentSession.selectedItems).flat().length;
-  const totalItems = content.discovery.length + content.differentiators.length + content.objections.length;
+  const rows = [
+    { label: 'Session details', ok: true },
+    { label: "3 Why's", ok: hasWhys, empty: 'Not answered yet' },
+    { label: 'Meeting notes', ok: hasNotes, empty: 'None yet' },
+    { label: 'Notes on items', ok: itemNoteCount > 0, value: itemNoteCount || null, empty: 'None yet' },
+    { label: 'Discovery questions', ok: items.discovery.length > 0, value: items.discovery.length },
+    { label: 'Use cases', ok: items.usecases.length > 0, value: items.usecases.length },
+    { label: 'Positioning', ok: items.differentiators.length > 0, value: items.differentiators.length },
+    { label: 'Objections', ok: items.objections.length > 0, value: items.objections.length },
+  ];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fadeIn"
-      onClick={handleBackdropClick}
+    <Dialog
+      title="Export session"
+      description={currentSession.name}
+      icon="download"
+      onClose={close}
+      size="md"
+      footer={
+        <>
+          <button type="button" className="btn btn-secondary" onClick={close} disabled={isExporting}>Cancel</button>
+          <button type="button" className="btn btn-primary" onClick={handleExport} disabled={isExporting} data-autofocus>
+            {isExporting ? <><Icon name="loader" size={14} className="animate-spin" /> Exporting…</> : <><Icon name="download" size={14} /> Download {format === 'pdf' ? 'PDF' : 'Word'}</>}
+          </button>
+        </>
+      }
     >
-      <div className="w-full max-w-lg bg-[#08062B] border border-[#1B1B61] rounded-xl shadow-2xl animate-scaleIn">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-[#1B1B61]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <svg className="w-6 h-6 text-[#00D2FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h2 className="text-xl font-bold text-[#e8eaf0]">Export Session</h2>
-            </div>
-            <button
-              onClick={handleClose}
-              disabled={isExporting}
-              className="p-2 rounded-lg hover:bg-[#1B1B61] transition-colors duration-200 disabled:opacity-50"
-            >
-              <svg className="w-5 h-5 text-[#a8b0c8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+      <div className="space-y-5">
+        <fieldset>
+          <legend className="label">Format</legend>
+          <div className="grid grid-cols-2 gap-2" role="radiogroup">
+            {FORMATS.map(f => {
+              const active = format === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setFormat(f.id)}
+                  className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-colors
+                    ${active ? 'border-accent bg-accent-soft' : 'border-line hover:border-line-strong'}`}
+                >
+                  <Icon name={f.icon} size={18} className={active ? 'text-accent-text' : 'text-fg-3'} />
+                  <div>
+                    <div className={`text-[13px] font-semibold ${active ? 'text-accent-text' : 'text-fg'}`}>{f.label}</div>
+                    <div className="text-xs text-fg-3">{f.hint}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
-        </div>
+        </fieldset>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Session Info */}
-          <div className="px-4 py-3 bg-[#1B1B61]/30 rounded-lg border border-[#1B1B61]">
-            <h3 className="text-sm font-medium text-[#e8eaf0] mb-2">{currentSession.name}</h3>
-            <p className="text-xs text-[#a8b0c8]">
-              {new Date(currentSession.metadata.demoDate).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-              })} • {currentSession.metadata.dealStage}
+        <fieldset>
+          <legend className="label">Library items</legend>
+          {selectedCount === 0 ? (
+            <p className="text-[13px] text-fg-2 flex gap-2">
+              <Icon name="info" size={15} className="text-fg-3 mt-0.5" />
+              <span>
+                You haven’t saved any items yet, so the whole library will be included. Use the
+                <Icon name="bookmark" size={13} className="inline mx-1 -mt-0.5" />
+                button on cards to pick specific ones.
+              </span>
             </p>
-          </div>
-
-          {/* Export Format Selection */}
-          <div>
-            <label className="block text-sm font-medium text-[#e8eaf0] mb-3">
-              Export Format
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setExportFormat('pdf')}
-                disabled={isExporting}
-                className={`p-4 rounded-lg border-2 transition-all duration-200 ${
-                  exportFormat === 'pdf'
-                    ? 'border-[#00D2FF] bg-[#00D2FF]/10'
-                    : 'border-[#1B1B61] bg-[#08062B] hover:border-[#00D2FF]/50'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="text-sm font-medium text-[#e8eaf0]">PDF</div>
-                <div className="text-xs text-[#a8b0c8] mt-1">Read-only format</div>
-              </button>
-
-              <button
-                onClick={() => setExportFormat('docx')}
-                disabled={isExporting}
-                className={`p-4 rounded-lg border-2 transition-all duration-200 ${
-                  exportFormat === 'docx'
-                    ? 'border-[#00D2FF] bg-[#00D2FF]/10'
-                    : 'border-[#1B1B61] bg-[#08062B] hover:border-[#00D2FF]/50'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="text-sm font-medium text-[#e8eaf0]">Word</div>
-                <div className="text-xs text-[#a8b0c8] mt-1">Editable format</div>
-              </button>
+          ) : (
+            <div className="flex gap-2">
+              {[['selected', `Saved items (${selectedCount})`], ['all', 'Entire library']].map(([id, text]) => (
+                <label key={id} className={`flex-1 flex items-center gap-2 px-3 h-9 rounded-lg border cursor-pointer text-[13px]
+                  ${scope === id ? 'border-accent bg-accent-soft text-accent-text font-medium' : 'border-line text-fg-2 hover:border-line-strong'}`}>
+                  <input type="radio" name="scope" value={id} checked={scope === id} onChange={() => setScope(id)} className="accent-[rgb(var(--accent))]" />
+                  {text}
+                </label>
+              ))}
             </div>
-          </div>
+          )}
+        </fieldset>
 
-          {/* Preview Checklist */}
-          <div>
-            <label className="block text-sm font-medium text-[#e8eaf0] mb-3">
-              What will be exported
-            </label>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm px-3 py-2 bg-[#1B1B61]/20 rounded">
-                <span className="text-[#a8b0c8]">Session metadata</span>
-                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-
-              {hasGeneralNotes && (
-                <div className="flex items-center justify-between text-sm px-3 py-2 bg-[#1B1B61]/20 rounded">
-                  <span className="text-[#a8b0c8]">General notes</span>
-                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              )}
-
-              {hasThreeWhys && (
-                <div className="flex items-center justify-between text-sm px-3 py-2 bg-[#1B1B61]/20 rounded">
-                  <span className="text-[#a8b0c8]">3 Why's responses</span>
-                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between text-sm px-3 py-2 bg-[#1B1B61]/20 rounded">
-                <span className="text-[#a8b0c8]">
-                  {selectedCount > 0 ? `${selectedCount} selected items` : `All items (${totalItems})`}
-                </span>
-                <span className="text-[#00D2FF] font-medium">{totalItems}</span>
-              </div>
-
-              {noteCount > 0 && (
-                <div className="flex items-center justify-between text-sm px-3 py-2 bg-[#1B1B61]/20 rounded">
-                  <span className="text-[#a8b0c8]">Item notes</span>
-                  <span className="text-[#00D2FF] font-medium">{noteCount}</span>
-                </div>
-              )}
-
-              {selectedCount === 0 && (
-                <div className="mt-3 px-3 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                  <p className="text-xs text-blue-300">
-                    💡 No items selected. All content will be exported.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="px-6 py-4 border-t border-[#1B1B61] flex items-center justify-end gap-3">
-          <button
-            onClick={handleClose}
-            disabled={isExporting}
-            className="px-6 py-2 rounded-lg border border-[#1B1B61] text-[#e8eaf0] hover:bg-[#1B1B61] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleExport}
-            disabled={isExporting}
-            className="px-6 py-2 rounded-lg bg-[#00D2FF] text-[#08062B] font-medium hover:bg-[#00D2FF]/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {isExporting ? (
-              <>
-                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span>Exporting...</span>
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Export</span>
-              </>
-            )}
-          </button>
+        <div>
+          <div className="label">Includes</div>
+          <ul className="border border-line rounded-lg divide-y divide-line">
+            {rows.map(r => (
+              <li key={r.label} className="flex items-center gap-2.5 px-3 py-2 text-[13px]">
+                <Icon name={r.ok ? 'check-circle' : 'x-circle'} size={15} className={r.ok ? 'text-success' : 'text-fg-3'} />
+                <span className={`flex-1 ${r.ok ? 'text-fg' : 'text-fg-3'}`}>{r.label}</span>
+                <span className="text-xs text-fg-3 tabular-nums">{r.ok ? (r.value ?? '') : (r.empty ?? '0')}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };
 
