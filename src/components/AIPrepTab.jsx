@@ -34,7 +34,7 @@ function normalizeHeaderKey(raw) {
   return k;
 }
 
-function parseSections(text) {
+export function parseSections(text) {
   const sections = { BRIEF: '', DISCOVERY: '', TALKING_POINTS: '', DEMO_FLOW: '' };
   let current = null;
   let sawAnyHeader = false;
