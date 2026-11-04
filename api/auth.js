@@ -1,3 +1,5 @@
+import { safeEqual } from './anthropic/_policy.js';
+
 export const config = { runtime: 'edge' };
 
 async function computeHmac(message, secret) {
@@ -39,7 +41,10 @@ export default async function handler(req) {
 
   const { username, password } = body;
 
-  if (username !== expectedUsername || password !== expectedPassword) {
+  // Evaluate both comparisons so timing doesn't reveal which one failed.
+  const userOk = safeEqual(username, expectedUsername);
+  const passOk = safeEqual(password, expectedPassword);
+  if (!userOk || !passOk) {
     return new Response(JSON.stringify({ error: 'INVALID_CREDENTIALS' }), {
       status: 401,
       headers: { 'content-type': 'application/json' },

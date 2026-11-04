@@ -1,6 +1,6 @@
 import { getToken, clearToken } from '../hooks/useAuth';
 const ANTHROPIC_API_URL = '/anthropic/v1/messages';
-export const MODEL = 'claude-sonnet-5';
+export const MODEL = 'claude-sonnet-5-5';
 
 /**
  * Describes what the SE sells, from Settings. Shared by every AI feature so
@@ -206,7 +206,7 @@ export async function streamAiPrep(inputs, onChunk, signal, { content, settings 
         },
       ],
       tools: [
-        { type: 'web_search_20250305', name: 'web_search', max_uses: 5 },
+        { type: 'web_search_20260209', name: 'web_search', max_uses: 5 },
       ],
       messages: [{ role: 'user', content: buildUserPrompt(inputs) }],
     },
