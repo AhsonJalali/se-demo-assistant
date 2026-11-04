@@ -6,6 +6,8 @@
 // var (ANTHROPIC_API_KEY, no VITE_ prefix) so the key is never bundled into the
 // browser. Streams the SSE response back unchanged.
 
+import { applyPolicy, safeEqual, PolicyError, DEFAULT_MODEL, MAX_BODY_BYTES } from './_policy.js';
+
 export const config = { runtime: 'edge' };
 
 // In-memory sliding-window rate limiter (best-effort within a single Edge isolate).
@@ -36,18 +38,20 @@ async function computeHmac(message, secret) {
   return btoa(String.fromCharCode(...new Uint8Array(buf)));
 }
 
+// Fails closed: if auth isn't configured, nobody gets through. The proxy
+// spends your API key, so it must never be open by accident.
 async function verifyToken(token) {
   const secret = process.env.APP_SECRET;
-  // Auth is optional — if APP_SECRET isn't set, all requests are allowed through
-  if (!secret) return true;
-
   const username = process.env.APP_USERNAME;
   const password = process.env.APP_PASSWORD;
-  if (!username || !password || !token) return false;
+  if (!secret || !username || !password || !token) return false;
 
   const expected = await computeHmac(`${username}:${password}`, secret);
-  return token === expected;
+  return safeEqual(token, expected);
 }
+
+const json = (status, obj, extra = {}) =>
+  new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json', ...extra } });
 
 export default async function handler(req) {
   if (req.method !== 'POST') {
@@ -81,16 +85,27 @@ export default async function handler(req) {
     );
   }
 
-  const body = await req.text();
+  const rawText = await req.text();
+  if (rawText.length > MAX_BODY_BYTES) return json(413, { error: 'Request too large' });
+
+  let body;
+  try {
+    body = applyPolicy(JSON.parse(rawText), { model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL });
+  } catch (err) {
+    const message = err instanceof PolicyError ? err.message : 'Invalid JSON body';
+    return json(400, { error: message });
+  }
 
   const upstream = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       'x-api-key': apiKey,
-      'anthropic-version': req.headers.get('anthropic-version') || '2023-06-01',
+      'anthropic-version': '2023-06-01',
+      // Server-side fallback: if a safety classifier declines, the API retries on a suitable model.
+      'anthropic-beta': 'server-side-fallback-2026-07-01',
     },
-    body,
+    body: JSON.stringify({ ...body, fallbacks: 'default' }),
   });
 
   // Never forward Anthropic's 401/403 as-is: the client treats 401 from this
